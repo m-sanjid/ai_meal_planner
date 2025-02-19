@@ -9,14 +9,14 @@ const Pricing = () => {
         <div className="text-center p-4 text-4xl lg:text-5xl font-bold">
           Choose Your Perfect Plan
         </div>
-        <div className="text-center text-xl text-gray-600 mb-20">
+        <div className="text-center text-xl text-gray-600 mb-20 dark:text-neutral-400">
           Start free and upgrade as you grow. No credit card required.
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 mx-auto gap-4 ">
           {plans.map((item) => (
             <div>
               <Card
-                className={`relative ${item.popular ? "border border-[#4B6746]" : ""} hover:border-2 hover:border-[#4B6746]`}
+                className={`relative dark:bg-[#4B6746]/10 dark:backdrop-blur-md ${item.popular ? "border border-[#4B6746]" : ""} hover:border-2 hover:border-[#4B6746]`}
               >
                 {item.popular && (
                   <span className="absolute bg-[#4B6746] -top-3 left-1/2 -translate-x-1/2 px-3 py-1 text-sm font-medium text-white rounded-full">
@@ -38,7 +38,9 @@ const Pricing = () => {
                     {item.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2">
                         <Check className="w-5 h-5 text-[#4B6746]" />
-                        <span className="text-gray-600">{feature}</span>
+                        <span className="text-gray-600 dark:text-neutral-400">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>

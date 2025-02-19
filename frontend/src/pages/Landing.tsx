@@ -4,14 +4,14 @@ import Pricing from "@/components/Pricing";
 
 const Landing = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <section className="bg-gradient-to-b from-white to-gray-50 flex justify-center">
+    <div className="flex flex-col min-h-screen dark:bg-neutral-900">
+      <section className="flex justify-center bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:to-black">
         <Hero />
       </section>
-      <section className="bg-gradient-to-b from-white to-gray-50 flex justify-center">
+      <section className="flex justify-center bg-linear-to-br/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:to-black">
         <Features />
       </section>
-      <section className="flex justify-center">
+      <section className="flex justify-center bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:to-black">
         <Pricing />
       </section>
     </div>

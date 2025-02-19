@@ -11,16 +11,18 @@ const Features = () => {
         <p className="text-xl font-thin">
           Powerful features to help you achieve your health and fitness goals
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-20 p-4">
           {featureItems.map((item) => (
             <div>
               <Card
                 key={item.title}
-                className="p-2 border border-gray-100 hover:border-green-700 transition-all duration-300 animate-fadeIn hover:shadow-lg"
+                className="p-2 border border-gray-100 dark:border-[#4B6746] dark:bg-[#4B6746]/30 dark:backdrop-blur-md hover:outline hover:outline-[#4B6746] transition-all duration-300 animate-fadeIn hover:shadow-lg"
               >
                 <CardHeader>
                   <CardTitle className="py-2">{item.icon}</CardTitle>
-                  <CardTitle className="text-2xl">{item.title}</CardTitle>
+                  <CardTitle className="text-2xl dark:text-neutral-200">
+                    {item.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="min-h-[145px]">{item.desc}</CardContent>
               </Card>
