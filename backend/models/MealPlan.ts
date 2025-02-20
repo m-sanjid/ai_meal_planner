@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const mealPlanSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: String, ref: "User", required: true },
   goal: { type: String, required: true },
   meals: [
     {
@@ -13,8 +13,15 @@ const mealPlanSchema = new mongoose.Schema({
         fat: Number,
       },
       ingredients: [String],
+      portionSize: { type: Number, default: 1 },
     },
   ],
+  totalNutrition: {
+    calories: Number,
+    protein: Number,
+    carbs: Number,
+    fat: Number,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

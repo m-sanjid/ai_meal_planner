@@ -4,6 +4,7 @@ import Options from "@/components/Options";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 interface Meal {
   name: string;
@@ -22,6 +23,10 @@ const Meal = () => {
   const [meals, setMeals] = useState<Meal[] | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth();
+
+  if (!isSignedIn) return <p> Not logged in</p>;
 
   const LoadingSkeleton = () => {
     return (
@@ -37,19 +42,27 @@ const Meal = () => {
   };
 
   const generateMealPlan = async () => {
-    //TODO: get user id after auth
-    const userId = "65d2ab4e5f18a7c3b69f1234";
+    if (!user) {
+      setError("User not authenticated");
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
       setMeals(null);
 
+      const token = await getToken();
+
       const response = await axios.post(
-        "http://localhost:3000/api/meals/generate",
+        `${import.meta.env.VITE_API_URL}/api/meals/generate`,
         {
           goal,
           dietaryPreferences,
-          userId,
+          userId: user.id,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
 
@@ -118,7 +131,6 @@ const Meal = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {/* <p className="text-gray-600">Description: {meal.description}</p> */}
                     <p className="">
                       Calories:{" "}
                       <span className="font-bold">{meal.calories} kcal</span>

@@ -62,11 +62,20 @@ export const generateMealPlan = async (req: Request, res: Response) => {
       throw new Error("AI returned invalid JSON.");
     }
 
+    let totalNutrition = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    aiGeneratedPlan.meals.forEach((meal: any) => {
+      totalNutrition.calories += Number(meal.calories) || 0;
+      totalNutrition.protein += Number(meal.macros?.protein) || 0;
+      totalNutrition.carbs += Number(meal.macros?.carbs) || 0;
+      totalNutrition.fat += Number(meal.macros?.fat) || 0;
+    });
+
     // Save to MongoDB
     const newMealPlan = new MealPlan({
       userId,
       goal,
       meals: aiGeneratedPlan.meals,
+      totalNutrition,
     });
     await newMealPlan.save();
 
@@ -85,5 +94,67 @@ export const getMealPlans = async (req: Request, res: Response) => {
     res.status(200).json(mealPlans);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch meal plans" });
+  }
+};
+
+export const updateMealPortion = async (req: Request, res: Response) => {
+  try {
+    const { mealPlanId, mealIndex } = req.params;
+    const { portionSize } = req.body;
+
+    if (!portionSize || portionSize <= 0) {
+      return res.status(400).json({ error: "Invalid portion size" });
+    }
+
+    const mealPlan = await MealPlan.findById(mealPlanId);
+    if (!mealPlan) {
+      return res.status(404).json({ error: "Meal plan not found" });
+    }
+
+    const meal = mealPlan.meals[mealIndex];
+    if (!meal) {
+      return res.status(404).json({ error: "Meal not found" });
+    }
+
+    const scaleFactor = portionSize / meal.portionSize;
+    meal.calories *= scaleFactor;
+    meal.macros.protein *= scaleFactor;
+    meal.macros.carbs *= scaleFactor;
+    meal.macros.fat *= scaleFactor;
+    meal.portionSize = portionSize;
+
+    mealPlan.totalNutrition = mealPlan.meals.reduce(
+      (total, meal) => {
+        total.calories += meal.calories || 0;
+        total.protein += meal.macros?.protein || 0;
+        total.carbs += meal.macros?.carbs || 0;
+        total.fat += meal.macros?.fat || 0;
+        return total;
+      },
+      { calories: 0, protein: 0, carbs: 0, fat: 0 },
+    );
+
+    await mealPlan.save();
+    res.status(200).json(mealPlan);
+  } catch (error) {
+    console.error("Error updating meal portion:", error);
+    res.status(500).json({ error: "Failed to update meal portion" });
+  }
+};
+
+export const getUserMealPlans = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const fetchedMealPlans = await MealPlan.find({ userId }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json(fetchedMealPlans);
+  } catch (error) {
+    console.error("Error fetching user meal plans:", error);
+    res.status(500).json({ error: "Failed to retrieve meal plans." });
   }
 };
