@@ -79,7 +79,7 @@ const Dashboard = () => {
               </div>
               <a href="/meal">
                 <div className="h-12 w-12 bg-white rounded-lg flex items-center justify-center p-1 dark:bg-white/40">
-                  <Plus size={"big"} stroke="#4B6746" />
+                  <Plus size={32} stroke="#4B6746" />
                 </div>
               </a>
             </div>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useAuth, useUser } from "@clerk/clerk-react";
+import { Star } from "lucide-react";
 
 interface Meal {
   name: string;
@@ -82,6 +83,21 @@ const Meal = () => {
       setLoading(false);
     }
   };
+
+  const saveFavoriteMeal = async (meal) => {
+    try {
+      const token = await getToken();
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/meals/favorites`,
+        { userId: user?.id, meal },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      alert("Meal added to favorites");
+    } catch (error) {
+      console.error("Error saving favorite meals", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:from-neutral-900 dark:to-black">
       <div className="min-h-screen flex flex-col max-w-4xl w-full mx-auto p-6 mb-20">
@@ -127,14 +143,22 @@ const Meal = () => {
                 <Card key={index} className="border p-4 rounded-lg shadow-md">
                   <CardHeader>
                     <CardTitle className="text-2xl font-bold">
-                      {meal.name}
+                      <div>{meal.name}</div>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="">
-                      Calories:{" "}
-                      <span className="font-bold">{meal.calories} kcal</span>
-                    </p>
+                    <div className="flex justify-between items-center">
+                      <p>
+                        Calories:{" "}
+                        <span className="font-bold">{meal.calories} kcal</span>
+                      </p>
+                      <Button
+                        onClick={() => saveFavoriteMeal(meal)}
+                        variant={"secondary"}
+                      >
+                        <Star />
+                      </Button>
+                    </div>
                     <p className="pt-2">
                       Protein:{" "}
                       <span className="font-bold">{meal.macros.protein}g</span>{" "}

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Moon, Sun } from "lucide-react";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
@@ -39,12 +45,28 @@ const Navbar = () => {
           </a>
         </div>
         <div className="flex gap-2">
-          {navItems.map((item) => (
-            <Button variant="ghost">
-              <a href={item.href}>{item.title}</a>
+          <SignedIn>
+            {navItems.map((item) => (
+              <Button variant="ghost" key={item.title}>
+                <a href={item.href}>{item.title}</a>
+              </Button>
+            ))}
+            <div className="px-6 scale-125 ">
+              <UserButton />
+            </div>
+          </SignedIn>
+
+          <SignedOut>
+            {outNavItems.map((item) => (
+              <Button variant="ghost">
+                <a href={item.href}>{item.title}</a>
+              </Button>
+            ))}
+            <Button variant={"secondary"} className="px-6 ml-10">
+              <SignInButton />
             </Button>
-          ))}
-          <div className="ml-10 p-1">
+          </SignedOut>
+          <div className="ml-4 p-1">
             <Button variant="ghost" size="sm" onClick={toggleTheme}>
               {isDarkMode ? (
                 <Sun className="h-4 w-4" />
@@ -65,12 +87,12 @@ const navItems = [
   { title: "Create", href: "/meal" },
   { title: "Add", href: "/add" },
   { title: "Dashboard", href: "/dashboard" },
+  { title: "Favorites", href: "/user/favorites" },
 ];
 
-// const outNavItems = [
-//   { title: "Pricing", href: "/pricing" },
-//   { title: "Preview", href: "/preview" },
-//   { title: "Contact", href: "/contact" },
-//   { title: "About Us", href: "/about" },
-//   { title: "Blog", href: "/blog" },
-// ];
+const outNavItems = [
+  { title: "Pricing", href: "/pricing" },
+  { title: "Preview", href: "/preview" },
+  { title: "Contact", href: "/contact" },
+  { title: "About Us", href: "/about" },
+];

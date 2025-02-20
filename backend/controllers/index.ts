@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import MealPlan from "../models/MealPlan";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import FavoriteMeal from "../models/FavoriteMeal";
 
 const apiKey = process.env.GEMINI_API_KEY!;
 if (!apiKey) {
@@ -156,5 +157,52 @@ export const getUserMealPlans = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching user meal plans:", error);
     res.status(500).json({ error: "Failed to retrieve meal plans." });
+  }
+};
+
+export const saveFavoriteMeal = async (req: Request, res: Response) => {
+  try {
+    const { userId, meal } = req.body;
+    if (!userId || !meal) {
+      return res.status(400).json({ error: "Missing userId or meal data" });
+    }
+
+    const favorite = new FavoriteMeal({ userId, meal });
+    await favorite.save();
+
+    res.status(200).json({ message: "Meal added to favorite", favorite });
+  } catch (error) {
+    console.error("Error while adding favorite");
+    res.status(500).json({ error: "Failed to save favorite meal" });
+  }
+};
+
+export const getFavoriteMeal = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    const favorites = await FavoriteMeal.find({ userId });
+    res.status(200).json(favorites);
+  } catch (error) {
+    console.error("Error fetching favorite", error);
+    res.status(500).json({ error: "Failed to fetch favorites" });
+  }
+};
+
+export const removeFavoriteMeal = async (req: Request, res: Response) => {
+  try {
+    const { favoriteId } = req.params;
+
+    const deletedFavorite = await FavoriteMeal.findByIdAndDelete(favoriteId);
+
+    if (!deletedFavorite) {
+      return res.status(404).json({ error: "Favorite meal not found" });
+    }
+
+    res.status(200).json({ message: "Favorite meal removed successfully" });
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+    res.status(500).json({ error: "Failed to remove favorite meal" });
   }
 };
