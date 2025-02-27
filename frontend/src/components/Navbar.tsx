@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
 } from "@clerk/clerk-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
@@ -44,6 +45,9 @@ const Navbar = () => {
             Befit<span className="text-[#4B6746]">AI</span>
           </a>
         </div>
+
+      {/* desktop Navbar  */}
+       <div className="hidden md:flex space-x-2">
         <div className="flex gap-2">
           <SignedIn>
             {navItems.map((item) => (
@@ -66,6 +70,39 @@ const Navbar = () => {
               <SignInButton />
             </Button>
           </SignedOut>
+       </div>
+        </div>
+          {/* Mobile */}
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+	              <Button variant="ghost" size="icon">
+								  <Menu className="h-5 w-5" />
+							  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <SignedIn>
+                  {navItems.map((item) => (
+                    <DropdownMenuItem key={item.title}>
+                      <Button variant="ghost" key={item.title}>
+                        <a href={item.href}>{item.title}</a>
+                      </Button>
+                    </DropdownMenuItem>
+                  ))}
+                </SignedIn>
+                <SignInButton>
+                  {outNavItems.map((item) => (
+                    <DropdownMenuItem key={item.title}>
+                      <Button variant="ghost" key={item.title}>
+                        <a href={item.href}>{item.title}</a>
+                      </Button>
+                    </DropdownMenuItem>
+                  ))}
+                </SignInButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+          </div>
           <div className="ml-4 p-1">
             <Button variant="ghost" size="sm" onClick={toggleTheme}>
               {isDarkMode ? (
@@ -74,8 +111,7 @@ const Navbar = () => {
                 <Moon className="h-4 w-4" />
               )}
             </Button>
-          </div>
-        </div>
+         </div>
       </div>
     </div>
   );

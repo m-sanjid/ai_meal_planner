@@ -5,8 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PAGE_SIZE } from "@/lib/constants";
 import { SignInButton, useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
-import { Plus, User } from "lucide-react";
+import { Plus, Star, User } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const { user, isSignedIn } = useUser();
@@ -34,6 +35,20 @@ const Dashboard = () => {
       console.error("Error fetching meal plans", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveFavoriteMeal = async (meal) => {
+    try {
+      const token = await getToken();
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/meals/favorites`,
+        { userId: user?.id, meal },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      toast("Meal added to favorites ");
+    } catch (error) {
+      console.error("Error saving favorite meals", error);
     }
   };
 
@@ -116,12 +131,21 @@ const Dashboard = () => {
                           </CardHeader>
                           <CardContent className="text-start">
                             {/* <p className="text-gray-600">Description: {meal.description}</p> */}
-                            <p className="">
-                              Calories:{" "}
-                              <span className="font-bold">
-                                {meal.calories} kcal
-                              </span>
-                            </p>
+                            <div className="flex justify-between items-center">
+                              <p>
+                                Calories:{" "}
+                                <span className="font-bold">
+                                  {meal.calories} kcal
+                                </span>
+                              </p>
+                              <Button
+                                onClick={() => saveFavoriteMeal(meal)}
+                                variant={"secondary"}
+                              >
+                                <Star />
+                              </Button>
+                            </div>
+
                             <p className="pt-2 text-xs flex gap-1">
                               Protein: <strong>{meal.macros.protein}g</strong>|
                               Carbs: <strong>{meal.macros.carbs}g</strong> |

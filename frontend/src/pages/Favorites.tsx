@@ -5,6 +5,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { Plus, Star, StarOff, User } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Favorites = () => {
   const { user, isSignedIn } = useUser();
@@ -52,6 +53,7 @@ const Favorites = () => {
 
       // Update local state by removing the deleted favorite
       setFavorites((prev) => prev.filter((fav) => fav._id !== favoriteId));
+      toast("Meal removed from favorites")
     } catch (error) {
       console.error("Error removing favorite meal:", error);
     }
@@ -121,7 +123,7 @@ const Favorites = () => {
                 </div>
                 <p className="font-semibold mt-2">Ingredients:</p>
                 <ul className="list-disc list-inside text-sm text-gray-700">
-                  {fav.meal.ingredients?.map((ingredient, idx) => (
+                  {fav.meal.ingredients?.map((ingredient:string, idx:string) => (
                     <li key={`${fav._id}-ingredient-${idx}`}>{ingredient}</li>
                   ))}
                 </ul>
