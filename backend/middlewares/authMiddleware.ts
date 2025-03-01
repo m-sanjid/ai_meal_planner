@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { getAuth } from "@clerk/express";
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: { userId: string };
 }
 
@@ -9,19 +9,17 @@ export const requireAuth = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
-    // Extract Clerk user ID
     const { userId } = getAuth(req);
-
+    console.log(userId);
     if (!userId) {
-      return res
+      res
         .status(401)
         .json({ error: "Unauthorized. No valid Clerk authentication found." });
+      return;
     }
-
     req.user = { userId };
-
     next();
   } catch (error) {
     console.error("Authentication Error:", error);

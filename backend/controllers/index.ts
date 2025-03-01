@@ -2,6 +2,7 @@ import { type Request, type Response } from "express";
 import MealPlan from "../models/MealPlan";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FavoriteMeal from "../models/FavoriteMeal";
+import type { AuthenticatedRequest } from "../middlewares/authMiddleware";
 
 const apiKey = process.env.GEMINI_API_KEY!;
 if (!apiKey) {
@@ -104,17 +105,20 @@ export const updateMealPortion = async (req: Request, res: Response) => {
     const { portionSize } = req.body;
 
     if (!portionSize || portionSize <= 0) {
-      return res.status(400).json({ error: "Invalid portion size" });
+      res.status(400).json({ error: "Invalid portion size" });
+      return;
     }
 
     const mealPlan = await MealPlan.findById(mealPlanId);
     if (!mealPlan) {
-      return res.status(404).json({ error: "Meal plan not found" });
+      res.status(404).json({ error: "Meal plan not found" });
+      return;
     }
 
     const meal = mealPlan.meals[mealIndex];
     if (!meal) {
-      return res.status(404).json({ error: "Meal not found" });
+      res.status(404).json({ error: "Meal not found" });
+      return;
     }
 
     const scaleFactor = portionSize / meal.portionSize;
@@ -143,7 +147,7 @@ export const updateMealPortion = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserMealPlans = async (req: Request, res: Response) => {
+export const getUserMealPlans = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {
@@ -164,7 +168,8 @@ export const saveFavoriteMeal = async (req: Request, res: Response) => {
   try {
     const { userId, meal } = req.body;
     if (!userId || !meal) {
-      return res.status(400).json({ error: "Missing userId or meal data" });
+      res.status(400).json({ error: "Missing userId or meal data" });
+      return;
     }
 
     const favorite = new FavoriteMeal({ userId, meal });
@@ -177,10 +182,13 @@ export const saveFavoriteMeal = async (req: Request, res: Response) => {
   }
 };
 
-export const getFavoriteMeal = async (req: Request, res: Response) => {
+export const getFavoriteMeal = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
 
     const favorites = await FavoriteMeal.find({ userId });
     res.status(200).json(favorites);
@@ -197,7 +205,8 @@ export const removeFavoriteMeal = async (req: Request, res: Response) => {
     const deletedFavorite = await FavoriteMeal.findByIdAndDelete(favoriteId);
 
     if (!deletedFavorite) {
-      return res.status(404).json({ error: "Favorite meal not found" });
+      res.status(404).json({ error: "Favorite meal not found" });
+      return;
     }
 
     res.status(200).json({ message: "Favorite meal removed successfully" });
