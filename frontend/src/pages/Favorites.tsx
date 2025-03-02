@@ -7,11 +7,31 @@ import { Plus, Star, StarOff, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+interface Macros {
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
+interface Meal {
+  _id: string;
+  name: string;
+  calories: number;
+  macros?: Macros;
+  ingredients?: string[];
+}
+
+interface Favorite {
+  _id: string;
+  meal: Meal;
+  userId?: string;
+}
+
 const Favorites = () => {
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
 
   useEffect(() => {
     if (isSignedIn) {
@@ -24,7 +44,7 @@ const Favorites = () => {
       setLoading(true);
       const token = await getToken();
 
-      const response = await axios.get(
+      const response = await axios.get<Favorite[]>(
         `${import.meta.env.VITE_API_URL}/api/meals/favorites/${user?.id}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -53,18 +73,18 @@ const Favorites = () => {
 
       // Update local state by removing the deleted favorite
       setFavorites((prev) => prev.filter((fav) => fav._id !== favoriteId));
-      toast("Meal removed from favorites")
+      toast("Meal removed from favorites");
     } catch (error) {
       console.error("Error removing favorite meal:", error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-black p-6">
-      <div className="bg-[#4B6746]/20 backdrop-blur-lg mb-10">
-        <div className="flex justify-between p-10">
+    <div className="h-full max-w-5xl mx-auto p-6">
+      <div className="bg-[#4B6746]/20 backdrop-blur-lg mb-10 rounded-md">
+        <div className="flex justify-between py-10 px-2 md:px-10">
           {user?.hasImage ? (
-            <div className="border-4 rounded-xl border-[#4B6746]">
+            <div className="md:border-4 rounded-xl border-[#4B6746]">
               <img
                 className="rounded-lg"
                 width={42}
@@ -74,12 +94,12 @@ const Favorites = () => {
               />
             </div>
           ) : (
-            <div className="p-2 rounded-lg border-4 border-[#4B6746] bg-[#4B6746]/30">
+            <div className="p-2 rounded-lg md:border-4 border-[#4B6746] bg-[#4B6746]/30">
               <User className="w-8 h-8" />
             </div>
           )}
 
-          <div className="text-4xl font-semibold text-[#4B6746] dark:text-white pr-4">
+          <div className="text-xl md:text-4xl font-semibold text-[#4B6746] dark:text-white pr-4">
             {user?.firstName}
           </div>
           <a href="/meal">
@@ -123,9 +143,11 @@ const Favorites = () => {
                 </div>
                 <p className="font-semibold mt-2">Ingredients:</p>
                 <ul className="list-disc list-inside text-sm text-gray-700">
-                  {fav.meal.ingredients?.map((ingredient:string, idx:string) => (
-                    <li key={`${fav._id}-ingredient-${idx}`}>{ingredient}</li>
-                  ))}
+                  {fav.meal.ingredients?.map(
+                    (ingredient: string, idx: number) => (
+                      <li key={`${fav._id}-ingredient-${idx}`}>{ingredient}</li>
+                    ),
+                  )}
                 </ul>
               </CardContent>
             </Card>

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8 md:p-20">
+    <div className="bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8 md:p-20">
       <div className="max-w-6xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">

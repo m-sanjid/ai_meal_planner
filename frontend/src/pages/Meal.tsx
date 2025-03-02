@@ -99,8 +99,8 @@ const Meal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:from-neutral-900 dark:to-black">
-      <div className="min-h-screen flex flex-col max-w-4xl w-full mx-auto p-6 mb-20">
+    <div className="bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:from-neutral-900 dark:to-black h-full w-full">
+      <div className="flex flex-col max-w-4xl mx-auto p-6 mb-20">
         <div className="text-4xl font-bold pt-10 text-center">
           Create <span className="text-[#4B6746]">Meals</span>
         </div>

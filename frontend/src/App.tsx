@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import Meal from "./pages/Meal";
@@ -24,43 +24,78 @@ import Support from "./pages/Support";
 import Careers from "./pages/Careers";
 import Preview from "./pages/Preview";
 import { Toaster } from "./components/ui/sonner";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppLayout from "./components/AppLayout";
+import Settings from "./pages/Settings";
 
 function App() {
-  return (
-    <>
-      <ThemeProvider>
-        <BrowserRouter>
-          <Navbar />
-          <div className="min-h-screen">
-            <Toaster />
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/user/register" element={<RegisterUser />} />
-              <Route path="/meal" element={<Meal />} />
-              <Route path="/user/favorites" element={<Favorites />} />
-              <Route path="/about" element={<About />} />
-              <Route path="*" element={<NotFound />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/signin" element={<Signin />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/documentation" element={<Documentation />} />
-              <Route path="/support" element={<Support />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/preview" element={<Preview />} />
-            </Routes>
-          </div>
-          <Footer />
-        </BrowserRouter>
-      </ThemeProvider>
-    </>
-  );
+	return (
+		<>
+			<ThemeProvider>
+				<SidebarProvider>
+					<BrowserRouter>
+						<AppContent />
+					</BrowserRouter>
+				</SidebarProvider>
+			</ThemeProvider>
+		</>
+	);
+}
+
+function AppContent() {
+	const location = useLocation();
+
+	const footerRoutes = [
+		"/",
+		"/about",
+		"/contact",
+		"/features",
+		"/pricing",
+		"/blog",
+		"/terms",
+		"/documentation",
+		"/support",
+		"/preview",
+		"/careers",
+	];
+
+	return (
+		<div className="w-full">
+			<Navbar />
+			<Toaster />
+			<Routes>
+				{/* Public routes without sidebar */}
+				<Route path="/" element={<Landing />} />
+				<Route path="/about" element={<About />} />
+				<Route path="/contact" element={<Contact />} />
+				<Route path="/signin" element={<Signin />} />
+				<Route path="/signup" element={<Signup />} />
+				<Route path="/features" element={<Features />} />
+				<Route path="/pricing" element={<Pricing />} />
+				<Route path="/blog" element={<Blog />} />
+				<Route path="/privacy" element={<Privacy />} />
+				<Route path="/terms" element={<Terms />} />
+				<Route path="/documentation" element={<Documentation />} />
+				<Route path="/support" element={<Support />} />
+				<Route path="/careers" element={<Careers />} />
+				<Route path="/preview" element={<Preview />} />
+				<Route path="/user/register" element={<RegisterUser />} />
+				<Route path="/settings" element={<Settings />} />
+
+				{/* App routes with sidebar layout */}
+				<Route element={<AppLayout />}>
+					<Route path="/home" element={<Home />} />
+					<Route path="/meal" element={<Meal />} />
+					<Route path="/user/favorites" element={<Favorites />} />
+					<Route path="/dashboard" element={<Dashboard />} />
+				</Route>
+
+				{/* 404 route */}
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+			{footerRoutes.includes(location.pathname) && <Footer />}
+		</div>
+	);
 }
 
 export default App;
