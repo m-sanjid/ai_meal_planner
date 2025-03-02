@@ -8,10 +8,12 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { useSubscription } from "@/context/SubscriptionContext";
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
   const [mounted, setMounted] = useState(false);
+  const {subscription,tokens} = useSubscription()
 
   useEffect(() => {
     setMounted(true);
@@ -38,15 +40,16 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-[#4B6746]/40 z-20 backdrop-blur p-4 top-0 sticky h-16">
-      <div className="flex justify-between w-full mx-auto max-w-7xl items-center">
+    <nav className="bg-[#4B6746]/40 z-20 backdrop-blur p-4 top-0 sticky h-16">
+      <div className="flex justify-between w-full mx-auto max-w-6xl items-center">
         <div className="text-2xl font-bold">
-          <a href="/">
+          <a href="/home">
             Befit<span className="text-[#4B6746]">AI</span>
           </a>
         </div>
 
       {/* desktop Navbar  */}
+      <div className="flex gap-2 items-center">
        <div className="hidden md:flex space-x-2">
         <div className="flex gap-2">
           <SignedIn>
@@ -55,14 +58,19 @@ const Navbar = () => {
                 <a href={item.href}>{item.title}</a>
               </Button>
             ))}
-            <div className="px-6 scale-125 ">
+            <div className="flex items-center">
+              {subscription === "pro" ? 
+                <div className="px-2 py-px rounded-3xl bg-amber-400/50 backdrop-blur-md border-amber-400 border text-xs font-medium">PRO</div> : 
+                <div className="text-sm font-semibold  bg-black/10 backdrop-blur-md p-2 rounded-2xl">Tokens: <span className="text-red-500">{tokens}</span></div>}
+            </div>
+            <div className="px-6">
               <UserButton />
             </div>
           </SignedIn>
 
           <SignedOut>
             {outNavItems.map((item) => (
-              <Button variant="ghost">
+              <Button variant="ghost" key={item.title}>
                 <a href={item.href}>{item.title}</a>
               </Button>
             ))}
@@ -84,21 +92,17 @@ const Navbar = () => {
                 <SignedIn>
                   {navItems.map((item) => (
                     <DropdownMenuItem key={item.title}>
-                      <Button variant="ghost" key={item.title}>
-                        <a href={item.href}>{item.title}</a>
-                      </Button>
-                    </DropdownMenuItem>
+                      <a href={item.href}>{item.title}</a>
+                    </DropdownMenuItem>                  
                   ))}
                 </SignedIn>
-                <SignInButton>
+                <SignedOut>
                   {outNavItems.map((item) => (
                     <DropdownMenuItem key={item.title}>
-                      <Button variant="ghost" key={item.title}>
-                        <a href={item.href}>{item.title}</a>
-                      </Button>
+                      <a href={item.href}>{item.title}</a>
                     </DropdownMenuItem>
                   ))}
-                </SignInButton>
+                </SignedOut>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -112,8 +116,9 @@ const Navbar = () => {
               )}
             </Button>
          </div>
+       </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
@@ -121,9 +126,10 @@ export default Navbar;
 
 const navItems = [
   { title: "Create", href: "/meal" },
-  { title: "Add", href: "/add" },
+  { title: "Pro", href: "/pricing" },
   { title: "Dashboard", href: "/dashboard" },
   { title: "Favorites", href: "/user/favorites" },
+  { title: "Settings", href: "/settings" },
 ];
 
 const outNavItems = [

@@ -156,3 +156,30 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 		});
 	}
 };
+
+export const cancelSubscription = async ( req:AuthenticatedRequest,res:Response,next:NextFunction) =>{
+	const userId = req.user?.userId
+	
+	if(!userId) {
+		res.status(401).json({message:"Unauthorized"})
+		return
+	}
+
+	try {
+    const user = await User.findOne({ userId });
+    if (!user || !user.subscriptionId) {
+      res.status(404).json({ message: "Active subscription not found" });
+      return;
+    }
+
+    await razorpay.subscriptions.cancel(user.subscriptionId);
+    await user.downgradeToFree();
+
+    res.json({ message: "Subscription cancelled and downgraded to free plan" });
+  } catch (error:any) {
+    console.error("Subscription cancellation error:", error);
+    res.status(500).json({
+      message: "Failed to cancel subscription",
+      error: error.message,
+    });
+  }}

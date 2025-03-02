@@ -3,6 +3,7 @@ import MealPlan from "../models/MealPlan";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import FavoriteMeal from "../models/FavoriteMeal";
 import type { AuthenticatedRequest } from "../middlewares/authMiddleware";
+import User from "../models/user";
 
 const apiKey = process.env.GEMINI_API_KEY!;
 if (!apiKey) {
@@ -12,17 +13,32 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-export const generateMealPlan = async (req: Request, res: Response) => {
+export const generateMealPlan = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     //Debugging log
     console.log("Received Request Body:", req.body);
 
-    const { goal, dietaryPreferences, userId } = req.body;
+    const { goal, dietaryPreferences } = req.body;
 
+    const userId = req.user?.userId;
     if (!goal || !dietaryPreferences || !userId) {
       throw new Error(
         "Missing required fields: goal, dietaryPreferences, or userId.",
       );
+    }
+
+    const user = await User.findOne({ userId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    try {
+      await user.generateMeal();
+    } catch (tokenError: any) {
+      return res.status(403).json({ error: tokenError.message });
     }
 
     // Construct the prompt
@@ -147,7 +163,10 @@ export const updateMealPortion = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserMealPlans = async (req: AuthenticatedRequest, res: Response) => {
+export const getUserMealPlans = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {
@@ -182,7 +201,10 @@ export const saveFavoriteMeal = async (req: Request, res: Response) => {
   }
 };
 
-export const getFavoriteMeal = async (req: AuthenticatedRequest, res: Response) => {
+export const getFavoriteMeal = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     const userId = req.user?.userId;
     if (!userId) {

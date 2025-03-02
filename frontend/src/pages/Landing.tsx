@@ -1,6 +1,6 @@
 import Features from "@/components/Features";
 import Hero from "../components/Hero";
-import Pricing from "@/components/Pricing";
+import PricingComponent from "@/components/PricingComponent";
 
 const Landing = () => {
   return (
@@ -12,7 +12,7 @@ const Landing = () => {
         <Features />
       </section>
       <section className="flex justify-center bg-linear-to-tr/increasing from-[#4B6746]/40 to-[#4B6746]/20 dark:to-black">
-        <Pricing />
+        <PricingComponent />
       </section>
     </div>
   );

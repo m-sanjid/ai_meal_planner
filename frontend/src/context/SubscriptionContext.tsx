@@ -1,0 +1,105 @@
+import fetchSubscriptionStatus from "@/lib/subscription";
+import { useAuth } from "@clerk/clerk-react";
+import {
+	createContext,
+	Dispatch,
+	ReactNode,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
+
+type SubscriptionContextType = {
+	subscription: string;
+	status: string;
+	tokens: number | "Unlimited";
+	nextReset: Date | null;
+	loading: boolean;
+	setSubscription: Dispatch<SetStateAction<string>>;
+	refreshSubscription: () => Promise<void>;
+};
+
+const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
+	undefined,
+);
+
+export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
+	const { getToken } = useAuth();
+	const [subscription, setSubscription] = useState("free");
+	const [status, setStatus] = useState("inactive");
+	const [tokens, setTokens] = useState(0);
+	const [nextReset, setNextReset] = useState<Date | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	const fetchStatus = async () => {
+		try {
+			const token = await getToken();
+			if (token) {
+				await fetchSubscriptionStatus({
+					token,
+					setLoading,
+					setSubscription,
+					setTokens,
+					setStatus,
+					setNextReset,
+				});
+			} else {
+				setLoading(false);
+			}
+		} catch (error) {
+			console.error("Failed to fetch subscription status:", error);
+			setLoading(false);
+		}
+	};
+
+	const refreshSubscription = async () => {
+		setLoading(true);
+		try {
+			await fetchStatus();
+		} catch (error) {
+			console.error("Failed to refresh subscription:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchStatus();
+	}, [getToken]);
+
+	useEffect(() => {
+		if (nextReset) {
+			const timeUntilReset =
+				new Date(nextReset).getTime() - new Date().getTime();
+			const timeoutId = setTimeout(refreshSubscription, timeUntilReset);
+			return () => clearTimeout(timeoutId);
+		}
+	}, [nextReset]);
+
+	return (
+		<SubscriptionContext.Provider
+			value={{
+				subscription,
+				status,
+				tokens,
+				nextReset,
+				loading,
+				setSubscription,
+				refreshSubscription,
+			}}
+		>
+			{children}
+		</SubscriptionContext.Provider>
+	);
+};
+
+export const useSubscription = () => {
+	const context = useContext(SubscriptionContext);
+	if (!context) {
+		throw new Error(
+			"useSubscription must be used within a SubscriptionProvider",
+		);
+	}
+	return context;
+};

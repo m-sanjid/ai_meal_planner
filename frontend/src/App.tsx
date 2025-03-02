@@ -27,16 +27,20 @@ import { Toaster } from "./components/ui/sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppLayout from "./components/AppLayout";
 import Settings from "./pages/Settings";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
+import AutoRegister from "./components/RegisterUser";
 
 function App() {
 	return (
 		<>
 			<ThemeProvider>
-				<SidebarProvider>
-					<BrowserRouter>
-						<AppContent />
-					</BrowserRouter>
-				</SidebarProvider>
+				<SubscriptionProvider>
+					<SidebarProvider>
+						<BrowserRouter>
+							<AppContent />
+						</BrowserRouter>
+					</SidebarProvider>
+				</SubscriptionProvider>
 			</ThemeProvider>
 		</>
 	);
@@ -63,6 +67,7 @@ function AppContent() {
 		<div className="w-full">
 			<Navbar />
 			<Toaster />
+			<AutoRegister/>
 			<Routes>
 				{/* Public routes without sidebar */}
 				<Route path="/" element={<Landing />} />
