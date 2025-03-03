@@ -6,26 +6,37 @@ import { PAGE_SIZE } from "@/lib/constants";
 import { SignInButton, useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { Plus, Star, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
+
+interface Meal {
+  name: string;
+  calories: number;
+  macros: {
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  ingredients: string[];
+}
+
+interface MealPlan {
+  _id: string;
+  createdAt: string;
+  goal: string;
+  meals: Meal[];
+}
 
 const Dashboard = () => {
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
-  const [mealPlans, setMealPlans] = useState([]);
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      fetchMealPlans();
-    }
-  }, [isSignedIn]);
-
-  const fetchMealPlans = async () => {
+  const fetchMealPlans = useCallback(async () => {
     try {
       const token = await getToken();
-      console.log(token);
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/meals/`,
         { headers: { Authorization: `Bearer ${token}` } },
@@ -36,9 +47,15 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getToken]);
 
-  const saveFavoriteMeal = async (meal) => {
+  useEffect(() => {
+    if (isSignedIn) {
+      fetchMealPlans();
+    }
+  }, [isSignedIn, fetchMealPlans])
+
+  const saveFavoriteMeal = async (meal: Meal) => {
     try {
       const token = await getToken();
       await axios.post(
@@ -61,7 +78,7 @@ const Dashboard = () => {
     );
   };
 
-  const totalMeals = mealPlans?.length;
+  const totalMeals = mealPlans.length;
   const noOfPages = Math.ceil(totalMeals / PAGE_SIZE);
   const start = currentPage * PAGE_SIZE;
   const end = start + PAGE_SIZE;
@@ -130,7 +147,6 @@ const Dashboard = () => {
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="text-start">
-                            {/* <p className="text-gray-600">Description: {meal.description}</p> */}
                             <div className="flex justify-between items-center">
                               <p>
                                 Calories:{" "}

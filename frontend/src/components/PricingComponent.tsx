@@ -35,7 +35,6 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const navigate = useNavigate();
   const current = subscription || "free";
   const path = window.location.pathname;
-  console.log(path);
 
   return (
     <div
@@ -136,7 +135,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
                   className="w-full"
                   variant={current === plan.id ? "outline" : "default"}
                   disabled={loading || current === plan.id}
-                  onClick={() => handleSubscribe(plan.name, plan.planId)}
+                  onClick={() => handleSubscribe?.(plan.name, plan.planId)}
                 >
                   {loading
                     ? "Processing..."

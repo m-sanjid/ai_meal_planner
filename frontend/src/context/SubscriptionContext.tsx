@@ -5,6 +5,7 @@ import {
 	Dispatch,
 	ReactNode,
 	SetStateAction,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -32,7 +33,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 	const [nextReset, setNextReset] = useState<Date | null>(null);
 	const [loading, setLoading] = useState(true);
 
-	const fetchStatus = async () => {
+	const fetchStatus = useCallback(async () => {
 		try {
 			const token = await getToken();
 			if (token) {
@@ -51,9 +52,9 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 			console.error("Failed to fetch subscription status:", error);
 			setLoading(false);
 		}
-	};
+	}, [getToken]);
 
-	const refreshSubscription = async () => {
+	const refreshSubscription = useCallback(async () => {
 		setLoading(true);
 		try {
 			await fetchStatus();
@@ -62,11 +63,11 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [fetchStatus]);
 
 	useEffect(() => {
 		fetchStatus();
-	}, [getToken]);
+	}, [getToken, fetchStatus]);
 
 	useEffect(() => {
 		if (nextReset) {
@@ -75,7 +76,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 			const timeoutId = setTimeout(refreshSubscription, timeUntilReset);
 			return () => clearTimeout(timeoutId);
 		}
-	}, [nextReset]);
+	}, [nextReset, refreshSubscription]);
 
 	return (
 		<SubscriptionContext.Provider

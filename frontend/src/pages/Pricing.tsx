@@ -53,8 +53,8 @@ const Pricing = () => {
       } else {
         throw new Error("Payment initialization failed");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to start subscription");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to start subscription");
     } finally {
       setLoading(false);
     }

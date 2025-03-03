@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { Star } from "lucide-react";
+import { useSubscription } from "@/context/SubscriptionContext";
 
 interface Meal {
   name: string;
@@ -26,6 +27,7 @@ const Meal = () => {
   const [loading, setLoading] = useState(false);
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const { tokens } = useSubscription();
 
   if (!isSignedIn) return <p> Not logged in</p>;
 
@@ -78,13 +80,15 @@ const Meal = () => {
       setMeals(response.data.meals);
     } catch (err) {
       console.error("Error generating meal plan:", err);
-      setError("Failed to generate meal plan. Please try again.");
+      setError(
+        `${tokens === 0 ? "No more tokens available, Upgrade to pro" : "Failed to generate meal plan. Please try again."}`,
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const saveFavoriteMeal = async (meal) => {
+  const saveFavoriteMeal = async (meal: Meal) => {
     try {
       const token = await getToken();
       await axios.post(
@@ -129,7 +133,11 @@ const Meal = () => {
             </Button>{" "}
           </div>
         </div>
-        {error && <div className="text-red-500">{error}</div>}
+        {error && (
+          <div className="bg-red-300/50 backdrop-blur-md p-4 border rounded-lg border-red-500">
+            <span className="text-red-500">{error}</span>
+          </div>
+        )}
         {loading && (
           <div>
             <LoadingSkeleton />

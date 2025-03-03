@@ -1,6 +1,9 @@
 import { ArrowRight } from "lucide-react";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen max-w-5xl w-full py-20">
       <div className="flex flex-col items-center gap-2 p-6 text-center">
@@ -16,9 +19,10 @@ const Hero = () => {
           preferences, and lifestyle. Let AI do the planning while you focus on
           achieving your health goals.
         </div>
-        <button className="py-4 px-8 bg-[#4B6746] dark:bg-[#4B6746]/40 dark:backdrop-blur-xl items-center rounded-4xl m-5 flex gap-2 text-white hover:shadow-xl hover:scale-x-105">
+        <Button className="py-4 px-8 bg-[#4B6746] dark:bg-[#4B6746]/40 dark:backdrop-blur-xl items-center rounded-4xl m-5 flex gap-2 text-white hover:shadow-xl hover:scale-x-105"
+          onClick={() => navigate("/signup")}>
           Get Started for Free <ArrowRight size="20" strokeWidth={"light"} />
-        </button>
+        </Button>
       </div>
     </div>
   );

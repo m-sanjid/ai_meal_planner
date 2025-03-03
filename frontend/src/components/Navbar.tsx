@@ -42,7 +42,8 @@ const Navbar = () => {
   return (
     <nav className="bg-[#4B6746]/40 z-20 backdrop-blur p-4 top-0 sticky h-16">
       <div className="flex justify-between w-full mx-auto max-w-6xl items-center">
-        <div className="text-2xl font-bold">
+        <div className="text-2xl font-bold flex gap-2">
+          <img className="w-8 h-8" src={isDarkMode?"/darkIcon.png":"/icon.png"} alt=""/>
           <a href="/home">
             Befit<span className="text-[#4B6746]">AI</span>
           </a>

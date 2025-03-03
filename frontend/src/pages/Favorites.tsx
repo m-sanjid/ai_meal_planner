@@ -37,6 +37,7 @@ const Favorites = () => {
     if (isSignedIn) {
       getFavoriteMeals();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
 
   const getFavoriteMeals = async () => {

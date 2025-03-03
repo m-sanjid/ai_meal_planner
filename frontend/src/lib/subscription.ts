@@ -34,15 +34,13 @@ const fetchSubscriptionStatus = async ({
 			},
 		);
 
-		console.log("Subscription status response:", response.data);
-
 		const { subscription, subscriptionStatus, tokens, nextReset } =
 			response.data;
 
-		setSubscription(subscription);
-		setStatus(subscriptionStatus || "inactive");
-		setTokens(tokens === "unlimited" ? "Unlimited" : (tokens ?? 0));
-		setNextReset(nextReset ?? null);
+		setSubscription?.(subscription);
+		setStatus?.(subscriptionStatus || "inactive");
+		setTokens?.(tokens === "unlimited" ? "Unlimited" : (tokens ?? 0));
+		setNextReset?.(nextReset ?? null);
 	} catch (error) {
 		console.error("Failed to fetch subscription status:", error);
 	} finally {

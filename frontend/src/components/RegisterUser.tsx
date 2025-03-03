@@ -32,14 +32,13 @@ const AutoRegister = () => {
 				);
 
 				localStorage.setItem("isUserRegistered", "true");
-				console.log("User registration successful");
 			} catch (error) {
 				console.error("User registration failed:", error);
 			}
 		};
 
 		registerUser();
-	}, [user, isSignedIn, isLoaded]);
+	}, [user, isSignedIn, isLoaded, getToken]);
 
 	return null; // No UI needed
 };
