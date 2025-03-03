@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db";
-import mealRoutes from "./routes/mealRoutes.ts";
+import mealRoutes from "./routes/mealRoutes";
 import userRoutes from "./routes/userRoutes";
-import subscribeRoutes from "./routes/subscribeRoutes.ts";
+import subscribeRoutes from "./routes/subscribeRoutes";
 import { clerkMiddleware } from "@clerk/express";
 import "dotenv/config";
 

@@ -18,9 +18,6 @@ export const generateMealPlan = async (
   res: Response,
 ) => {
   try {
-    //Debugging log
-    console.log("Received Request Body:", req.body);
-
     const { goal, dietaryPreferences } = req.body;
 
     const userId = req.user?.userId;
@@ -32,13 +29,15 @@ export const generateMealPlan = async (
 
     const user = await User.findOne({ userId });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ error: "User not found" });
+      return
     }
 
     try {
       await user.generateMeal();
     } catch (tokenError: any) {
-      return res.status(403).json({ error: tokenError.message });
+      res.status(403).json({ error: tokenError.message });
+      return
     }
 
     // Construct the prompt
@@ -60,17 +59,13 @@ export const generateMealPlan = async (
     // Generate content using Gemini AI
     const result = await model.generateContent(prompt);
     let responseText = result.response.text();
-    //Log the raw response
-    console.log("AI Response Before Processing:", responseText);
 
     if (!responseText) {
       throw new Error("AI failed to generate a response.");
     }
 
     responseText = responseText.replace(/```json|```/g, "").trim();
-    //Log the cleaned response
-    console.log("Cleaned AI Response:", responseText);
-
+   
     // Parse AI response
     let aiGeneratedPlan;
     try {
@@ -131,17 +126,20 @@ export const updateMealPortion = async (req: Request, res: Response) => {
       return;
     }
 
-    const meal = mealPlan.meals[mealIndex];
+    const mealIndexNumber = parseInt(mealIndex, 10);
+    const meal = mealPlan.meals[mealIndexNumber];
     if (!meal) {
       res.status(404).json({ error: "Meal not found" });
       return;
     }
 
     const scaleFactor = portionSize / meal.portionSize;
-    meal.calories *= scaleFactor;
-    meal.macros.protein *= scaleFactor;
-    meal.macros.carbs *= scaleFactor;
-    meal.macros.fat *= scaleFactor;
+    meal.calories = meal.calories? meal.calories *= scaleFactor : 0;
+    meal.macros = meal.macros ? {
+      protein: meal.macros.protein ? meal.macros.protein * scaleFactor : 0,
+      carbs: meal.macros.carbs ? meal.macros.carbs * scaleFactor : 0,
+      fat: meal.macros.fat ? meal.macros.fat * scaleFactor : 0
+    } : { protein: 0, carbs: 0, fat: 0 };
     meal.portionSize = portionSize;
 
     mealPlan.totalNutrition = mealPlan.meals.reduce(
