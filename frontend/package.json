@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "homepage": ".",
   "dependencies": {
     "@clerk/clerk-react": "^5.23.0",
     "@radix-ui/react-avatar": "^1.1.3",
