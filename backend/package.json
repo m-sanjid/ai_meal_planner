@@ -6,6 +6,11 @@
     "@types/bun": "latest",
     "nodemon": "^3.1.9"
   },
+  "scripts": {
+    "dev": "bun run index.ts",
+    "build": "bun build index.ts --outdir dist --target bun",
+    "start": "bun run dist/index.js"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
