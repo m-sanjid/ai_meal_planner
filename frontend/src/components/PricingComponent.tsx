@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
 import {
   Tooltip,
@@ -16,7 +15,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { JSX, useState } from "react";
+import { JSX } from "react";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -29,9 +28,6 @@ type Props = {
 
 const PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const { subscription } = useSubscription();
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
-    "monthly",
-  );
   const navigate = useNavigate();
   const current = subscription || "free";
   const path = window.location.pathname;
@@ -53,26 +49,6 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
         ""
       )}
 
-      <div className="flex justify-center mb-8">
-        <Tabs
-          defaultValue="monthly"
-          value={billingPeriod}
-          onValueChange={(value) =>
-            setBillingPeriod(value as "monthly" | "yearly")
-          }
-        >
-          <TabsList>
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="yearly">
-              Yearly
-              <Badge variant="secondary" className="ml-2">
-                Save 20%
-              </Badge>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-
       <div className="grid md:grid-cols-3 gap-8">
         {plans.map((plan) => (
           <Card
@@ -91,13 +67,10 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
               <CardDescription>{plan.description}</CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold">
-                  $
-                  {billingPeriod === "yearly"
-                    ? (plan.price * 0.8).toFixed(2)
-                    : plan.price}
+                  ₹ {plan.price}
                 </span>
                 <span className="text-gray-500">
-                  /{billingPeriod === "yearly" ? "year" : "month"}
+                  /month
                 </span>
               </div>
             </CardHeader>
@@ -181,7 +154,7 @@ const plans = [
     id: "pro",
     name: "Pro",
     description: "For nutrition enthusiasts",
-    price: 9.99,
+    price: 499,
     planId: "plan_Q1Srxoloblnvpy",
     popular: true,
     features: [
@@ -199,7 +172,7 @@ const plans = [
     id: "family",
     name: "Family",
     description: "Perfect for families",
-    price: 29.99,
+    price: 1299,
     planId: "plan_Q1Ssb9efvNYZlP",
     features: [
       { text: "All Pro features" },
