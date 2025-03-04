@@ -9,7 +9,7 @@ import "dotenv/config";
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.APP_URL,
     credentials: true,              
   }));
 app.use(express.json());
@@ -20,4 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/meals", mealRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sub", subscribeRoutes);
-app.listen(3000, () => console.log("Server started on port 3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+export default app
