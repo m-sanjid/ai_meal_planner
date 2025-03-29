@@ -8,7 +8,7 @@ import {
   removeFavoriteMeal,
   saveFavoriteMeal,
   updateMealPortion,
-} from "../controllers";
+} from "../controllers/mealController";
 
 const router = express.Router();
 

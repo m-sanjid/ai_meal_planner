@@ -5,7 +5,7 @@ import {
 	subscriptionStatus,
 	subscriptionWebhook,
 } from "../controllers/subscriptionController";
-import { requireAuth } from "../middlewares/authMiddleware";
+import { requireAuth } from "../middlewares/authMiddleware"; 
 
 const router = express.Router();
 

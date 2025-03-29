@@ -1,14 +1,14 @@
 import razorpay from "../config/razorpay";
 import type { AuthenticatedRequest } from "../middlewares/authMiddleware";
 import User from "../models/user";
-import type { Request, NextFunction, Response } from "express";
+import type { Request, Response } from "express";
+import crypto from "crypto";
 
 const validPlans = ["plan_Q1Ssb9efvNYZlP", "plan_Q1Srxoloblnvpy"];
 
 export const createSubscription = async (
 	req: AuthenticatedRequest,
 	res: Response,
-	next: NextFunction,
 ) => {
 	const userId = req.user?.userId;
 	if (!userId) {
@@ -21,7 +21,6 @@ export const createSubscription = async (
 		res.status(400).json({ message: "Plan ID is required" });
 		return;
 	}
-	console.log("Received Plan ID:", planId);
 
 	if (!validPlans.includes(planId)) {
 		res.status(400).json({ message: "Invalid plan ID" });
@@ -69,17 +68,14 @@ export const subscriptionStatus = async (
 	console.log("Received User ID:", userId);
 
 	if (!userId) {
-		console.log("No User ID found in request.");
 		res.status(401).json({ message: "Unauthorized" });
 		return;
 	}
 
 	try {
 		const user = await User.findOne({ userId });
-		console.log("Fetched User from DB:", user);
 
 		if (!user) {
-			console.log("User not found for ID:", userId);
 			res.status(404).json({ message: "User not found" });
 			return;
 		}
@@ -99,7 +95,6 @@ export const subscriptionStatus = async (
 };
 
 export const subscriptionWebhook = async (req: Request, res: Response) => {
-	const crypto = require("crypto");
 	const signature = req.headers["x-razorpay-signature"];
 	const body = JSON.stringify(req.body);
 
@@ -109,7 +104,7 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 	}
 
 	const expectedSignature = crypto
-		.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+		.createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET!)
 		.update(body)
 		.digest("hex");
 
@@ -119,7 +114,6 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 	}
 
 	const event = req.body.event;
-	console.log("Received webhook event:", event);
 
 	try {
 		if (event === "subscription.cancelled") {
@@ -128,9 +122,6 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 			if (user) {
 				await user.downgradeToFree();
 			}
-			console.log(
-				`Subscription ${subscriptionId} cancelled. User downgraded to free plan.`,
-			);
 		}
 
 		if (event === "subscription.charged") {
@@ -139,12 +130,14 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 				{ subscriptionId },
 				{ subscriptionStatus: "active" },
 			);
-			console.log(`Subscription ${subscriptionId} successfully charged.`);
 		}
 
 		if (event === "subscription.updated") {
 			const subscriptionId = req.body.payload.subscription.entity.id;
-			console.log(`Subscription ${subscriptionId} updated:`, req.body.payload);
+			await User.findOneAndUpdate(
+				{ subscriptionId },
+				{ subscriptionStatus: "active" },
+			);
 		}
 
 		res.status(200).json({ message: "Webhook processed successfully" });
@@ -157,7 +150,7 @@ export const subscriptionWebhook = async (req: Request, res: Response) => {
 	}
 };
 
-export const cancelSubscription = async ( req:AuthenticatedRequest,res:Response,next:NextFunction) =>{
+export const cancelSubscription = async ( req:AuthenticatedRequest,res:Response) =>{
 	const userId = req.user?.userId
 	
 	if(!userId) {
