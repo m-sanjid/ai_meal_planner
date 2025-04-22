@@ -12,6 +12,7 @@ const app = express();
 const allowedOrigins = [
   "https://ai-meal-planner-nine.vercel.app",
   "http://localhost:5173",
+  "https://befitai.sanjid.shop"
 ];
 
 app.use(
