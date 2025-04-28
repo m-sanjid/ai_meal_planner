@@ -42,7 +42,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
     >
       {path !== "/settings" ? (
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 dark:text-neutral-200">
+          <h1 className="text-4xl font-bold mb-4 text-black dark:text-neutral-200">
             Simple, Transparent Pricing
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -61,7 +61,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
             setBillingPeriod(value as "monthly" | "yearly")
           }
         >
-          <TabsList>
+          <TabsList className="bg-black/10 dark:bg-white/10">
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="yearly">
               Yearly
@@ -78,12 +78,12 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
           <Card
             key={plan.name}
             className={`relative ${
-              current === plan.id ? "border-[#4B6746] border-2" : ""
+              current === plan.id ? "border-black dark:border-white border-2" : ""
             } ${plan.popular ? "shadow-lg" : ""}`}
           >
             {plan.popular && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <Badge className="bg-[#4B6746]">Most Popular</Badge>
+                <Badge className="bg-black dark:bg-white">Most Popular</Badge>
               </div>
             )}
             <CardHeader>
@@ -91,13 +91,13 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
               <CardDescription>{plan.description}</CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold">
-                  $
+                ₹
                   {billingPeriod === "yearly"
                     ? (plan.price * 0.8).toFixed(2)
                     : plan.price}
                 </span>
-                <span className="text-gray-500">
-                  /{billingPeriod === "yearly" ? "year" : "month"}
+                <span className="text-muted-foreground">
+                  /{billingPeriod === "yearly" ? "month" : "month"}
                 </span>
               </div>
             </CardHeader>
@@ -181,7 +181,7 @@ const plans = [
     id: "pro",
     name: "Pro",
     description: "For nutrition enthusiasts",
-    price: 9.99,
+    price: 499,
     planId: "plan_Q1Srxoloblnvpy",
     popular: true,
     features: [
@@ -199,7 +199,7 @@ const plans = [
     id: "family",
     name: "Family",
     description: "Perfect for families",
-    price: 29.99,
+    price: 1299,
     planId: "plan_Q1Ssb9efvNYZlP",
     features: [
       { text: "All Pro features" },

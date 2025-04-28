@@ -4,6 +4,7 @@ import Signin from "./Signin";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { toast } from "sonner";
 import PricingComponent from "@/components/PricingComponent";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ const Pricing = () => {
           body: JSON.stringify({
             planId,
           }),
-        },
+        }
       );
 
       const data = await response.json();
@@ -54,14 +55,16 @@ const Pricing = () => {
         throw new Error("Payment initialization failed");
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to start subscription");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to start subscription"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8">
+    <PageLayout>
       <div className="max-w-6xl mx-auto">
         <div>
           <PricingComponent
@@ -70,7 +73,7 @@ const Pricing = () => {
           />
         </div>
         <div className="mt-12 text-center">
-          <h2 className="text-2xl font-semibold mb-4 dark:text-neutral-200">
+          <h2 className="text-2xl font-semibold mb-4 text-black dark:text-neutral-200">
             Frequently Asked Questions
           </h2>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -79,7 +82,7 @@ const Pricing = () => {
                 key={index}
                 className="text-left bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-6"
               >
-                <h3 className="font-semibold mb-2 dark:text-neutral-200">
+                <h3 className="font-semibold mb-2 text-black dark:text-neutral-200">
                   {faq.question}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">{faq.answer}</p>
@@ -88,7 +91,7 @@ const Pricing = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 
