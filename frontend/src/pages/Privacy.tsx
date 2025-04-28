@@ -1,19 +1,27 @@
+import { PageLayout } from "@/components/layout/PageLayout";
+
 const Privacy = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8">
+    <PageLayout>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 dark:text-neutral-200">Privacy Policy</h1>
+        <h1 className="text-4xl font-bold mb-8 text-black dark:text-neutral-200">
+          Privacy Policy
+        </h1>
         
         {sections.map((section) => (
           <section key={section.title} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4 dark:text-neutral-300">{section.title}</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-black dark:text-neutral-100">
+              {section.title}
+            </h2>
             <div className="prose dark:prose-invert">
-              <p className="text-gray-600 dark:text-gray-400">{section.content}</p>
+              <p className="text-muted-foreground">
+                {section.content}
+              </p>
             </div>
           </section>
         ))}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

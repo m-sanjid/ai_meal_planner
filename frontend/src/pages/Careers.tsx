@@ -1,49 +1,138 @@
 import { Briefcase, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { notionTypography, notionShadows, getThemeColor } from "@/lib/styles";
+import { motion } from "framer-motion";
 
 const Careers = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4 dark:text-neutral-200">
+    <PageLayout>
+      <motion.div 
+        className="max-w-6xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <h1 
+            className="text-4xl font-bold mb-4 text-foreground"
+            style={notionTypography.heading}
+          >
             Join Our Team
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p 
+            className="text-lg max-w-2xl mx-auto text-muted-foreground"
+            style={{ ...notionTypography.body }}
+          >
             Help us revolutionize the way people plan and prepare their meals with AI technology
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {openPositions.map((position) => (
-            <div key={position.title} className="bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-6">
-              <h3 className="text-xl font-semibold mb-3 dark:text-neutral-200">{position.title}</h3>
-              <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 mb-4">
-                <span className="flex items-center gap-1">
+        <motion.div 
+          className="grid md:grid-cols-2 gap-8 mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          {openPositions.map((position, index) => (
+            <motion.div 
+              key={position.title} 
+              className="bg-card backdrop-blur-lg rounded-xl p-6 transition-all duration-200 hover:shadow-lg"
+              style={{ boxShadow: notionShadows.sm }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.h3 
+                className="text-xl font-semibold mb-3 text-foreground"
+                style={notionTypography.heading}
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {position.title}
+              </motion.h3>
+              <motion.div 
+                className="flex items-center gap-4 mb-4 text-muted-foreground"
+                style={notionTypography.body}
+              >
+                <motion.span 
+                  className="flex items-center gap-1"
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <MapPin className="h-4 w-4" /> {position.location}
-                </span>
-                <span className="flex items-center gap-1">
+                </motion.span>
+                <motion.span 
+                  className="flex items-center gap-1"
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <Clock className="h-4 w-4" /> {position.type}
-                </span>
-                <span className="flex items-center gap-1">
+                </motion.span>
+                <motion.span 
+                  className="flex items-center gap-1"
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <Briefcase className="h-4 w-4" /> {position.department}
-                </span>
-              </div>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{position.description}</p>
-              <Button variant="outline">Apply Now</Button>
-            </div>
+                </motion.span>
+              </motion.div>
+              <motion.p 
+                className="mb-4 text-muted-foreground"
+                style={notionTypography.body}
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {position.description}
+              </motion.p>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button>Apply Now</Button>
+              </motion.div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4 dark:text-neutral-200">Don't see a perfect fit?</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <motion.h2 
+            className="text-2xl font-semibold mb-4 text-foreground"
+            style={notionTypography.heading}
+            whileHover={{ x: 4 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            Don't see a perfect fit?
+          </motion.h2>
+          <motion.p 
+            className="mb-6 text-muted-foreground"
+            style={notionTypography.body}
+            whileHover={{ x: 4 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             We're always looking for talented individuals. Send us your resume and we'll keep you in mind for future positions.
-          </p>
-          <Button>Send General Application</Button>
-        </div>
-      </div>
-    </div>
+          </motion.p>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button>Send General Application</Button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </PageLayout>
   );
 };
 
