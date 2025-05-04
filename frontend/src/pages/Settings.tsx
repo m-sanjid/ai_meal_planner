@@ -1,382 +1,134 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import axios from "axios";
-import {
-  Bell,
-  CreditCard,
-  LogOut,
-  Moon,
-  Shield,
-  Sun,
-  User,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-import { useSubscription } from "@/context/SubscriptionContext";
-import SubscriptionStatus from "@/components/SubscriptionStatus";
-import PricingComponent from "@/components/PricingComponent";
-
-// Updated interface to match what's expected from SubscriptionContext
-interface UserSubscription {
-  plan: string;
-  status: string;
-  renewalDate: string;
-}
+import { LogOut, User } from "lucide-react";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { motion } from "motion/react";
+import Privacy from "@/components/settings/Privacy";
+import Subscription from "@/components/settings/Subscription";
+import Notification from "@/components/settings/Notification";
+import Appearance from "@/components/settings/Appearance";
+import Account from "@/components/settings/Account";
+import Accessibility from "@/components/settings/Accessibility";
 
 const Settings = () => {
   const { user, isSignedIn } = useUser();
   const { getToken, signOut } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [emailNotificationsEnabled, setEmailNotificationsEnabled] =
-    useState(true);
-  const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
-  // Fixed how we use the subscription context
-  const { subscription, status, nextReset, setSubscription } =
-    useSubscription();
-  const [userSubscription, setUserSubscription] = useState<UserSubscription>({
-    plan: "free",
-    status: "inactive",
-    renewalDate: "N/A",
-  });
-
-  useEffect(() => {
-    if (isSignedIn) {
-      fetchUserSettings();
-    }
-  }, [isSignedIn]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const currentTheme =
-      localStorage.getItem("theme") ||
-      (root.classList.contains("dark") ? "dark" : "light");
-    setIsDarkMode(currentTheme === "dark");
-    root.classList.toggle("dark", currentTheme === "dark");
-  }, []);
-
-  // Update userSubscription when subscription changes
-  useEffect(() => {
-    if (subscription) {
-      setUserSubscription({
-        plan: subscription,
-        status: status || "inactive",
-        renewalDate: nextReset
-          ? new Date(nextReset).toLocaleDateString()
-          : "N/A",
-      });
-    }
-  }, [subscription, status, nextReset]);
-
-  const toggleTheme = () => {
-    if (isDarkMode !== undefined) {
-      const newTheme = isDarkMode ? "light" : "dark";
-      setIsDarkMode(!isDarkMode);
-      document.documentElement.classList.toggle("dark", !isDarkMode);
-      localStorage.setItem("theme", newTheme);
-    }
-  };
-
-  const fetchUserSettings = async () => {
-    try {
-      setLoading(true);
-      // This is a mock implementation
-      const response = {
-        data: {
-          notificationsEnabled: true,
-          emailNotificationsEnabled: true,
-        },
-      };
-      const settings = response.data;
-
-      setNotificationsEnabled(settings.notificationsEnabled);
-      setEmailNotificationsEnabled(settings.emailNotificationsEnabled);
-    } catch (error) {
-      console.error("Error fetching user settings:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleNotificationsToggle = () => {
-    const newValue = !notificationsEnabled;
-    setNotificationsEnabled(newValue);
-    saveUserSetting("notificationsEnabled");
-  };
-
-  const handleEmailNotificationsToggle = () => {
-    const newValue = !emailNotificationsEnabled;
-    setEmailNotificationsEnabled(newValue);
-    saveUserSetting("emailNotificationsEnabled");
-  };
-
-  const saveUserSetting = async (setting: string) => {
-    try {
-      // Mock success
-      toast(`${setting} updated successfully`);
-    } catch (error) {
-      console.error(`Error updating ${setting}:`, error);
-      toast.error(`Failed to update ${setting}`);
-    }
-  };
-
-  const handleCancelSubscription = async () => {
-    if (window.confirm("Are you sure you want to cancel your subscription?")) {
-      try {
-        const token = await getToken();
-
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/sub/cancel-subscription`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-
-        setUserSubscription((prev) => ({
-          ...prev,
-          status: "cancelled",
-        }));
-        setSubscription("free");
-
-        toast("Subscription cancelled successfully");
-      } catch (error) {
-        console.error("Error cancelling subscription:", error);
-        toast.error("Failed to cancel subscription");
-      }
-    }
-  };
 
   const handleLogout = () => {
     signOut();
     window.location.href = "/";
   };
 
-  if (loading) {
-    return <LoadingSkeleton />;
+  if (!isSignedIn) {
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
+    return <div>Redirecting to login...</div>;
   }
-
   return (
-    <div className="h-full max-w-5xl mx-auto p-6">
-      <div className="bg-[#4B6746]/20 backdrop-blur-lg mb-10 rounded-md">
-        <div className="flex justify-between py-10 px-2 md:px-10">
-          {user?.hasImage ? (
-            <div className="md:border-4 rounded-xl border-[#4B6746]">
-              <img
-                className="rounded-lg"
-                width={42}
-                height={42}
-                src={user?.imageUrl}
-                alt="user avatar"
-              />
-            </div>
-          ) : (
-            <div className="p-2 rounded-lg md:border-4 border-[#4B6746] bg-[#4B6746]/30">
-              <User className="w-8 h-8" />
-            </div>
-          )}
-
-          <div className="text-xl md:text-4xl font-semibold text-[#4B6746] dark:text-white pr-4">
-            {user?.firstName}'s Settings
-          </div>
-        </div>
-      </div>
-
-      <Tabs defaultValue="account" className="w-full">
-        <TabsList className="grid grid-cols-4 mb-8">
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="subscription">Subscription</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Information</CardTitle>
-              <CardDescription>
-                Manage your personal account details
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label>Full Name</label>
-                <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                  {user?.firstName} {user?.lastName}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label>Email Address</label>
-                <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                  {user?.primaryEmailAddress?.emailAddress}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label>Account Created</label>
-                <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                  {new Date(user?.createdAt || Date.now()).toLocaleDateString()}
-                </div>
-              </div>
-
-              <Separator className="my-4" />
-
-              <div className="pt-4 flex flex-col gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => (window.location.href = "/profile")}
+    <PageLayout>
+      <motion.div
+        className="max-w-5xl mx-auto p-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="bg-card backdrop-blur-lg mb-10 rounded-xl p-6 transition-all duration-200"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {user?.hasImage ? (
+                <motion.div
+                  className="border-2 rounded-xl border-primary/20"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <User className="mr-2 h-4 w-4" /> Edit Profile
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() => (window.location.href = "/security")}
+                  <img
+                    className="rounded-lg"
+                    width={48}
+                    height={48}
+                    src={user?.imageUrl}
+                    alt="user avatar"
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  className="p-2 rounded-lg border-2 border-primary/20 bg-primary/10"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Shield className="mr-2 h-4 w-4" /> Security Settings
-                </Button>
-
-                <Button variant="destructive" onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" /> Log Out
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="appearance">
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>
-                Customize how the application looks
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <label>Dark Mode</label>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Switch between light and dark theme
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Sun className="h-4 w-4" />
-                  <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
-                  <Moon className="h-4 w-4" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
-                Configure how and when you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-0.5">
-                  <label>Push Notifications</label>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Receive notifications on your device
-                  </p>
-                </div>
-                <Switch
-                  checked={notificationsEnabled}
-                  onCheckedChange={handleNotificationsToggle}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between py-2">
-                <div className="space-y-0.5">
-                  <label>Email Notifications</label>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Receive notifications via email
-                  </p>
-                </div>
-                <Switch
-                  checked={emailNotificationsEnabled}
-                  onCheckedChange={handleEmailNotificationsToggle}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="pt-4">
-                <Button variant="outline" className="w-full">
-                  <Bell className="mr-2 h-4 w-4" /> Manage Notification
-                  Preferences
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="subscription">
-          <Card>
-            <CardHeader>
-              <CardTitle>Subscription Management</CardTitle>
-              <CardDescription>
-                View and manage your current subscription
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {userSubscription && (
-                <div className="space-y-4">
-                  <div className="p-4 bg-[#4B6746]/10 rounded-lg">
-                    <SubscriptionStatus />
-                  </div>
-
-                  <Button variant="outline" className="w-full">
-                    <CreditCard className="mr-2 h-4 w-4" /> Manage Payment
-                    Methods
-                  </Button>
-
-                  {userSubscription.plan !== "free" &&
-                    userSubscription.status === "active" && (
-                      <Button
-                        variant="destructive"
-                        className="w-full"
-                        onClick={handleCancelSubscription}
-                      >
-                        Cancel Subscription
-                      </Button>
-                    )}
-                </div>
+                  <User className="w-8 h-8" />
+                </motion.div>
               )}
+              <motion.div
+                className="text-2xl font-semibold text-foreground"
+                whileHover={{ x: 4 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {user?.firstName}'s Settings
+              </motion.div>
+            </div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Log Out
+              </Button>
+            </motion.div>
+          </div>
+        </motion.div>
 
-              <Separator className="my-6" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Tabs defaultValue="account" className="w-full">
+            <TabsList className="grid grid-cols-6 mb-8">
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="appearance">Appearance</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="subscription">Subscription</TabsTrigger>
+              <TabsTrigger value="accessibility">Accessibility</TabsTrigger>
+              <TabsTrigger value="privacy">Data & Privacy</TabsTrigger>
+            </TabsList>
 
-              <div>
-                <h3 className="text-lg font-medium mb-4">Available Plans</h3>
-                <div className="">
-                  <PricingComponent />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+            <TabsContent value="account">
+              <Account />
+            </TabsContent>
+
+            <TabsContent value="appearance">
+              <Appearance />
+            </TabsContent>
+
+            <TabsContent value="notifications">
+              <Notification />
+            </TabsContent>
+
+            <TabsContent value="subscription">
+              <Subscription getToken={getToken} />
+            </TabsContent>
+
+            <TabsContent value="accessibility">
+              <Accessibility />
+            </TabsContent>
+
+            <TabsContent value="privacy">
+              <Privacy getToken={getToken} />
+            </TabsContent>
+
+          </Tabs>
+        </motion.div>
+      </motion.div>
+    </PageLayout>
   );
 };
 
