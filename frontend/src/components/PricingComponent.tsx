@@ -23,14 +23,14 @@ type Props = {
   loading?: boolean;
   handleSubscribe?: (
     plan: string,
-    planId: string,
+    planId: string
   ) => Promise<JSX.Element | undefined>;
 };
 
 const PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const { subscription } = useSubscription();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
-    "monthly",
+    "monthly"
   );
   const navigate = useNavigate();
   const current = subscription || "free";
@@ -38,7 +38,9 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
 
   return (
     <div
-      className={`${path !== "/" ? "max-w-6xl py-10" : "max-w-4xl py-20"} mx-auto`}
+      className={`${
+        path !== "/" ? "max-w-6xl py-10" : "max-w-4xl py-20"
+      } mx-auto`}
     >
       {path !== "/settings" ? (
         <div className="text-center mb-12">
@@ -53,7 +55,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
         ""
       )}
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-16">
         <Tabs
           defaultValue="monthly"
           value={billingPeriod}
@@ -78,7 +80,9 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
           <Card
             key={plan.name}
             className={`relative ${
-              current === plan.id ? "border-black dark:border-white border-2" : ""
+              current === plan.id
+                ? "border-black dark:border-white border-2"
+                : ""
             } ${plan.popular ? "shadow-lg" : ""}`}
           >
             {plan.popular && (
@@ -91,7 +95,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
               <CardDescription>{plan.description}</CardDescription>
               <div className="mt-4">
                 <span className="text-3xl font-bold">
-                ₹
+                  ₹
                   {billingPeriod === "yearly"
                     ? (plan.price * 0.8).toFixed(2)
                     : plan.price}
@@ -140,8 +144,8 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
                   {loading
                     ? "Processing..."
                     : current === plan.id
-                      ? "Current Plan"
-                      : `Get ${plan.name}`}
+                    ? "Current Plan"
+                    : `Get ${plan.name}`}
                 </Button>
               ) : (
                 <Button
