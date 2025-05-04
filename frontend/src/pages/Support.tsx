@@ -1,84 +1,150 @@
 import { Button } from "@/components/ui/button";
-import { Mail, MessageCircle, Phone } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { motion } from "motion/react";
+import { Mail, MessageSquare, Phone, Clock, CheckCircle2 } from "lucide-react";
 
 const Support = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4 dark:text-neutral-200">
-            How Can We Help?
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Get the support you need through our various support channels
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {supportChannels.map((channel) => (
-            <div key={channel.title} className="bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center">
-              <channel.icon className="w-12 h-12 mx-auto mb-4 text-[#4B6746]" />
-              <h3 className="text-xl font-semibold mb-3 dark:text-neutral-200">{channel.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{channel.description}</p>
-              <Button variant="outline">{channel.buttonText}</Button>
-            </div>
+    <PageLayout>
+      <motion.div
+        className="max-w-6xl mx-auto py-8 lg:py-16"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {SupportData.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+            >
+              <Card className="bg-card backdrop-blur-lg h-full">
+                <CardHeader>
+                  <motion.div
+                    className="w-12 h-12 rounded-lg bg-accent-foreground border flex items-center justify-center mb-4"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {item.icon}
+                  </motion.div>
+                  <CardTitle className="text-foreground">
+                    {item.title}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">
+                    {item.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <motion.p className="text-muted-foreground mb-4">
+                    {item.text}
+                  </motion.p>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button variant="outline" className="w-full">
+                      {item.button}
+                    </Button>
+                  </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
-
-        <div className="bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-8">
-          <h2 className="text-2xl font-semibold mb-6 dark:text-neutral-200">Frequently Asked Questions</h2>
-          <div className="space-y-6">
-            {faqs.map((faq) => (
-              <div key={faq.question}>
-                <h3 className="text-lg font-semibold mb-2 dark:text-neutral-300">{faq.question}</h3>
-                <p className="text-gray-600 dark:text-gray-400">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+        <motion.div
+          className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.8 }}
+        >
+          {SupportData2.map((item, index) => (
+            <Card key={index} className="bg-card backdrop-blur-lg">
+              <CardHeader>
+                <motion.div
+                  className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  {item.icon}
+                </motion.div>
+                <CardTitle className="text-foreground">{item.title}</CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  {item.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <motion.ul className="space-y-2 text-muted-foreground">
+                  {item.items.map((item, index) => (
+                    <motion.li
+                      key={index}
+                      className="flex items-center gap-2"
+                      whileHover={{ x: 4 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-primary" />
+                      {item}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </CardContent>
+            </Card>
+          ))}
+        </motion.div>
+      </motion.div>
+    </PageLayout>
   );
 };
 
-const supportChannels = [
+export default Support;
+
+const SupportData = [
   {
-    icon: MessageCircle,
-    title: "Live Chat",
-    description: "Get instant help from our support team through live chat.",
-    buttonText: "Start Chat",
-  },
-  {
-    icon: Mail,
     title: "Email Support",
-    description: "Send us an email and we'll get back to you within 24 hours.",
-    buttonText: "Send Email",
+    icon: <Mail className="w-6 h-6 text-accent" />,
+    description: "Get help via email",
+    text: "support@mealplanner.com",
+    button: "Send Email",
   },
   {
-    icon: Phone,
+    title: "Live Chat",
+    icon: <MessageSquare className="w-6 h-6 text-accent" />,
+    description: "Chat with our support team",
+    text: "24/7",
+    button: "Start Chat",
+  },
+  {
     title: "Phone Support",
-    description: "Call us directly for immediate assistance with your issues.",
-    buttonText: "Call Now",
+    icon: <Phone className="w-6 h-6 text-accent" />,
+    description: "Call our support team",
+    text: "+1 (555) 123-4567",
+    button: "Call Now",
   },
 ];
 
-const faqs = [
+const SupportData2 = [
   {
-    question: "How do I reset my password?",
-    answer: "You can reset your password by clicking the 'Forgot Password' link on the login page...",
+    title: "Response Time",
+    description: "Typical response times",
+    icon: <Clock className="w-6 h-6 text-accent" />,
+    items: ["Email: Within 24 hours", "Live Chat: Instant", "Phone: Immediate"],
   },
   {
-    question: "Can I customize my meal plans?",
-    answer: "Yes, you can customize your meal plans by adjusting your preferences and dietary restrictions...",
-  },
-  {
-    question: "How do I share my shopping list?",
-    answer: "You can share your shopping list by clicking the share button and choosing your preferred method...",
-  },
-  {
-    question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards, PayPal, and Apple Pay for premium subscriptions...",
+    title: "Common Solutions",
+    description: "Quick answers to common questions",
+    icon: <CheckCircle2 className="w-6 h-6 text-accent" />,
+    items: [
+      "Account access issues",
+      "Billing and subscription",
+      "Technical support",
+    ],
   },
 ];
-
-export default Support; 

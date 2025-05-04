@@ -3,20 +3,17 @@ import { PageLayout } from "@/components/layout/PageLayout";
 const Privacy = () => {
   return (
     <PageLayout>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto py-8 lg:py-16">
         <h1 className="text-4xl font-bold mb-8 text-black dark:text-neutral-200">
           Privacy Policy
         </h1>
-        
         {sections.map((section) => (
           <section key={section.title} className="mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-black dark:text-neutral-100">
               {section.title}
             </h2>
             <div className="prose dark:prose-invert">
-              <p className="text-muted-foreground">
-                {section.content}
-              </p>
+              <p className="text-muted-foreground">{section.content}</p>
             </div>
           </section>
         ))}
@@ -44,4 +41,4 @@ const sections = [
   },
 ];
 
-export default Privacy; 
+export default Privacy;
