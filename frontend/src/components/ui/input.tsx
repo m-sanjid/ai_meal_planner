@@ -1,6 +1,5 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { notionTypography } from "@/lib/styles"
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -15,7 +14,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className
         )}
         ref={ref}
-        style={notionTypography.body}
         {...props}
       />
     )

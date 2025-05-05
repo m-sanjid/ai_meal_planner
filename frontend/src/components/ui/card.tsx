@@ -1,6 +1,5 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { notionTypography } from "@/lib/styles"
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -12,7 +11,6 @@ const Card = React.forwardRef<
       "rounded-xl border bg-card text-card-foreground shadow",
       className
     )}
-    style={notionTypography.body}
     {...props}
   />
 ))
@@ -25,7 +23,6 @@ const CardHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn("flex flex-col space-y-1.5 p-6", className)}
-    style={notionTypography.heading}
     {...props}
   />
 ))
@@ -38,7 +35,6 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn("font-semibold leading-none tracking-tight", className)}
-    style={notionTypography.heading}
     {...props}
   />
 ))
@@ -51,7 +47,6 @@ const CardDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
-    style={notionTypography.body}
     {...props}
   />
 ))
@@ -64,7 +59,6 @@ const CardContent = React.forwardRef<
   <div
     ref={ref}
     className={cn("p-6 pt-0", className)}
-    style={notionTypography.body}
     {...props}
   />
 ))
@@ -77,7 +71,6 @@ const CardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn("flex items-center p-6 pt-0", className)}
-    style={notionTypography.body}
     {...props}
   />
 ))
