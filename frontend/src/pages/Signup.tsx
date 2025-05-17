@@ -1,6 +1,5 @@
 import { SignUp } from "@clerk/clerk-react";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { notionShadows } from "@/lib/styles";
 
 const Signup = () => {
   return (
@@ -10,7 +9,6 @@ const Signup = () => {
       >
         <div 
           className="bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-8"
-          style={{ boxShadow: notionShadows.lg }}
         >
           <SignUp />
         </div>
