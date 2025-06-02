@@ -1,231 +1,179 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
-import { Menu, Moon, Sun, Plus, ChevronDown} from "lucide-react";
+import { Menu, Sparkles } from "lucide-react";
+import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
 import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { Progress } from "./ui/progress";
 import { cn } from "@/lib/utils";
-import { Link, useLocation } from "react-router-dom";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-;
+import { Link, useLocation } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 
 const Navbar = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
-  const [mounted, setMounted] = useState(false);
-  const [isHovered, setIsHovered] = useState<number|null>(null);
+  const [isHovered, setIsHovered] = useState<number | null>(null);
   const { subscription, tokens } = useSubscription();
-  const [calories, setCalories] = useState({ consumed: 1200, goal: 2000 });
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { pathname } = useLocation();
+  const { isSignedIn } = useAuth();
 
-  useEffect(() => {
-    setMounted(true);
-    const root = document.documentElement;
-    const currentTheme =
-      localStorage.getItem("theme") ||
-      (root.classList.contains("dark") ? "dark" : "light");
-    setIsDarkMode(currentTheme === "dark");
-    root.classList.toggle("dark", currentTheme === "dark");
-  }, []);
+  const pathname = useLocation().pathname;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 0);
+    setIsScrolled(latest > 20);
   });
 
-  if (!mounted) {
-    return (
-      <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur" />
-    );
-  }
-
-  const toggleTheme = () => {
-    if (isDarkMode !== undefined) {
-      const newTheme = isDarkMode ? "light" : "dark";
-      setIsDarkMode(!isDarkMode);
-      document.documentElement.classList.toggle("dark", !isDarkMode);
-      localStorage.setItem("theme", newTheme);
-    }
-  };
-
-  const calorieProgress = (calories.consumed / calories.goal) * 100;
-
   return (
-<nav
-onMouseLeave={() => setIsHovered(null)}
-      className={`sticky z-50 w-full transition-all duration-300 ${isScrolled
-        ? "top-4 mx-auto max-w-5xl border rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-        : "top-0 mx-auto max-w-6xl bg-background/95 backdrop-blur"
-        }`}
+    <motion.nav
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      onMouseLeave={() => setIsHovered(null)}
+      className={cn(
+        "sticky z-50 w-full transition-all duration-700 ease-out",
+        isScrolled
+          ? "top-6 mx-auto max-w-4xl px-4"
+          : "top-0 mx-auto max-w-6xl px-4",
+      )}
     >
-      <div className="max-w-6xl mx-4 flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img 
-            className="w-8 h-8" 
-            src={isDarkMode ? "/darkIcon.png" : "/icon.png"} 
-            alt="Logo"
-          />
-          <a href="/home" className="text-xl text-muted-foreground font-semibold">
-            Befit<span className="text-black dark:text-white">AI</span>
-          </a>
-        </div>
+      <div
+        className={cn(
+          "flex h-16 items-center justify-between transition-all duration-700 ease-out",
+          isScrolled
+            ? "border-border/20 bg-background/60 rounded-2xl border px-6 shadow-lg shadow-black/5 backdrop-blur-2xl dark:shadow-white/5"
+            : "bg-background/80 border-border/20 border-b px-2 backdrop-blur-xl",
+        )}
+      >
+        {/* Logo Section */}
+        <Logo />
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4">
-          <SignedIn>
-            {navItems.map((item,idx) => (
-              <Link
-              to={item.href}
-             onMouseEnter={() => setIsHovered(idx)}
-             className={`gap-2 relative px-4 py-2 flex items-center z-10 ${pathname === item.href
-               ? "text-neutral-500"
-               : "text-black dark:text-white"
-               }`}
-               >
-             <span className="text-sm">{item.title}</span>
-             {isHovered === idx && (
-               <motion.div
-                 layoutId="hover"
-                 className="absolute inset-0 z-20 bg-black/10 dark:bg-white/10 h-full w-full rounded-lg"
-               />
-             )}
-             </Link>
-            ))}
-            
-            {/* Calorie Tracker */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="gap-2">
-                  <div className="flex flex-col items-start">
-                    <span className="text-xs text-muted-foreground">Calories</span>
-                  </div>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 p-4">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Daily Goal</span>
-                      <span className="font-medium">{calories.goal} kcal</span>
-                    </div>
-                    <Progress 
-                      value={calorieProgress} 
-                      className={cn(
-                        "h-2",
-                        calorieProgress > 100 ? "bg-destructive" : "bg-primary"
-                      )}
-                    />
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    asChild
+        <div className="hidden items-center gap-2 md:flex">
+          <nav className="hidden items-center md:flex">
+            <div
+              onMouseLeave={() => setIsHovered(null)}
+              className="flex items-center gap-1 rounded-xl border border-neutral-200/50 bg-neutral-100/70 p-1 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/70"
+            >
+              {(isSignedIn ? navItems : outNavItems).map((item, idx) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className="group relative rounded-lg px-4 py-2 text-sm font-medium"
+                  onMouseEnter={() => setIsHovered(idx)}
+                >
+                  <motion.span
+                    className={`relative z-10 transition-colors duration-200 ${
+                      pathname === item.href
+                        ? "text-neutral-900 dark:text-neutral-100"
+                        : "text-neutral-600 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-neutral-100"
+                    }`}
                   >
-                    <a href="/calorie-tracker">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Track Calories
-                    </a>
-                  </Button>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    {item.title}
+                  </motion.span>
 
-            <div className="flex items-center gap-2">
-              {subscription === "pro" ? (
-                <div className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                  PRO
-                </div>
-              ) : (
-                <div className="text-sm font-medium bg-muted px-3 py-1 rounded-full">
-                  Tokens: <span className="text-primary">{tokens}</span>
-                </div>
-              )}
+                  {isHovered === idx && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900 dark:shadow-lg"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                  {/* Active tab background */}
+                  {pathname === item.href && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
+              ))}
             </div>
-            <UserButton />
-          </SignedIn>
-
-          <SignedOut>
-            {outNavItems.map((item) => (
-              <Button 
-                key={item.title} 
-                variant="ghost" 
-                className="text-sm font-medium"
-                asChild
+          </nav>
+          {isSignedIn && (
+            <>
+              <motion.div
+                className="flex items-center gap-3"
+                whileHover={{ scale: 1.02 }}
               >
-                <a href={item.href}>{item.title}</a>
-              </Button>
-            ))}
-            <Button variant="default" className="ml-4">
-              <SignInButton />
-            </Button>
-          </SignedOut>
+                {subscription === "pro" ? (
+                  <motion.div
+                    className="flex items-center gap-1.5 rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-500/10 to-orange-500/10 px-3 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-400"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    PRO
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className="bg-muted/50 border-border/30 hover:bg-muted/70 hover:border-border/50 rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-300"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <span className="text-muted-foreground">Tokens:</span>{" "}
+                    <span className="text-foreground font-semibold">
+                      {tokens}
+                    </span>
+                  </motion.div>
+                )}
+              </motion.div>
+            </>
+          )}
         </div>
 
-        {/* Mobile Navigation */}
-        <div className="md:hidden">
+        {/* Enhanced Mobile Navigation */}
+        <div className="flex items-center gap-2 md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-muted/50 rounded-xl transition-all duration-300"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </motion.div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <SignedIn>
-                {navItems.map((item) => (
-                  <DropdownMenuItem key={item.title}>
-                    <a href={item.href}>
-                      {item.title}
-                    </a>
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuItem>
-                  <a href="/calorie-tracker" className="w-full">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Calories</span>
-                      <span>{calories.consumed}/{calories.goal} kcal</span>
-                    </div>
-                    <Progress 
-                      value={calorieProgress} 
-                      className={cn(
-                        "h-1",
-                        calorieProgress > 100 ? "bg-destructive" : "bg-primary"
-                      )}
-                    />
-                  </a>
+            <DropdownMenuContent
+              align="end"
+              className="border-border/50 bg-background/95 w-64 border shadow-2xl backdrop-blur-xl"
+            >
+              {(isSignedIn ? navItems : outNavItems).map((item) => (
+                <DropdownMenuItem key={item.title} className="mx-1 rounded-lg">
+                  <Link to={item.href} className="w-full text-left">
+                    {item.title}
+                  </Link>
                 </DropdownMenuItem>
-              </SignedIn>
-              <SignedOut>
-                {outNavItems.map((item) => (
-                  <DropdownMenuItem key={item.title}>
-                    <a href={item.href} className="w-full">{item.title}</a>
-                  </DropdownMenuItem>
-                ))}
-              </SignedOut>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleTheme}
-          className="ml-2"
-        >
-          {isDarkMode ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
-        </Button>
+        {isSignedIn ? (
+          <UserButton />
+        ) : (
+          <Button className="bg-primary hover:shadow-primary/25 ml-4 rounded-xl transition-all duration-300 hover:shadow-lg">
+            <SignInButton />
+          </Button>
+        )}
+        <ThemeToggle />
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
@@ -234,8 +182,8 @@ export default Navbar;
 const navItems = [
   { title: "Dashboard", href: "/dashboard" },
   { title: "Create", href: "/meal" },
-  { title: "Favorites", href: "/user/favorites"},
-  { title: "Pro", href: "/pricing"},
+  { title: "Favorites", href: "/user/favorites" },
+  { title: "Pro", href: "/pricing" },
   { title: "Settings", href: "/settings" },
 ];
 
