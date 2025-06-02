@@ -1,3 +1,5 @@
+"use client";
+
 import { Info } from "lucide-react";
 import {
   Card,
@@ -18,44 +20,49 @@ import {
 import { useSubscription } from "@/context/SubscriptionContext";
 import { JSX, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { IconCheck } from "@tabler/icons-react";
 
 type Props = {
   loading?: boolean;
   handleSubscribe?: (
     plan: string,
-    planId: string
+    planId: string,
   ) => Promise<JSX.Element | undefined>;
 };
 
 const PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const { subscription } = useSubscription();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
-    "monthly"
+    "monthly",
   );
   const navigate = useNavigate();
   const current = subscription || "free";
   const path = window.location.pathname;
 
   return (
-    <div
+    <section
       className={`${
-        path !== "/" ? "max-w-6xl py-10" : "max-w-4xl py-20"
-      } mx-auto`}
+        path !== "/" ? "max-w-6xl py-16" : "max-w-4xl py-24"
+      } mx-auto px-4`}
     >
-      {path !== "/settings" ? (
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 text-black dark:text-neutral-200">
+      {path !== "/settings" && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-10 text-center"
+        >
+          <h1 className="mb-3 text-4xl font-semibold text-black dark:text-neutral-200">
             Simple, Transparent Pricing
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the perfect plan for your meal planning needs
+          <p className="text-muted-foreground mx-auto max-w-2xl text-base">
+            Find a plan that works for you — no hidden fees.
           </p>
-        </div>
-      ) : (
-        ""
+        </motion.div>
       )}
 
-      <div className="flex justify-center mb-16">
+      <div className="mb-14 flex justify-center">
         <Tabs
           defaultValue="monthly"
           value={billingPeriod}
@@ -63,11 +70,19 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
             setBillingPeriod(value as "monthly" | "yearly")
           }
         >
-          <TabsList className="bg-black/10 dark:bg-white/10">
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="yearly">
+          <TabsList className="bg-muted border-border rounded-full border p-1 dark:border-neutral-800">
+            <TabsTrigger
+              value="monthly"
+              className="rounded-full px-4 py-1 text-sm data-[state=active]:bg-black data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-black"
+            >
+              Monthly
+            </TabsTrigger>
+            <TabsTrigger
+              value="yearly"
+              className="rounded-full px-4 py-1 text-sm data-[state=active]:bg-black data-[state=active]:text-white dark:data-[state=active]:bg-white dark:data-[state=active]:text-black"
+            >
               Yearly
-              <Badge variant="secondary" className="ml-2">
+              <Badge className="ml-2 bg-neutral-200 text-xs text-black dark:bg-neutral-800 dark:text-white">
                 Save 20%
               </Badge>
             </TabsTrigger>
@@ -75,93 +90,103 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
         </Tabs>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <motion.div
+        className="grid gap-8 md:grid-cols-3"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: { transition: { staggerChildren: 0.1 } },
+          hidden: {},
+        }}
+      >
         {plans.map((plan) => (
-          <Card
+          <motion.div
             key={plan.name}
-            className={`relative ${
-              current === plan.id
-                ? "border-black dark:border-white border-2"
-                : ""
-            } ${plan.popular ? "shadow-lg" : ""}`}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
           >
-            {plan.popular && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <Badge className="bg-black dark:bg-white">Most Popular</Badge>
-              </div>
-            )}
-            <CardHeader>
-              <CardTitle>{plan.name}</CardTitle>
-              <CardDescription>{plan.description}</CardDescription>
-              <div className="mt-4">
-                <span className="text-3xl font-bold">
+            <Card
+              className={`group border-border relative h-full border transition-shadow duration-300 hover:shadow-md ${
+                current === plan.id
+                  ? "border-black dark:border-white"
+                  : "border-neutral-200 dark:border-neutral-800"
+              } ${plan.popular ? "bg-neutral-100 dark:bg-neutral-900" : ""}`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <Badge className="bg-black px-3 py-1 text-xs text-white dark:bg-white dark:text-black">
+                    Most Popular
+                  </Badge>
+                </div>
+              )}
+              <CardHeader>
+                <CardTitle className="text-lg font-medium">
+                  {plan.name}
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  {plan.description}
+                </CardDescription>
+                <div className="mt-4 text-3xl font-bold text-black dark:text-white">
                   ₹
                   {billingPeriod === "yearly"
-                    ? (plan.price * 0.8).toFixed(2)
+                    ? (plan.price * 0.8).toFixed(0)
                     : plan.price}
-                </span>
-                <span className="text-muted-foreground">
-                  /{billingPeriod === "yearly" ? "month" : "month"}
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="flex-1">{feature.text}</span>
-                    {feature.tooltip && (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <Info className="h-4 w-4 text-gray-400" />
-                          </TooltipTrigger>
-                          <TooltipContent>{feature.tooltip}</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {path !== "/" ? (
+                  <span className="text-muted-foreground text-base font-normal">
+                    /mo
+                  </span>
+                </div>
+              </CardHeader>
+
+              <CardContent className="mt-4">
+                <ul className="mb-6 space-y-3">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <span className="text-sm leading-5 text-neutral-800 dark:text-neutral-300">
+                        <IconCheck className="text-muted-foreground bg-accent size-6 rounded p-1" />
+                      </span>
+                      <span className="flex-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {feature.text}
+                      </span>
+                      {feature.tooltip && (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Info className="text-muted-foreground size-4" />
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs text-sm">
+                              {feature.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+
                 <Button
                   className="w-full"
                   variant={current === plan.id ? "outline" : "default"}
                   disabled={loading || current === plan.id}
-                  onClick={() => handleSubscribe?.(plan.name, plan.planId)}
+                  onClick={() =>
+                    path !== "/"
+                      ? handleSubscribe?.(plan.name, plan.planId)
+                      : navigate("/pricing")
+                  }
                 >
                   {loading
                     ? "Processing..."
                     : current === plan.id
-                    ? "Current Plan"
-                    : `Get ${plan.name}`}
+                      ? "Current Plan"
+                      : `Get ${plan.name}`}
                 </Button>
-              ) : (
-                <Button
-                  className="w-full"
-                  variant={current === plan.id ? "outline" : "default"}
-                  disabled={current === plan.id}
-                  onClick={() => navigate("/pricing")}
-                >
-                  {current === plan.id ? "Current Plan" : `Get ${plan.name}`}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </section>
   );
 };
 
@@ -175,7 +200,7 @@ const plans = [
     price: 0,
     planId: "plan_basic",
     features: [
-      { text: "10 AI-generated meals per month", tooltip: "Resets monthly" },
+      { text: "10 AI-generated meals per month", tooltip: "Renews monthly" },
       { text: "Basic recipe suggestions" },
       { text: "Shopping list generation" },
       { text: "Basic nutritional info" },
@@ -184,7 +209,7 @@ const plans = [
   {
     id: "pro",
     name: "Pro",
-    description: "For nutrition enthusiasts",
+    description: "For health-focused individuals",
     price: 499,
     planId: "plan_Q1Srxoloblnvpy",
     popular: true,
@@ -193,27 +218,27 @@ const plans = [
       { text: "Advanced recipe customization" },
       {
         text: "Detailed nutrition tracking",
-        tooltip: "Including macro and micronutrients",
+        tooltip: "Includes macros, micros, and calories",
       },
-      { text: "Meal prep guides" },
-      { text: "Priority support" },
+      { text: "Meal prep automation" },
+      { text: "Priority chat support" },
     ],
   },
   {
     id: "family",
     name: "Family",
-    description: "Perfect for families",
+    description: "Ideal for households and groups",
     price: 1299,
     planId: "plan_Q1Ssb9efvNYZlP",
     features: [
-      { text: "All Pro features" },
+      { text: "All Pro features included" },
       {
-        text: "Up to 6 family profiles",
-        tooltip: "Each with their own preferences",
+        text: "Up to 6 profiles",
+        tooltip: "Customize for each family member",
       },
-      { text: "Family meal planning" },
-      { text: "Grocery cost optimization" },
-      { text: "24/7 priority support" },
+      { text: "Family-wide planning dashboard" },
+      { text: "Grocery list sharing & sync" },
+      { text: "24/7 premium support" },
     ],
   },
 ];
