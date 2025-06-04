@@ -32,7 +32,7 @@ const Pricing = () => {
           body: JSON.stringify({
             planId,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -58,7 +58,7 @@ const Pricing = () => {
       }
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to start subscription"
+        error instanceof Error ? error.message : "Failed to start subscription",
       );
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ const Pricing = () => {
 
   return (
     <PageLayout>
-      <div className="max-w-6xl mx-auto py-8 lg:py-16">
+      <div className="mx-auto max-w-6xl py-8 lg:py-16">
         <div>
           <PricingComponent
             loading={loading}
@@ -75,7 +75,7 @@ const Pricing = () => {
           />
         </div>
         <div className="mt-12 text-center">
-          <h2 className="text-2xl font-semibold mb-8 text-black dark:text-neutral-200">
+          <h2 className="mb-8 text-2xl font-semibold text-black dark:text-neutral-200">
             Frequently Asked Questions
           </h2>
           <PricingFaq />
@@ -83,7 +83,7 @@ const Pricing = () => {
         <div className="flex items-center justify-center pt-20">
           <Link
             to={"/contact"}
-            className="px-6 py-2 rounded-md border bg-accent-foreground"
+            className="bg-accent rounded-md border px-6 py-2"
           >
             Contact
           </Link>

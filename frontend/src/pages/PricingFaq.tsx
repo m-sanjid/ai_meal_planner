@@ -10,26 +10,30 @@ const PricingFaq = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-4 py-1 max-w-4xl mx-auto">
+    <div className="mx-auto grid max-w-4xl grid-cols-1 gap-4 py-1">
       {pricingFaqs.map((faq, index) => {
         const isOpen = openIndex === index;
         return (
-          <div
+          <motion.div
             key={index}
-            className="bg-black/5 dark:bg-white/5 backdrop-blur-lg rounded-xl p-6 transition-colors duration-300"
+            whileHover={{ scale: 1.015 }}
+            initial={{ opacity: 0, y: 20,filter: "blur(5px)" }}
+            whileInView={{ opacity: 1, y: 0,filter: "blur(0px)" }}
+            transition={{ duration: 0.3,delay: index * 0.1,ease: "easeInOut" }}
+            className="rounded-xl bg-black/5 p-6 backdrop-blur-lg transition-colors duration-300 dark:bg-white/5"
           >
             <button
               onClick={() => toggle(index)}
-              className="flex items-center justify-between w-full text-left text-black dark:text-neutral-200 font-semibold focus:outline-none"
+              className="flex w-full items-center justify-between text-left font-semibold text-black focus:outline-none dark:text-neutral-200"
               aria-expanded={isOpen}
             >
-              {faq.question}
+              <span>{faq.question}</span>
               <motion.span
                 initial={false}
-                animate={{ rotate: isOpen ? 45 : 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                animate={{ rotate: isOpen ? 45 : 0, scale: isOpen ? 1.1 : 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
               >
-                <IconPlus className="w-5 h-5" />
+                <IconPlus className="h-5 w-5" />
               </motion.span>
             </button>
 
@@ -41,19 +45,38 @@ const PricingFaq = () => {
                   animate="open"
                   exit="collapsed"
                   variants={{
-                    open: { opacity: 1, height: "auto" },
-                    collapsed: { opacity: 0, height: 0 },
+                    open: {
+                      opacity: 1,
+                      height: "auto",
+                      clipPath: "inset(0% 0% 0% 0%)",
+                    },
+                    collapsed: {
+                      opacity: 0,
+                      height: 0,
+                      clipPath: "inset(0% 0% 100% 0%)",
+                    },
                   }}
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{
+                    duration: 0.4,
+                    ease: [0.65, 0, 0.35, 1],
+                  }}
                   className="overflow-hidden"
                 >
-                  <p className="mt-2 text-gray-600 dark:text-gray-400 flex items-start">
+                  <motion.hr
+                    className="my-3 border-t border-neutral-200 dark:border-neutral-700"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    exit={{ scaleX: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    style={{ originX: 0 }}
+                  />
+                  <p className="mt-2 text-neutral-600 dark:text-neutral-400">
                     {faq.answer}
                   </p>
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
         );
       })}
     </div>

@@ -1,14 +1,15 @@
 import { PageLayout } from "@/components/layout/PageLayout";
+import SectionHeader from "@/components/SectionHeader";
 
 const Terms = () => {
   return (
     <PageLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Terms of Service</h1>
+      <div className="mx-auto max-w-4xl">
+        <SectionHeader title="Terms of Service" />
 
         {terms.map((term) => (
           <section key={term.title} className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">{term.title}</h2>
+            <h2 className="mb-4 text-2xl font-semibold">{term.title}</h2>
             <div className="prose dark:prose-invert">
               <p>{term.content}</p>
             </div>

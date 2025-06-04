@@ -9,28 +9,30 @@ import {
 import { PageLayout } from "@/components/layout/PageLayout";
 import { motion } from "motion/react";
 import { Mail, MessageSquare, Phone, Clock, CheckCircle2 } from "lucide-react";
+import SectionHeader from "@/components/SectionHeader";
 
 const Support = () => {
   return (
     <PageLayout>
+      <SectionHeader title="Support" />
       <motion.div
-        className="max-w-6xl mx-auto py-8 lg:py-16"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="mx-auto max-w-6xl py-8 lg:py-16"
+        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.5 }}
       >
-        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {SupportData.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
             >
-              <Card className="bg-card backdrop-blur-lg h-full">
+              <Card className="bg-card h-full backdrop-blur-lg">
                 <CardHeader>
                   <motion.div
-                    className="w-12 h-12 rounded-lg bg-accent-foreground border flex items-center justify-center mb-4"
+                    className="bg-accent-foreground text-primary-foreground mb-4 flex h-12 w-12 items-center justify-center rounded-lg border"
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
@@ -61,16 +63,16 @@ const Support = () => {
           ))}
         </motion.div>
         <motion.div
-          className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2"
+          initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.3, delay: 0.8 }}
         >
           {SupportData2.map((item, index) => (
             <Card key={index} className="bg-card backdrop-blur-lg">
               <CardHeader>
                 <motion.div
-                  className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
+                  className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-lg"
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -82,7 +84,7 @@ const Support = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <motion.ul className="space-y-2 text-muted-foreground">
+                <motion.ul className="text-muted-foreground space-y-2">
                   {item.items.map((item, index) => (
                     <motion.li
                       key={index}
@@ -90,7 +92,7 @@ const Support = () => {
                       whileHover={{ x: 4 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <CheckCircle2 className="w-4 h-4 text-primary" />
+                      <CheckCircle2 className="text-primary h-4 w-4" />
                       {item}
                     </motion.li>
                   ))}
@@ -109,21 +111,21 @@ export default Support;
 const SupportData = [
   {
     title: "Email Support",
-    icon: <Mail className="w-6 h-6 text-accent" />,
+    icon: <Mail className="h-6 w-6" />,
     description: "Get help via email",
     text: "support@mealplanner.com",
     button: "Send Email",
   },
   {
     title: "Live Chat",
-    icon: <MessageSquare className="w-6 h-6 text-accent" />,
+    icon: <MessageSquare className="h-6 w-6" />,
     description: "Chat with our support team",
     text: "24/7",
     button: "Start Chat",
   },
   {
     title: "Phone Support",
-    icon: <Phone className="w-6 h-6 text-accent" />,
+    icon: <Phone className="h-6 w-6" />,
     description: "Call our support team",
     text: "+1 (555) 123-4567",
     button: "Call Now",
@@ -134,13 +136,13 @@ const SupportData2 = [
   {
     title: "Response Time",
     description: "Typical response times",
-    icon: <Clock className="w-6 h-6 text-accent" />,
+    icon: <Clock className="h-6 w-6" />,
     items: ["Email: Within 24 hours", "Live Chat: Instant", "Phone: Immediate"],
   },
   {
     title: "Common Solutions",
     description: "Quick answers to common questions",
-    icon: <CheckCircle2 className="w-6 h-6 text-accent" />,
+    icon: <CheckCircle2 className="h-6 w-6" />,
     items: [
       "Account access issues",
       "Billing and subscription",

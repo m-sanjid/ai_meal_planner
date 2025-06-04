@@ -1,15 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Home, Utensils, Star, Layout, Settings } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  ChevronDown,
+  Home,
+  Utensils,
+  Star,
+  Settings,
+} from "lucide-react";
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-      <div className="max-w-2xl w-full px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-8xl font-bold text-primary mb-4">404</h1>
-          <p className="text-2xl text-muted-foreground mb-8">Page not found</p>
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center">
+      <div className="w-full max-w-2xl px-4">
+        <div className="mb-12 text-center">
+          <h1 className="text-primary mb-4 text-8xl font-bold">404</h1>
+          <p className="text-muted-foreground mb-8 text-2xl">Page not found</p>
           <p className="text-muted-foreground mb-8">
             The page you're looking for doesn't exist or has been moved.
           </p>
@@ -25,14 +36,8 @@ const NotFound = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-48">
               <DropdownMenuItem asChild>
-                <Link to="/home" className="flex items-center">
-                  <Home className="mr-2 h-4 w-4" />
-                  Home
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
                 <Link to="/dashboard" className="flex items-center">
-                  <Layout className="mr-2 h-4 w-4" />
+                  <Home className="mr-2 h-4 w-4" />
                   Dashboard
                 </Link>
               </DropdownMenuItem>
@@ -58,7 +63,7 @@ const NotFound = () => {
           </DropdownMenu>
 
           <Button asChild>
-            <Link to="/home">Go to Homepage</Link>
+            <Link to="/dashboard">Go to Dashboard</Link>
           </Button>
         </div>
       </div>
