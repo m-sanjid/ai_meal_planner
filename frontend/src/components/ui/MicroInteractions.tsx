@@ -1,5 +1,5 @@
 import React from "react";
-import {motion} from "framer-motion"
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface MicroInteractionProps {
@@ -89,14 +89,14 @@ export const HoverCard: React.FC<{
 }> = ({ children, content, className }) => {
   return (
     <motion.div
-      className={cn("relative group", className)}
+      className={cn("group relative", className)}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
       {children}
       <motion.div
-        className="absolute z-50 hidden group-hover:block bg-background border rounded-lg shadow-lg p-4"
+        className="bg-background absolute z-50 hidden rounded-lg border p-4 shadow-lg group-hover:block"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
@@ -122,7 +122,7 @@ export const LoadingSpinner: React.FC<{
         ease: "linear",
       }}
     >
-      <div className="absolute inset-0 border-2 border-primary border-t-transparent rounded-full" />
+      <div className="border-primary absolute inset-0 rounded-full border-2 border-t-transparent" />
     </motion.div>
   );
 };
@@ -133,13 +133,13 @@ export const ProgressBar: React.FC<{
 }> = ({ progress, className }) => {
   return (
     <motion.div
-      className={cn("h-2 bg-muted rounded-full overflow-hidden", className)}
+      className={cn("bg-muted h-2 overflow-hidden rounded-full", className)}
       initial={{ width: 0 }}
       animate={{ width: `${progress}%` }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <motion.div
-        className="h-full bg-primary"
+        className="bg-primary h-full"
         initial={{ width: 0 }}
         animate={{ width: "100%" }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -155,7 +155,14 @@ export const AnimatedButton: React.FC<{
   disabled?: boolean;
   variant?: "default" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
-}> = ({ children, className, onClick, disabled, variant = "default", size = "md" }) => {
+}> = ({
+  children,
+  className,
+  onClick,
+  disabled,
+  variant = "default",
+  size = "md",
+}) => {
   const baseStyles = "font-medium rounded-lg transition-colors";
   const variantStyles = {
     default: "bg-primary text-primary-foreground hover:bg-primary/90",
@@ -174,8 +181,8 @@ export const AnimatedButton: React.FC<{
         baseStyles,
         variantStyles[variant],
         sizeStyles[size],
-        "disabled:opacity-50 disabled:cursor-not-allowed",
-        className
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
       )}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
@@ -198,17 +205,19 @@ export const AnimatedInput: React.FC<{
     <motion.input
       type={type}
       value={value}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        onChange(e.target.value)
+      }
       placeholder={placeholder}
       className={cn(
-        "w-full px-4 py-2 rounded-lg border",
+        "w-full rounded-lg border px-4 py-2",
         "bg-background text-foreground",
-        "focus:outline-none focus:ring-2 focus:ring-primary",
+        "focus:ring-primary focus:ring-2 focus:outline-none",
         "transition-colors duration-200",
-        className
+        className,
       )}
       whileFocus={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     />
   );
-}; 
+};

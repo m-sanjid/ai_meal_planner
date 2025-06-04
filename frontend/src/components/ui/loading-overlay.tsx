@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 
 interface LoadingOverlayProps {
   isLoading: boolean;
@@ -26,9 +26,9 @@ const LoadingOverlay = ({ isLoading }: LoadingOverlayProps) => {
         }}
         className="flex flex-col items-center gap-4"
       >
-        <div className="relative w-16 h-16">
+        <div className="relative h-16 w-16">
           <motion.div
-            className="absolute inset-0 border-4 border-t-transparent rounded-full"
+            className="absolute inset-0 rounded-full border-4 border-t-transparent"
             animate={{ rotate: 360 }}
             transition={{
               duration: 1,
@@ -50,4 +50,4 @@ const LoadingOverlay = ({ isLoading }: LoadingOverlayProps) => {
   );
 };
 
-export { LoadingOverlay }; 
+export { LoadingOverlay };
