@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
   Card,
   CardContent,
@@ -58,7 +58,7 @@ const Subscription = ({
           {},
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         setUserSubscription((prev) => ({
@@ -89,16 +89,16 @@ const Subscription = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="p-4 bg-card rounded-lg">
+          <div className="bg-card rounded-lg p-4">
             <SubscriptionStatus />
           </div>
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.9 }}>
             <Button
               variant="outline"
-              className="w-full flex items-center gap-2"
+              className="flex w-full items-center gap-2"
             >
-              <CreditCard className="w-4 h-4" /> Manage Payment Methods
+              <CreditCard className="h-4 w-4" /> Manage Payment Methods
             </Button>
           </motion.div>
 
@@ -122,7 +122,7 @@ const Subscription = ({
 
           <div>
             <motion.h3
-              className="mb-4 text-foreground"
+              className="text-foreground mb-4"
               whileHover={{ x: 2 }}
               transition={{ type: "spring", stiffness: 300 }}
             >

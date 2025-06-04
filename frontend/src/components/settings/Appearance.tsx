@@ -8,8 +8,7 @@ import {
 } from "../ui/card";
 import { Switch } from "../ui/switch";
 import { Sun, Moon } from "lucide-react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Appearance = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean | undefined>(undefined);
@@ -45,12 +44,12 @@ const Appearance = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.6 }}
-    >
-      <Card className="bg-card backdrop-blur-lg">
+    <Card className="bg-card backdrop-blur-lg">
+      <motion.div
+        initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.3, delay: 0.3, ease: "easeInOut" }}
+      >
         <CardHeader>
           <CardTitle className="text-foreground">Appearance</CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -58,11 +57,7 @@ const Appearance = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <motion.div
-            className="flex items-center justify-between"
-            whileHover={{ x: 2 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <div className="flex items-end justify-between">
             <div className="space-y-0.5">
               <label className="text-foreground">Theme</label>
               <p className="text-muted-foreground">
@@ -70,33 +65,14 @@ const Appearance = () => {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Sun className="w-4 h-4" />
+              <Sun className="h-4 w-4" />
               <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
-              <Moon className="w-4 h-4" />
+              <Moon className="h-4 w-4" />
             </div>
-          </motion.div>
-
-          <motion.div
-            className="flex items-center justify-between"
-            whileHover={{ x: 2 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <div className="space-y-0.5">
-              <label className="text-foreground">Language</label>
-              <p className="text-muted-foreground">
-                Choose your preferred language
-              </p>
-            </div>
-            <select className="bg-card rounded-md p-2 text-foreground">
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-            </select>
-          </motion.div>
+          </div>
         </CardContent>
-      </Card>
-    </motion.div>
+      </motion.div>
+    </Card>
   );
 };
 
