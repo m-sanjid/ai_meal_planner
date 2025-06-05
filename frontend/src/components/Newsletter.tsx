@@ -89,7 +89,7 @@ const NewsletterSection = () => {
                   placeholder="you@example.com"
                   disabled={isSubmitting || isSuccess}
                   onKeyDown={handleKeyPress}
-                  className="focus:border-primary/50 focus:ring-primary/10 dark:focus:border-primary/50 dark:focus:ring-primary/10 h-14 w-full rounded-2xl border border-gray-200/50 bg-white/50 px-6 text-gray-900 placeholder-gray-500 backdrop-blur-sm transition-all duration-300 group-hover/input:border-gray-300/50 focus:bg-white/80 focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700/50 dark:bg-black/30 dark:text-gray-100 dark:placeholder-gray-400 dark:group-hover/input:border-gray-600/50 dark:focus:bg-black/50"
+                  className="focus:border-primary/50 focus:ring-primary/10 dark:focus:border-primary/50 dark:focus:ring-primary/10 h-14 w-full rounded-2xl border border-neutral-200/50 bg-white/50 px-6 text-neutral-900 placeholder-neutral-500 backdrop-blur-sm transition-all duration-300 group-hover/input:border-neutral-300/50 focus:bg-white/80 focus:ring-4 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-700/50 dark:bg-black/30 dark:text-neutral-100 dark:placeholder-neutral-400 dark:group-hover/input:border-neutral-600/50 dark:focus:bg-black/50"
                 />
 
                 {/* Floating label effect */}

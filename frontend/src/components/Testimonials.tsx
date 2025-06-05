@@ -4,7 +4,7 @@ import { Testimonials } from "@/lib/constants";
 import SectionHeader from "./SectionHeader";
 import Marquee from "react-fast-marquee";
 
-export default function ProcessSection() {
+export default function TestimonialsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 
@@ -35,7 +35,7 @@ export default function ProcessSection() {
   };
 
   return (
-    <section id="testimonials" className="min-h-screen py-32" ref={ref}>
+    <section id="testimonials" className="py-20" ref={ref}>
       <div className="mx-auto max-w-7xl px-8">
         {/* Testimonials */}
         <motion.div

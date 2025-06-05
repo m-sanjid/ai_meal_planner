@@ -1,31 +1,13 @@
 import { features } from "@/lib/constants"
 import { motion } from "motion/react"
 import { useState } from "react"
-
-
+import SectionHeader from "./SectionHeader"
 
 export function FeaturesSection() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
   return (
     <section className="relative px-4 py-32 sm:px-8 md:px-16 lg:px-24">
-      <div className="mx-auto max-w-5xl text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="text-4xl z-10 font-semibold tracking-tight text-black dark:text-white md:text-5xl"
-        >
-          Designed for Speed & Simplicity
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mx-auto mt-4 max-w-2xl z-10 text-muted-foreground text-lg md:text-xl"
-        >
-          No fluff. Just the essential tools to help you eat better, faster.
-        </motion.p>
-      </div>
+      <SectionHeader title="Designed for Speed & Simplicity" description="No fluff. Just the essential tools to help you eat better, faster." />
 
       <div
         onMouseLeave={() => setHoveredCard(null)}

@@ -1,5 +1,3 @@
-"use client";
-
 import { Info } from "lucide-react";
 import {
   Card,
@@ -22,6 +20,8 @@ import { JSX, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { IconCheck } from "@tabler/icons-react";
+import SectionHeader from "./SectionHeader";
+import { plans } from "@/lib/constants";
 
 type Props = {
   loading?: boolean;
@@ -31,7 +31,7 @@ type Props = {
   ) => Promise<JSX.Element | undefined>;
 };
 
-const PricingComponent = ({ loading, handleSubscribe }: Props) => {
+const   PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const { subscription } = useSubscription();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
     "monthly",
@@ -43,7 +43,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
   return (
     <section
       className={`${
-        path !== "/" ? "max-w-6xl py-16" : "max-w-4xl py-24"
+        path !== "/" ? "max-w-6xl py-16" : "max-w-5xl py-24"
       } mx-auto px-4`}
     >
       {path !== "/settings" && (
@@ -53,12 +53,7 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
           transition={{ duration: 0.6 }}
           className="mb-10 text-center"
         >
-          <h1 className="mb-3 text-4xl font-semibold text-black dark:text-neutral-200">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-base">
-            Find a plan that works for you — no hidden fees.
-          </p>
+          <SectionHeader title="Simple, Transparent Pricing" description="Find a plan that works for you — no hidden fees." />
         </motion.div>
       )}
 
@@ -191,54 +186,3 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
 };
 
 export default PricingComponent;
-
-const plans = [
-  {
-    id: "free",
-    name: "Basic",
-    description: "Perfect for getting started",
-    price: 0,
-    planId: "plan_basic",
-    features: [
-      { text: "10 AI-generated meals per month", tooltip: "Renews monthly" },
-      { text: "Basic recipe suggestions" },
-      { text: "Shopping list generation" },
-      { text: "Basic nutritional info" },
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    description: "For health-focused individuals",
-    price: 499,
-    planId: "plan_Q1Srxoloblnvpy",
-    popular: true,
-    features: [
-      { text: "Unlimited AI meal generations" },
-      { text: "Advanced recipe customization" },
-      {
-        text: "Detailed nutrition tracking",
-        tooltip: "Includes macros, micros, and calories",
-      },
-      { text: "Meal prep automation" },
-      { text: "Priority chat support" },
-    ],
-  },
-  {
-    id: "family",
-    name: "Family",
-    description: "Ideal for households and groups",
-    price: 1299,
-    planId: "plan_Q1Ssb9efvNYZlP",
-    features: [
-      { text: "All Pro features included" },
-      {
-        text: "Up to 6 profiles",
-        tooltip: "Customize for each family member",
-      },
-      { text: "Family-wide planning dashboard" },
-      { text: "Grocery list sharing & sync" },
-      { text: "24/7 premium support" },
-    ],
-  },
-];
