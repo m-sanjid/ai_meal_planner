@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ContainerTextFlip } from "./ui/container-text-flip";
@@ -21,7 +21,13 @@ const Hero = () => {
         className="-top-40 left-0 md:-top-20 md:left-60 dark:block"
         fill="white"
       />
-      <motion.div className="mx-auto max-w-4xl">
+      <motion.div
+        initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ amount: 0.5, once: true }}
+        transition={{ duration: 0.6, delay: 0.2, staggerChildren: 0.1 }}
+        className="mx-auto max-w-4xl"
+      >
         {/* Title */}
         <div className="mb-12 flex flex-col items-center justify-center gap-4">
           <h1 className="relative z-10 mx-auto max-w-4xl text-center text-4xl font-bold md:text-5xl lg:text-7xl">
@@ -29,7 +35,8 @@ const Hero = () => {
               <motion.span
                 key={index}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 10 }}
-                animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                viewport={{ amount: 0.5, once: true }}
                 transition={{
                   duration: 0.3,
                   delay: index * 0.1,
