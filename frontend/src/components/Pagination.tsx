@@ -47,7 +47,7 @@ const Pagination = ({
   const pageNumbers = renderPageNumbers();
 
   return (
-    <div className="flex gap-1 items-center">
+    <div className="flex items-center gap-1">
       <Button
         variant={"secondary"}
         disabled={currentPage === 1}

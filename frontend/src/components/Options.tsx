@@ -18,7 +18,7 @@ const Options = ({
   return (
     <>
       <Select onValueChange={onChange}>
-        <SelectTrigger className="bg-white dark:bg-black p-4 mt-4">
+        <SelectTrigger className="mt-4 bg-white p-4 dark:bg-black">
           <SelectValue
             placeholder={
               type === "diet" ? "Select a diet type" : "Select a goal"

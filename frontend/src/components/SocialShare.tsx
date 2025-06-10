@@ -31,7 +31,7 @@ const socialLinks = [
     href: "https://github.com/m-sanjid",
     icon: IconBrandGithub,
     label: "GitHub",
-    color: "hover:bg-gray-600",
+    color: "hover:bg-neutral-600",
   },
 ];
 
