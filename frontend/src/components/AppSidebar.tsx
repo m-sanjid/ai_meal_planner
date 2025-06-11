@@ -22,8 +22,8 @@ import {
 import { NavUser } from "./NavUser";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "motion/react";
 import { IconLayoutSidebar } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
@@ -111,12 +111,12 @@ const AppSidebar = () => {
                     key={item.name}
                     className="relative"
                     variants={itemVariants}
+                    onHoverStart={() => setHoveredIndex(index)}
                   >
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild className="my-1">
-                        <motion.a
-                          href={item.href}
-                          onHoverStart={() => setHoveredIndex(index)}
+                        <Link
+                          to={item.href}
                           className={cn("relative flex items-center px-2 py-1.5 transition", isActive(index) ? "text-primary-foreground" : "text-primary")}
                         >
                           {/* Active border glow */}
@@ -167,7 +167,7 @@ const AppSidebar = () => {
                           >
                             {item.name}
                           </motion.span>
-                        </motion.a>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </motion.div>

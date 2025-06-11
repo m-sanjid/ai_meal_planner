@@ -2,10 +2,10 @@ import { Skeleton } from "./ui/skeleton";
 
 const LoadingSkeleton = () => {
   return (
-    <div className="p-4 max-w-5xl mx-auto h-full flex flex-col gap-4 rounded-lg border m-20">
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
+    <div className="m-20 mx-auto flex h-full max-w-5xl flex-col gap-4 rounded-lg border p-4">
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
     </div>
   );
 };

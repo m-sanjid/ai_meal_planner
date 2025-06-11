@@ -10,7 +10,7 @@ const Logo = () => {
       className="group flex items-center gap-2 text-xl font-semibold tracking-tight"
     >
       <img className="h-8 w-8" src="/icon.png" alt="Logo" />
-      <h1 className="text-muted-foreground text-lg font-semibold md:text-xl">
+      <h1 className="text-muted-foreground text-lg font-semibold md:text-xl hidden md:block">
         Befit
         <span className="text-black transition-colors duration-200 dark:text-white">
           AI

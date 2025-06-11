@@ -22,26 +22,26 @@ const Careers = () => {
 
   return (
     <PageLayout>
-      <div className="bg-gradient-to-b from-primary/10 to-background py-16">
+      <div className="from-primary/10 to-background bg-gradient-to-b py-16">
         <motion.div
-          className="max-w-6xl mx-auto px-4 sm:px-6"
+          className="mx-auto max-w-6xl px-4 sm:px-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <motion.div
-            className="text-center mb-12"
+            className="mb-12 text-center"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
+            <span className="bg-primary/10 text-primary mb-4 inline-block rounded-full px-4 py-1 text-sm font-medium">
               We're Hiring
             </span>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            <h1 className="text-foreground mb-4 text-4xl font-bold md:text-5xl">
               Join Our Team
             </h1>
-            <p className="text-lg max-w-2xl mx-auto text-muted-foreground">
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
               Help us revolutionize the way people plan and prepare their meals
               with AI technology
             </p>
@@ -49,28 +49,28 @@ const Careers = () => {
 
           {/* Search and filter section */}
           <motion.div
-            className="mb-10 flex flex-col md:flex-row items-center justify-between gap-4"
+            className="mb-10 flex flex-col items-center justify-between gap-4 md:flex-row"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <div className="relative w-full md:w-auto md:flex-1 max-w-md">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-muted-foreground" />
+            <div className="relative w-full max-w-md md:w-auto md:flex-1">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <Search className="text-muted-foreground h-4 w-4" />
               </div>
               <input
                 type="text"
                 placeholder="Search positions..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="border-border bg-background focus:ring-primary/50 w-full rounded-lg border py-2 pr-4 pl-10 focus:ring-2 focus:outline-none"
               />
             </div>
 
-            <div className="flex gap-2 items-center w-full md:w-auto justify-center md:justify-end">
+            <div className="flex w-full items-center justify-center gap-2 md:w-auto md:justify-end">
               {departments.map((dept) => (
                 <button
                   key={dept}
                   onClick={() => setFilter(dept)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                     filter === dept
                       ? "bg-primary text-primary-foreground"
                       : "bg-card hover:bg-muted"
@@ -84,15 +84,15 @@ const Careers = () => {
         </motion.div>
       </div>
 
-      <div className="py-16 bg-background">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="bg-background py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <motion.div
             className="mb-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <h2 className="text-2xl font-bold mb-2 text-foreground">
+            <h2 className="text-foreground mb-2 text-2xl font-bold">
               Open Positions
             </h2>
             <p className="text-muted-foreground">
@@ -103,7 +103,7 @@ const Careers = () => {
           </motion.div>
 
           <motion.div
-            className="grid md:grid-cols-2 gap-6 mb-16"
+            className="mb-16 grid gap-6 md:grid-cols-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -111,41 +111,41 @@ const Careers = () => {
             {filteredPositions.map((position, index) => (
               <motion.div
                 key={position.title}
-                className="group bg-card border border-border hover:border-primary/30 rounded-xl p-8 transition-all duration-200 hover:shadow-lg"
+                className="group bg-card border-border hover:border-primary/30 rounded-xl border p-8 transition-all duration-200 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-start justify-between mb-4">
+                <div className="mb-4 flex items-start justify-between">
                   <div>
-                    <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
+                    <span className="bg-primary/10 text-primary mb-3 inline-block rounded-full px-3 py-1 text-xs font-medium">
                       {position.department}
                     </span>
-                    <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="text-foreground group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
                       {position.title}
                     </h3>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border group-hover:bg-primary/10 transition-colors">
-                    <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <div className="bg-background border-border group-hover:bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full border transition-colors">
+                    <ChevronRight className="text-muted-foreground group-hover:text-primary h-5 w-5 transition-colors" />
                   </div>
                 </div>
 
-                <p className="mb-6 text-muted-foreground line-clamp-2">
+                <p className="text-muted-foreground mb-6 line-clamp-2">
                   {position.description}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
+                <div className="text-muted-foreground mb-6 flex flex-wrap items-center gap-4 text-sm">
                   <span className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4 text-primary" />{" "}
+                    <MapPin className="text-primary h-4 w-4" />{" "}
                     {position.location}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4 text-primary" /> {position.type}
+                    <Clock className="text-primary h-4 w-4" /> {position.type}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Briefcase className="h-4 w-4 text-primary" />{" "}
+                    <Briefcase className="text-primary h-4 w-4" />{" "}
                     {position.department}
                   </span>
                 </div>
@@ -156,18 +156,18 @@ const Careers = () => {
           </motion.div>
 
           <motion.div
-            className="rounded-2xl bg-muted/50 border border-border p-8 md:p-12 text-center"
+            className="bg-muted/50 border-border rounded-2xl border p-8 text-center md:p-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-              <Send className="h-6 w-6 text-primary" />
+            <div className="bg-primary/10 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+              <Send className="text-primary h-6 w-6" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
+            <h2 className="text-foreground mb-4 text-2xl font-semibold md:text-3xl">
               Don't see a perfect fit?
             </h2>
-            <p className="mb-8 text-muted-foreground max-w-xl mx-auto">
+            <p className="text-muted-foreground mx-auto mb-8 max-w-xl">
               We're always looking for talented individuals. Send us your resume
               and we'll keep you in mind for future positions that match your
               skills and experience.
@@ -180,24 +180,24 @@ const Careers = () => {
       </div>
 
       <div className="bg-primary/5 py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <motion.div
-            className="text-center mb-12"
+            className="mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.7 }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            <h2 className="text-foreground mb-4 text-2xl font-bold md:text-3xl">
               Why Join Us?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
               Besides working on cutting-edge AI technology, we offer great
               benefits
             </p>
           </motion.div>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-6"
+            className="grid gap-6 md:grid-cols-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
@@ -205,15 +205,15 @@ const Careers = () => {
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.title}
-                className="bg-card p-6 rounded-xl border border-border"
+                className="bg-card border-border rounded-xl border p-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-lg">
                   {benefit.icon}
                 </div>
-                <h3 className="text-lg font-medium mb-2 text-foreground">
+                <h3 className="text-foreground mb-2 text-lg font-medium">
                   {benefit.title}
                 </h3>
                 <p className="text-muted-foreground">{benefit.description}</p>
@@ -264,19 +264,19 @@ const openPositions = [
 const benefits = [
   {
     title: "Remote-First Culture",
-    icon: <MapPin className="h-6 w-6 text-primary" />,
+    icon: <MapPin className="text-primary h-6 w-6" />,
     description:
       "Work from anywhere in the world with flexible hours that suit your lifestyle.",
   },
   {
     title: "Competitive Compensation",
-    icon: <Briefcase className="h-6 w-6 text-primary" />,
+    icon: <Briefcase className="text-primary h-6 w-6" />,
     description:
       "We offer competitive salaries, equity options, and comprehensive benefits packages.",
   },
   {
     title: "Professional Growth",
-    icon: <ChevronRight className="h-6 w-6 text-primary" />,
+    icon: <ChevronRight className="text-primary h-6 w-6" />,
     description:
       "Continuous learning opportunities with budget for courses, conferences, and certifications.",
   },
