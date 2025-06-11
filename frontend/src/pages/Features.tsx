@@ -1,23 +1,22 @@
 import { Check } from "lucide-react";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 const Features = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4B6746]/20 to-[#4B6746]/40 p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12 dark:text-neutral-200">
-          Features
-        </h1>
-        
-        <div className="grid md:grid-cols-2 gap-8">
+    <PageLayout>
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-12 text-center text-4xl font-bold">Features</h1>
+        <div className="grid gap-8 md:grid-cols-2">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white/30 dark:bg-white/10 backdrop-blur-lg rounded-xl p-6">
-              <h3 className="text-xl font-semibold mb-4 dark:text-neutral-200">
-                {feature.title}
-              </h3>
+            <div
+              key={index}
+              className="bg-accent-foreground rounded-xl border p-6 backdrop-blur-sm transition-all duration-200 hover:shadow-sm"
+            >
+              <h3 className="mb-4 text-xl font-semibold">{feature.title}</h3>
               <ul className="space-y-3">
                 {feature.items.map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-3 dark:text-neutral-300">
-                    <Check className="h-5 w-5 text-[#4B6746]" />
+                  <li key={idx} className="flex items-center gap-3">
+                    <Check className="h-5 w-5" />
                     {item}
                   </li>
                 ))}
@@ -26,7 +25,7 @@ const Features = () => {
           ))}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 
@@ -69,4 +68,4 @@ const features = [
   },
 ];
 
-export default Features; 
+export default Features;

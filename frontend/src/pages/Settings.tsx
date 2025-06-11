@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import Subscription from "@/components/settings/Subscription";
 import Appearance from "@/components/settings/Appearance";
 import Account from "@/components/settings/Account";
+import Unauthorized from "./Unauthorized";
 
 const Settings = () => {
   const { user, isSignedIn } = useUser();
@@ -16,6 +17,10 @@ const Settings = () => {
     signOut();
     window.location.href = "/";
   };
+
+  if (!isSignedIn) {
+    return <Unauthorized />;
+  }
 
   return (
     <PageLayout>

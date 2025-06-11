@@ -6,7 +6,8 @@ import axios from "axios";
 import { Plus, Star, StarOff, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import Unauthorized from "./Unauthorized";
 
 interface Macros {
   protein: number;
@@ -79,6 +80,10 @@ const Favorites = () => {
       toast.error("Failed to remove meal from favorites");
     }
   };
+
+  if (!isSignedIn) {
+    return <Unauthorized />;
+  }
 
   return (
     <div className="min-h-screen bg-background">

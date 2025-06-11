@@ -246,7 +246,7 @@ const ContactForm = () => {
             className={`mt-6 w-full rounded-lg border bg-white px-4 py-3 transition-all duration-300 focus:ring-2 focus:outline-none dark:bg-neutral-800 ${
               errors.name
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "focus:border-primary focus:ring-primary border-gray-200 dark:border-neutral-700"
+                : "focus:border-primary focus:ring-primary border-neutral-200 dark:border-neutral-700"
             }`}
           />
           <AnimatePresence mode="wait">
@@ -295,7 +295,7 @@ const ContactForm = () => {
             className={`mt-6 w-full rounded-lg border bg-white px-4 py-3 transition-all duration-300 focus:ring-2 focus:outline-none dark:bg-neutral-800 ${
               errors.email
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "focus:border-primary focus:ring-primary border-gray-200 dark:border-neutral-700"
+                : "focus:border-primary focus:ring-primary border-neutral-200 dark:border-neutral-700"
             }`}
           />
           <AnimatePresence mode="wait">
@@ -344,7 +344,7 @@ const ContactForm = () => {
             className={`mt-6 w-full rounded-lg border bg-white px-4 py-3 transition-all duration-300 focus:ring-2 focus:outline-none dark:bg-neutral-800 ${
               errors.subject
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "focus:border-primary focus:ring-primary border-gray-200 dark:border-neutral-700"
+                : "focus:border-primary focus:ring-primary border-neutral-200 dark:border-neutral-700"
             }`}
           />
           <AnimatePresence mode="wait">
@@ -393,7 +393,7 @@ const ContactForm = () => {
             className={`resize-vertical mt-6 w-full rounded-lg border bg-white px-4 py-3 transition-all duration-300 focus:ring-2 focus:outline-none dark:bg-neutral-800 ${
               errors.message
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                : "focus:border-primary focus:ring-primary border-gray-200 dark:border-neutral-700"
+                : "focus:border-primary focus:ring-primary border-neutral-200 dark:border-neutral-700"
             }`}
           />
           <AnimatePresence mode="wait">
@@ -436,7 +436,7 @@ const ContactForm = () => {
           animate={isSubmitting ? "loading" : "idle"}
           className={`text-primary-foreground w-full rounded-lg px-6 py-3 text-sm font-medium transition-colors duration-300 ${
             isSubmitting
-              ? "cursor-not-allowed bg-gray-400"
+              ? "cursor-not-allowed bg-neutral-400"
               : "bg-primary hover:bg-primary/90"
           }`}
         >

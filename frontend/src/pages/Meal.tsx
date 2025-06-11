@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
@@ -57,6 +57,7 @@ import { Textarea } from "@/components/ui/textarea";
 import LoadingSkeleton from "@/components/meal/LoadingSkeleton";
 import HelpSheet from "@/components/meal/HelpSheet";
 import UpgradeToPro from "@/components/UpgradeToPro";
+import Unauthorized from "./Unauthorized";
 
 interface Meal {
   id?: string;
@@ -120,7 +121,7 @@ const Meal = () => {
         `${import.meta.env.VITE_API_URL}/api/meals/favorites?userId=${
           user?.id
         }`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setFavoriteMeals(response.data.favoriteMeals || []);
     } catch (error) {
@@ -129,17 +130,7 @@ const Meal = () => {
   };
 
   if (!isSignedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6 bg-card rounded-xl shadow-lg">
-          <h1 className="text-4xl font-bold mb-4">Please Sign In</h1>
-          <p className="text-muted-foreground mb-6">
-            You need to be signed in to access meal planning features.
-          </p>
-          <Button className="w-full">Sign In to Continue</Button>
-        </div>
-      </div>
-    );
+    return <Unauthorized />;
   }
 
   const generateMealPlan = async () => {
@@ -171,7 +162,7 @@ const Meal = () => {
         },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.data?.meals?.length) {
@@ -198,7 +189,7 @@ const Meal = () => {
       setError(
         tokens === 0
           ? "No more tokens available. Upgrade to pro to continue."
-          : "Failed to generate meal plan. Please try again."
+          : "Failed to generate meal plan. Please try again.",
       );
       toast.error("Failed to generate meal plan");
     } finally {
@@ -212,13 +203,13 @@ const Meal = () => {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/meals/favorites`,
         { userId: user?.id, meal },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       // Update the meals array to mark this meal as favorite
       if (meals) {
         setMeals(
-          meals.map((m) => (m.id === meal.id ? { ...m, isFavorite: true } : m))
+          meals.map((m) => (m.id === meal.id ? { ...m, isFavorite: true } : m)),
         );
       }
 
@@ -294,28 +285,29 @@ const Meal = () => {
       (meal) =>
         meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         meal.ingredients.some((ing) =>
-          ing.toLowerCase().includes(searchQuery.toLowerCase())
+          ing.toLowerCase().includes(searchQuery.toLowerCase()),
         ) ||
         (meal.tags &&
           meal.tags.some((tag) =>
-            tag.toLowerCase().includes(searchQuery.toLowerCase())
-          ))
+            tag.toLowerCase().includes(searchQuery.toLowerCase()),
+          )),
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="container max-w-6xl mx-auto py-12 px-4">
+    <div className="from-background to-muted/20 min-h-screen bg-gradient-to-br">
+      <div className="container mx-auto max-w-6xl px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h1 className="text-5xl font-bold mb-4">
-            Smart <span className="text-black dark:text-white">Meal Planner</span>
+          <h1 className="mb-4 text-5xl font-bold">
+            Smart{" "}
+            <span className="text-black dark:text-white">Meal Planner</span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
             Generate personalized meal plans based on your goals, preferences,
             and dietary needs
           </p>
@@ -324,9 +316,9 @@ const Meal = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-card/50 backdrop-blur-sm rounded-xl p-8 shadow-sm mb-8"
+          className="bg-card/50 mb-8 rounded-xl p-8 shadow-sm backdrop-blur-sm"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="space-y-6">
               <div className="space-y-3">
                 <Label htmlFor="goal" className="text-sm font-medium">
@@ -346,7 +338,7 @@ const Meal = () => {
               </div>
 
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <Label htmlFor="calories" className="text-sm font-medium">
                     Daily Calorie Target: {calorieTarget} kcal
                   </Label>
@@ -360,7 +352,7 @@ const Meal = () => {
                   onValueChange={(value) => setCalorieTarget(value[0])}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex justify-between text-xs">
                   <span>1200</span>
                   <span>2500</span>
                   <span>4000</span>
@@ -370,7 +362,7 @@ const Meal = () => {
 
             <div className="space-y-6">
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <Label htmlFor="mealCount" className="text-sm font-medium">
                     Number of Meals: {mealCount}
                   </Label>
@@ -384,7 +376,7 @@ const Meal = () => {
                   onValueChange={(value) => setMealCount(value[0])}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex justify-between text-xs">
                   <span>1</span>
                   <span>3</span>
                   <span>6</span>
@@ -419,7 +411,7 @@ const Meal = () => {
                         value={excludeIngredients}
                         onChange={(e) => setExcludeIngredients(e.target.value)}
                       />
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Separate with commas
                       </p>
                     </div>
@@ -430,7 +422,7 @@ const Meal = () => {
                         id="cookingTime"
                         value={cookingTime}
                         onValueChange={(
-                          value: "any" | "quick" | "medium" | "slow"
+                          value: "any" | "quick" | "medium" | "slow",
                         ) => setCookingTime(value)}
                       >
                         <div className="flex items-center space-x-2">
@@ -485,14 +477,14 @@ const Meal = () => {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Button
               size="lg"
               disabled={!goal || !dietaryPreferences || loading}
               onClick={generateMealPlan}
               className={cn(
                 "w-full sm:w-auto",
-                loading && "opacity-50 cursor-not-allowed"
+                loading && "cursor-not-allowed opacity-50",
               )}
             >
               {loading ? (
@@ -513,7 +505,7 @@ const Meal = () => {
           </div>
 
           {tokens !== undefined && (
-            <p className="text-center text-sm text-muted-foreground mt-4">
+            <p className="text-muted-foreground mt-4 text-center text-sm">
               You have {tokens} tokens remaining
             </p>
           )}
@@ -524,7 +516,7 @@ const Meal = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-destructive/10 text-destructive p-4 rounded-lg mb-8"
+            className="bg-destructive/10 text-destructive mb-8 rounded-lg p-4"
           >
             {error}
           </motion.div>
@@ -539,14 +531,14 @@ const Meal = () => {
             transition={{ duration: 0.5 }}
             className="space-y-8"
           >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
               <div>
                 <div className="flex items-center gap-3">
                   <h2 className="text-2xl font-semibold">Your Meal Plan</h2>
                   <Input
                     value={mealPlanName}
                     onChange={(e) => setMealPlanName(e.target.value)}
-                    className="max-w-xs text-lg font-medium border-0 focus-visible:ring-0 p-0 h-auto focus-visible:bg-muted"
+                    className="focus-visible:bg-muted h-auto max-w-xs border-0 p-0 text-lg font-medium focus-visible:ring-0"
                   />
                 </div>
                 <p className="text-muted-foreground">
@@ -565,7 +557,7 @@ const Meal = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {getFilteredMeals().map((meal, index) => (
                 <motion.div
                   key={meal.id || index}
@@ -573,35 +565,33 @@ const Meal = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                  <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-200 group">
+                  <Card className="group overflow-hidden transition-shadow duration-200 hover:shadow-lg">
                     <CardHeader className="bg-muted/40 pb-4">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-xl line-clamp-1 group-hover:text-primary transition-colors">
+                        <CardTitle className="group-hover:text-primary line-clamp-1 text-xl transition-colors">
                           {meal.name}
                         </CardTitle>
                         <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => saveFavoriteMeal(meal)}
-                                className={cn(
-                                  "hover:bg-primary/10 transition-colors",
-                                  meal.isFavorite && "text-primary"
-                                )}
-                              >
-                                <Star
-                                  className={cn(
-                                    "h-4 w-4 transition-transform",
-                                    meal.isFavorite && "scale-110"
-                                  )}
-                                  fill={
-                                    meal.isFavorite ? "currentColor" : "none"
-                                  }
-                                />
-                              </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => saveFavoriteMeal(meal)}
+                            className={cn(
+                              "hover:bg-primary/10 transition-colors",
+                              meal.isFavorite && "text-primary",
+                            )}
+                          >
+                            <Star
+                              className={cn(
+                                "h-4 w-4 transition-transform",
+                                meal.isFavorite && "scale-110",
+                              )}
+                              fill={meal.isFavorite ? "currentColor" : "none"}
+                            />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {meal.tags?.map((tag, idx) => (
                           <Badge
                             key={idx}
@@ -615,17 +605,17 @@ const Meal = () => {
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="space-y-6">
-                        <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            <Clock className="text-muted-foreground h-4 w-4" />
                             <span>Prep: {meal.prepTime}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Utensils className="h-4 w-4 text-muted-foreground" />
+                            <Utensils className="text-muted-foreground h-4 w-4" />
                             <span>Cook: {meal.cookTime}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            <Calendar className="text-muted-foreground h-4 w-4" />
                             <span>Serves: {meal.servings}</span>
                           </div>
                         </div>
@@ -646,47 +636,47 @@ const Meal = () => {
                         </div>
 
                         <div className="grid grid-cols-3 gap-4">
-                          <div className="text-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
-                            <p className="text-sm text-muted-foreground">
+                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
+                            <p className="text-muted-foreground text-sm">
                               Protein
                             </p>
                             <p className="font-semibold">
                               {meal.macros.protein}g
                             </p>
                             {showNutritionDetails && (
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="text-muted-foreground mt-1 text-xs">
                                 {Math.round(
                                   ((meal.macros.protein * 4) / meal.calories) *
-                                    100
+                                    100,
                                 )}
                                 % of calories
                               </p>
                             )}
                           </div>
-                          <div className="text-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
-                            <p className="text-sm text-muted-foreground">Fat</p>
+                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
+                            <p className="text-muted-foreground text-sm">Fat</p>
                             <p className="font-semibold">{meal.macros.fat}g</p>
                             {showNutritionDetails && (
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="text-muted-foreground mt-1 text-xs">
                                 {Math.round(
-                                  ((meal.macros.fat * 9) / meal.calories) * 100
+                                  ((meal.macros.fat * 9) / meal.calories) * 100,
                                 )}
                                 % of calories
                               </p>
                             )}
                           </div>
-                          <div className="text-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
-                            <p className="text-sm text-muted-foreground">
+                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
+                            <p className="text-muted-foreground text-sm">
                               Carbs
                             </p>
                             <p className="font-semibold">
                               {meal.macros.carbs}g
                             </p>
                             {showNutritionDetails && (
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="text-muted-foreground mt-1 text-xs">
                                 {Math.round(
                                   ((meal.macros.carbs * 4) / meal.calories) *
-                                    100
+                                    100,
                                 )}
                                 % of calories
                               </p>
@@ -696,7 +686,7 @@ const Meal = () => {
 
                         <Accordion type="single" collapsible className="w-full">
                           <AccordionItem value="ingredients">
-                            <AccordionTrigger className="text-base font-medium py-2">
+                            <AccordionTrigger className="py-2 text-base font-medium">
                               Ingredients
                             </AccordionTrigger>
                             <AccordionContent>
@@ -704,9 +694,9 @@ const Meal = () => {
                                 {meal.ingredients.map((ingredient, idx) => (
                                   <li
                                     key={idx}
-                                    className="text-sm flex items-center group"
+                                    className="group flex items-center text-sm"
                                   >
-                                    <span className="mr-2 text-primary">•</span>
+                                    <span className="text-primary mr-2">•</span>
                                     {ingredient}
                                   </li>
                                 ))}
@@ -715,11 +705,11 @@ const Meal = () => {
                           </AccordionItem>
 
                           <AccordionItem value="instructions">
-                            <AccordionTrigger className="text-base font-medium py-2">
+                            <AccordionTrigger className="py-2 text-base font-medium">
                               Instructions
                             </AccordionTrigger>
                             <AccordionContent>
-                              <ol className="space-y-2 list-decimal list-inside">
+                              <ol className="list-inside list-decimal space-y-2">
                                 {meal.instructions?.map((instruction, idx) => (
                                   <li key={idx} className="text-sm">
                                     {instruction}
@@ -731,7 +721,7 @@ const Meal = () => {
 
                           {showNutritionDetails && (
                             <AccordionItem value="nutrition">
-                              <AccordionTrigger className="text-base font-medium py-2">
+                              <AccordionTrigger className="py-2 text-base font-medium">
                                 Detailed Nutrition
                               </AccordionTrigger>
                               <AccordionContent>
@@ -750,7 +740,7 @@ const Meal = () => {
                                         {Math.round(
                                           ((meal.macros.protein * 4) /
                                             meal.calories) *
-                                            100
+                                            100,
                                         )}
                                         %)
                                       </span>
@@ -762,7 +752,7 @@ const Meal = () => {
                                         {Math.round(
                                           ((meal.macros.carbs * 4) /
                                             meal.calories) *
-                                            100
+                                            100,
                                         )}
                                         %)
                                       </span>
@@ -774,7 +764,7 @@ const Meal = () => {
                                         {Math.round(
                                           ((meal.macros.fat * 9) /
                                             meal.calories) *
-                                            100
+                                            100,
                                         )}
                                         %)
                                       </span>
@@ -811,7 +801,7 @@ const Meal = () => {
                         </Accordion>
                       </div>
                     </CardContent>
-                    <CardFooter className="bg-muted/10 flex justify-between items-center p-4">
+                    <CardFooter className="bg-muted/10 flex items-center justify-between p-4">
                       <span className="text-sm font-medium">
                         {meal.difficulty}
                       </span>
@@ -822,11 +812,11 @@ const Meal = () => {
                       >
                         {expandedMealId === meal.id ? (
                           <>
-                            <ChevronUp className="h-4 w-4 mr-1" /> Collapse
+                            <ChevronUp className="mr-1 h-4 w-4" /> Collapse
                           </>
                         ) : (
                           <>
-                            <ChevronDown className="h-4 w-4 mr-1" /> Details
+                            <ChevronDown className="mr-1 h-4 w-4" /> Details
                           </>
                         )}
                       </Button>
@@ -841,39 +831,39 @@ const Meal = () => {
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden"
                         >
-                          <div className="p-6 border-t">
+                          <div className="border-t p-6">
                             <div className="space-y-6">
                               <div>
-                                <h3 className="text-lg font-medium mb-3">
+                                <h3 className="mb-3 text-lg font-medium">
                                   Cooking Instructions
                                 </h3>
-                                <ol className="space-y-3 list-decimal list-inside">
+                                <ol className="list-inside list-decimal space-y-3">
                                   {meal.instructions?.map(
                                     (instruction, idx) => (
                                       <li key={idx} className="text-sm">
                                         {instruction}
                                       </li>
-                                    )
+                                    ),
                                   )}
                                 </ol>
                               </div>
 
                               <div>
-                                <h3 className="text-lg font-medium mb-3">
+                                <h3 className="mb-3 text-lg font-medium">
                                   Health Benefits
                                 </h3>
                                 <ul className="space-y-2">
-                                  <li className="text-sm flex items-start">
-                                    <span className="mr-2 text-primary">•</span>
+                                  <li className="flex items-start text-sm">
+                                    <span className="text-primary mr-2">•</span>
                                     Rich in essential nutrients and vitamins
                                   </li>
-                                  <li className="text-sm flex items-start">
-                                    <span className="mr-2 text-primary">•</span>
+                                  <li className="flex items-start text-sm">
+                                    <span className="text-primary mr-2">•</span>
                                     Balanced macronutrient profile to support
                                     your {goal.toLowerCase()} goals
                                   </li>
-                                  <li className="text-sm flex items-start">
-                                    <span className="mr-2 text-primary">•</span>
+                                  <li className="flex items-start text-sm">
+                                    <span className="text-primary mr-2">•</span>
                                     Contains antioxidants and anti-inflammatory
                                     compounds
                                   </li>
@@ -889,7 +879,7 @@ const Meal = () => {
               ))}
             </div>
 
-            <div className="flex justify-center mt-8">
+            <div className="mt-8 flex justify-center">
               <Button onClick={saveMealPlan} className="mr-4">
                 <Bookmark className="mr-2 h-4 w-4" /> Save Meal Plan
               </Button>
@@ -908,7 +898,7 @@ const Meal = () => {
 
         {/* Meal Details Dialog */}
         <Dialog open={showMealDetails} onOpenChange={setShowMealDetails}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">
                 {selectedMeal?.name}
@@ -920,50 +910,50 @@ const Meal = () => {
 
             <div className="space-y-6">
               {/* Meal Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="h-4 w-4 text-primary" />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <Card className="p-4 transition-shadow hover:shadow-md">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Clock className="text-primary h-4 w-4" />
                     <span className="text-sm font-medium">Time</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Prep: {selectedMeal?.prepTime}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Cook: {selectedMeal?.cookTime}
                     </p>
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Target className="h-4 w-4 text-primary" />
+                <Card className="p-4 transition-shadow hover:shadow-md">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Target className="text-primary h-4 w-4" />
                     <span className="text-sm font-medium">Nutrition</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Calories: {selectedMeal?.calories} kcal
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Servings: {selectedMeal?.servings}
                     </p>
                   </div>
                 </Card>
 
-                <Card className="p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Utensils className="h-4 w-4 text-primary" />
+                <Card className="p-4 transition-shadow hover:shadow-md">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Utensils className="text-primary h-4 w-4" />
                     <span className="text-sm font-medium">Macros</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Protein: {selectedMeal?.macros.protein}g
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Carbs: {selectedMeal?.macros.carbs}g
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       Fat: {selectedMeal?.macros.fat}g
                     </p>
                   </div>
@@ -974,15 +964,15 @@ const Meal = () => {
               {selectedMeal?.ingredients &&
                 selectedMeal.ingredients.length > 0 && (
                   <div className="space-y-3">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <List className="h-5 w-5 text-primary" />
+                    <h3 className="flex items-center gap-2 text-lg font-semibold">
+                      <List className="text-primary h-5 w-5" />
                       Ingredients
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                       {selectedMeal.ingredients.map((ingredient, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                          className="bg-muted/30 hover:bg-muted/50 flex items-center gap-2 rounded-lg p-3 transition-colors"
                         >
                           <span className="text-primary">•</span>
                           <span className="text-sm">{ingredient}</span>
@@ -996,18 +986,18 @@ const Meal = () => {
               {selectedMeal?.instructions &&
                 selectedMeal.instructions.length > 0 && (
                   <div className="space-y-3">
-                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                      <ClipboardList className="h-5 w-5 text-primary" />
+                    <h3 className="flex items-center gap-2 text-lg font-semibold">
+                      <ClipboardList className="text-primary h-5 w-5" />
                       Instructions
                     </h3>
                     <div className="space-y-3">
                       {selectedMeal.instructions.map((instruction, idx) => (
                         <div
                           key={idx}
-                          className="flex gap-3 p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                          className="bg-muted/30 hover:bg-muted/50 flex gap-3 rounded-lg p-4 transition-colors"
                         >
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-sm font-medium text-primary">
+                          <div className="bg-primary/10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
+                            <span className="text-primary text-sm font-medium">
                               {idx + 1}
                             </span>
                           </div>
@@ -1021,8 +1011,8 @@ const Meal = () => {
               {/* Tags */}
               {selectedMeal?.tags && selectedMeal.tags.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-lg font-semibold flex items-center gap-2">
-                    <Tags className="h-5 w-5 text-primary" />
+                  <h3 className="flex items-center gap-2 text-lg font-semibold">
+                    <Tags className="text-primary h-5 w-5" />
                     Tags
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -1056,7 +1046,7 @@ const Meal = () => {
                   "gap-2",
                   selectedMeal?.isFavorite
                     ? "bg-destructive hover:bg-destructive/90"
-                    : "bg-primary hover:bg-primary/90"
+                    : "bg-primary hover:bg-primary/90",
                 )}
               >
                 {selectedMeal?.isFavorite ? (

@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useReactToPrint } from "react-to-print";
 import { PageLayout } from "./layout/PageLayout";
+import Unauthorized from "@/pages/Unauthorized";
 
 interface ShoppingItem {
   name: string;
@@ -33,6 +34,7 @@ const ShoppingList: React.FC = () => {
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(false);
   const { getToken } = useAuth();
+  const { isSignedIn } = useUser();
   const componentRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
@@ -73,6 +75,10 @@ const ShoppingList: React.FC = () => {
     },
     {} as Record<string, ShoppingItem[]>,
   );
+
+  if (!isSignedIn) {
+    return <Unauthorized />;
+  }
 
   return (
     <PageLayout>
