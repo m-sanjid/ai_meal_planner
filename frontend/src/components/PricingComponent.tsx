@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
 import {
   Tooltip,
@@ -16,7 +15,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { useSubscription } from "@/context/SubscriptionContext";
-import { JSX, useState } from "react";
+import { JSX } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { IconCheck } from "@tabler/icons-react";
@@ -33,9 +32,6 @@ type Props = {
 
 const   PricingComponent = ({ loading, handleSubscribe }: Props) => {
   const { subscription } = useSubscription();
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(
-    "monthly",
-  );
   const navigate = useNavigate();
   const current = subscription || "free";
   const path = window.location.pathname;
@@ -186,3 +182,54 @@ const   PricingComponent = ({ loading, handleSubscribe }: Props) => {
 };
 
 export default PricingComponent;
+
+const plans = [
+  {
+    id: "free",
+    name: "Basic",
+    description: "Perfect for getting started",
+    price: 0,
+    planId: "plan_basic",
+    features: [
+      { text: "10 AI-generated meals per month", tooltip: "Resets monthly" },
+      { text: "Basic recipe suggestions" },
+      { text: "Shopping list generation" },
+      { text: "Basic nutritional info" },
+    ],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    description: "For nutrition enthusiasts",
+    price: 499,
+    planId: "plan_Q1Srxoloblnvpy",
+    popular: true,
+    features: [
+      { text: "Unlimited AI meal generations" },
+      { text: "Advanced recipe customization" },
+      {
+        text: "Detailed nutrition tracking",
+        tooltip: "Including macro and micronutrients",
+      },
+      { text: "Meal prep guides" },
+      { text: "Priority support" },
+    ],
+  },
+  {
+    id: "family",
+    name: "Family",
+    description: "Perfect for families",
+    price: 1299,
+    planId: "plan_Q1Ssb9efvNYZlP",
+    features: [
+      { text: "All Pro features" },
+      {
+        text: "Up to 6 family profiles",
+        tooltip: "Each with their own preferences",
+      },
+      { text: "Family meal planning" },
+      { text: "Grocery cost optimization" },
+      { text: "24/7 priority support" },
+    ],
+  },
+];

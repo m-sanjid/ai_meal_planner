@@ -18,6 +18,11 @@
     "lint": "bunx eslint ./src --ext .ts,.tsx",
     "lint:fix": "bunx eslint ./src --ext .ts,.tsx --fix"
   },
+  "scripts": {
+    "dev": "bun run index.ts",
+    "build": "bun build index.ts --outdir dist --target bun",
+    "start": "bun run dist/index.js"
+  },
   "peerDependencies": {
     "typescript": "^5.7.3"
   },
