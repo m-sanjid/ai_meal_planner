@@ -11,6 +11,18 @@ interface UserDocument extends Document {
 	nextReset?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
+	nutritionGoals: {
+		calories: number;
+		protein: number;
+		carbs: number;
+		fat: number;
+	};
+	preferences: string[];
+	scheduledMeals: {
+		date: Date;
+		mealType: "breakfast" | "lunch" | "dinner" | "snack";
+		meal: any;
+	}[];
 
 	resetTokensIfNeeded(): void;
 	generateMeal(): Promise<{ success: boolean; message: string }>;
@@ -36,6 +48,27 @@ const userSchema = new mongoose.Schema<UserDocument>(
 		subscriptionId: { type: String, default: null },
 		subscriptionStatus: {type: String,enum: ["active", "inactive", "canceled"],default: "inactive"},
 		nextReset: { type: Date, default: null, required: false },
+		nutritionGoals: {
+			calories: { type: Number, default: 2000 },
+			protein: { type: Number, default: 150 },
+			carbs: { type: Number, default: 200 },
+			fat: { type: Number, default: 65 },
+		},
+		preferences: { type: [String], default: [] },
+		scheduledMeals: {
+			type: [
+				{
+					date: { type: Date, required: true },
+					mealType: {
+						type: String,
+						enum: ["breakfast", "lunch", "dinner", "snack"],
+						required: true,
+					},
+					meal: { type: mongoose.Schema.Types.Mixed, required: true },
+				},
+			],
+			default: [],
+		},
 	},
 	{ timestamps: true },
 );
