@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import MealPreview from "@/components/MealPreview";
 import { useFavorites } from "@/lib/favorites";
 import { useAuth, useUser } from "@clerk/clerk-react";
+import Unauthorized from "./Unauthorized";
 
 interface Meal {
   id: string;
@@ -22,7 +23,7 @@ interface Meal {
 }
 
 const CalorieTracker = () => {
-  const { user } = useUser();
+  const { user ,isSignedIn } = useUser();
   const { getToken } = useAuth();
   const [token, setToken] = useState<string | null>(null);
   const [dailyGoal, setDailyGoal] = useState(2000);
@@ -44,11 +45,11 @@ const CalorieTracker = () => {
 
   const progress = (totalCalories / dailyGoal) * 100;
 
-const favorites = useFavorites({
-  userId: user?.id!,
-  token: token ?? "",
-});
-  
+  const favorites = useFavorites({
+    userId: user?.id!,
+    token: token ?? "",
+  });
+
   const handleAddMeal = () => {
     if (!newMeal.name || !newMeal.calories) {
       toast.error("Please fill in at least the meal name and calories");
@@ -104,12 +105,16 @@ const favorites = useFavorites({
   };
 
   const filteredMeals = meals.filter((meal) =>
-    meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+    meal.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  if (!isSignedIn) {
+    return <Unauthorized />;
+  }
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-4xl mx-auto py-8 px-4">
+    <div className="bg-background min-h-screen">
+      <div className="container mx-auto max-w-4xl px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,47 +129,51 @@ const favorites = useFavorites({
                 Track your daily nutrition
               </p>
             </div>
-            <Button onClick={() => setShowAddMeal(!showAddMeal)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Meal
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button onClick={() => setShowAddMeal(!showAddMeal)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Meal
+              </Button>
+            </motion.div>
           </div>
 
           {/* Progress Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Daily Progress</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Calories</p>
-                    <p className="text-2xl font-semibold">
-                      {totalCalories} / {dailyGoal} kcal
-                    </p>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Card className="bg-card border border-border">
+              <CardHeader>
+                <CardTitle>Daily Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-muted-foreground text-sm">Calories</p>
+                      <p className="text-2xl font-semibold">
+                        {totalCalories} / {dailyGoal} kcal
+                      </p>
+                    </div>
+                    <div className="w-48">
+                      <Progress value={progress} className="h-2" />
+                    </div>
                   </div>
-                  <div className="w-48">
-                    <Progress value={progress} className="h-2" />
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-muted-foreground text-sm">Protein</p>
+                      <p className="font-semibold">{totalProtein}g</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Carbs</p>
+                      <p className="font-semibold">{totalCarbs}g</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">Fat</p>
+                      <p className="font-semibold">{totalFat}g</p>
+                    </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Protein</p>
-                    <p className="font-semibold">{totalProtein}g</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Carbs</p>
-                    <p className="font-semibold">{totalCarbs}g</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Fat</p>
-                    <p className="font-semibold">{totalFat}g</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Add Meal Form */}
           {showAddMeal && (
@@ -172,17 +181,19 @@ const favorites = useFavorites({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-card rounded-lg p-4 space-y-4"
+              className="bg-card border border-border rounded-lg p-4 transition-all duration-200"
             >
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Add New Meal</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowAddMeal(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowAddMeal(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </motion.div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -246,25 +257,29 @@ const favorites = useFavorites({
                 </div>
               </div>
               <div className="flex justify-end">
-                <Button onClick={handleAddMeal}>Add Meal</Button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button onClick={handleAddMeal}>Add Meal</Button>
+                </motion.div>
               </div>
             </motion.div>
           )}
 
           {/* Favorites Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Add from Favorites</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <MealPreview onClick={handleAddFromFavorite} />
-            </CardContent>
-          </Card>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Card className="bg-card border border-border">
+              <CardHeader>
+                <CardTitle>Add from Favorites</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MealPreview onClick={handleAddFromFavorite} />
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Search and Meals List */}
           <div className="space-y-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
               <Input
                 placeholder="Search meals..."
                 value={searchQuery}
@@ -279,12 +294,14 @@ const favorites = useFavorites({
                   key={meal.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-card rounded-lg p-4"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="bg-card border border-border rounded-lg p-4 transition-all duration-200"
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-medium">{meal.name}</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         {meal.time}
                       </p>
                     </div>
@@ -298,19 +315,19 @@ const favorites = useFavorites({
                   </div>
                   <div className="mt-2 grid grid-cols-4 gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Calories</p>
+                      <p className="text-muted-foreground text-sm">Calories</p>
                       <p className="font-semibold">{meal.calories} kcal</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Protein</p>
+                      <p className="text-muted-foreground text-sm">Protein</p>
                       <p className="font-semibold">{meal.protein}g</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Carbs</p>
+                      <p className="text-muted-foreground text-sm">Carbs</p>
                       <p className="font-semibold">{meal.carbs}g</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Fat</p>
+                      <p className="text-muted-foreground text-sm">Fat</p>
                       <p className="font-semibold">{meal.fat}g</p>
                     </div>
                   </div>

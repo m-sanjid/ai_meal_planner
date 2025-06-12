@@ -4,6 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import FavoriteMeal from "../models/FavoriteMeal";
 import type { AuthenticatedRequest } from "../middlewares/authMiddleware";
 import User from "../models/user";
+import { DayMeals, Meal } from '../models/Meal';
 
 const apiKey = process.env.GEMINI_API_KEY!;
 if (!apiKey) {
@@ -12,6 +13,8 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+let userMeals: Record<string, DayMeals[]> = {};
 
 export const generateMealPlan = async (
   req: AuthenticatedRequest,
@@ -146,7 +149,7 @@ export const updateMealPortion = async (req: Request, res: Response) => {
     meal.portionSize = portionSize;
 
     mealPlan.totalNutrition = mealPlan.meals.reduce(
-      (total, meal) => {
+      ({total, meal}:{total:any,meal:any}) => {
         total.calories += meal.calories || 0;
         total.protein += meal.macros?.protein || 0;
         total.carbs += meal.macros?.carbs || 0;
@@ -236,5 +239,303 @@ export const removeFavoriteMeal = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error removing favorite:", error);
     res.status(500).json({ error: "Failed to remove favorite meal" });
+  }
+};
+
+export const generateMeal = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { goal, dietaryPreferences } = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const user = await User.findOne({ userId });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const mealPlan = await MealPlan.findOne({ userId });
+    if (!mealPlan) {
+      res.status(404).json({ error: 'Meal plan not found' });
+      return;
+    }
+
+    // Calculate current nutrition totals
+    const totalNutrition = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    mealPlan.meals.forEach((meal: any) => {
+      totalNutrition.calories += Number(meal.calories) || 0;
+      totalNutrition.protein += Number(meal.macros?.protein) || 0;
+      totalNutrition.carbs += Number(meal.macros?.carbs) || 0;
+      totalNutrition.fat += Number(meal.macros?.fat) || 0;
+    });
+
+    // Calculate remaining nutrition needs based on user's goals
+    const dailyTargets = user.nutritionGoals || { calories: 2000, protein: 150, carbs: 200, fat: 65 };
+    const remainingNutrition = {
+      calories: Math.max(0, dailyTargets.calories - totalNutrition.calories),
+      protein: Math.max(0, dailyTargets.protein - totalNutrition.protein),
+      carbs: Math.max(0, dailyTargets.carbs - totalNutrition.carbs),
+      fat: Math.max(0, dailyTargets.fat - totalNutrition.fat)
+    };
+
+    // Generate meal based on goal, dietary preferences, and remaining nutrition
+    const generatedMeal = await generateMealBasedOnCriteria({
+      goal,
+      dietaryPreferences,
+      remainingNutrition,
+      userPreferences: user.preferences
+    });
+
+    // Add the generated meal to the meal plan
+    mealPlan.meals.push(generatedMeal);
+    await mealPlan.save();
+
+    res.json({ 
+      meal: generatedMeal,
+      remainingNutrition,
+      totalNutrition: {
+        calories: totalNutrition.calories + generatedMeal.calories,
+        protein: totalNutrition.protein + generatedMeal.macros.protein,
+        carbs: totalNutrition.carbs + generatedMeal.macros.carbs,
+        fat: totalNutrition.fat + generatedMeal.macros.fat
+      }
+    });
+  } catch (error) {
+    console.error('Error generating meal:', error);
+    res.status(500).json({ error: 'Failed to generate meal' });
+  }
+};
+
+// Helper function to generate meal based on criteria
+const generateMealBasedOnCriteria = async (criteria: {
+  goal: string;
+  dietaryPreferences: string[];
+  remainingNutrition: any;
+  userPreferences: any;
+}): Promise<Meal> => {
+  const { goal, dietaryPreferences, remainingNutrition, userPreferences } = criteria;
+  
+  // Meal database or API call would go here
+  // For now, return a contextual meal based on the goal
+  const mealTemplates = {
+    'weight_loss': {
+      name: "Grilled Chicken Salad",
+      baseCalories: 350,
+      macros: { protein: 35, carbs: 15, fat: 12 },
+      ingredients: ["Grilled chicken breast", "Mixed greens", "Cherry tomatoes", "Cucumber", "Olive oil vinaigrette"]
+    },
+    'muscle_gain': {
+      name: "Protein Power Bowl",
+      baseCalories: 650,
+      macros: { protein: 45, carbs: 55, fat: 18 },
+      ingredients: ["Lean ground turkey", "Quinoa", "Sweet potato", "Black beans", "Avocado"]
+    },
+    'maintenance': {
+      name: "Balanced Mediterranean Plate",
+      baseCalories: 500,
+      macros: { protein: 30, carbs: 40, fat: 20 },
+      ingredients: ["Baked salmon", "Brown rice", "Roasted vegetables", "Hummus", "Mixed nuts"]
+    }
+  };
+
+  let selectedTemplate = mealTemplates[goal as keyof typeof mealTemplates] || mealTemplates.maintenance;
+  
+  // Adjust for dietary preferences
+  if (dietaryPreferences?.includes('vegetarian')) {
+    selectedTemplate = {
+      name: "Vegetarian Protein Bowl",
+      baseCalories: 480,
+      macros: { protein: 25, carbs: 45, fat: 18 },
+      ingredients: ["Tofu", "Quinoa", "Chickpeas", "Spinach", "Tahini dressing"]
+    };
+  } else if (dietaryPreferences?.includes('vegan')) {
+    selectedTemplate = {
+      name: "Vegan Power Plate",
+      baseCalories: 520,
+      macros: { protein: 22, carbs: 50, fat: 20 },
+      ingredients: ["Lentils", "Brown rice", "Roasted vegetables", "Nutritional yeast", "Cashew cream"]
+    };
+  }
+
+  // Scale based on remaining nutrition needs
+  const scaleFactor = Math.min(
+    remainingNutrition.calories > 0 ? remainingNutrition.calories / selectedTemplate.baseCalories : 1,
+    2 // Cap at 2x to avoid oversized meals
+  );
+
+  return {
+    name: selectedTemplate.name,
+    calories: Math.round(selectedTemplate.baseCalories * scaleFactor),
+    macros: {
+      protein: Math.round(selectedTemplate.macros.protein * scaleFactor),
+      carbs: Math.round(selectedTemplate.macros.carbs * scaleFactor),
+      fat: Math.round(selectedTemplate.macros.fat * scaleFactor)
+    },
+    ingredients: selectedTemplate.ingredients
+  };
+};
+
+export const addMealToCalendar = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { date, mealType, meal } = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    // Validate input
+    if (!date || !mealType || !meal) {
+      res.status(400).json({ error: 'Missing required fields: date, mealType, meal' });
+      return;
+    }
+
+    const validMealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+    if (!validMealTypes.includes(mealType)) {
+      res.status(400).json({ error: 'Invalid meal type' });
+      return;
+    }
+
+    // Initialize user meals if not exists
+    if (!userMeals[userId]) {
+      userMeals[userId] = [];
+    }
+
+    const targetDate = new Date(date);
+    const dayIndex = userMeals[userId].findIndex(d => 
+      d.date.toDateString() === targetDate.toDateString()
+    );
+    
+    if (dayIndex === -1) {
+      // Create new day entry
+      userMeals[userId].push({
+        date: targetDate,
+        meals: { [mealType]: meal }
+      });
+    } else {
+      // Update existing day
+      userMeals[userId][dayIndex].meals[mealType] = meal;
+    }
+
+    // Also update the user's meal plan in database for persistence
+    try {
+      const mealPlan = await MealPlan.findOne({ userId });
+      if (mealPlan) {
+        const existingMealIndex = mealPlan.scheduledMeals?.findIndex((sm: any) => 
+          sm.date.toDateString() === targetDate.toDateString() && sm.mealType === mealType
+        );
+
+        if (existingMealIndex >= 0) {
+          mealPlan.scheduledMeals[existingMealIndex].meal = meal;
+        } else {
+          if (!mealPlan.scheduledMeals) mealPlan.scheduledMeals = [];
+          mealPlan.scheduledMeals.push({
+            date: targetDate,
+            mealType,
+            meal
+          });
+        }
+        await mealPlan.save();
+      }
+    } catch (dbError) {
+      console.warn('Failed to persist meal to database:', dbError);
+      // Continue execution - in-memory storage still works
+    }
+
+    res.json({ 
+      success: true, 
+      message: `${mealType} added to ${targetDate.toDateString()}` 
+    });
+  } catch (error) {
+    console.error('Error adding meal to calendar:', error);
+    res.status(500).json({ error: 'Failed to add meal to calendar' });
+  }
+};
+
+export const getMealsForWeek = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { startDate } = req.query;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    if (!startDate) {
+      res.status(400).json({ error: 'Start date is required' });
+      return;
+    }
+
+    const start = new Date(startDate as string);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 7);
+
+    // Get meals from in-memory storage
+    const weekMeals = userMeals[userId]?.filter(day => {
+      const dayDate = new Date(day.date);
+      return dayDate >= start && dayDate < end;
+    }) || [];
+
+    // Also try to get from database for more persistent storage
+    try {
+      const mealPlan = await MealPlan.findOne({ userId });
+      if (mealPlan?.scheduledMeals) {
+        const dbMeals = mealPlan.scheduledMeals.filter((sm: any) => {
+          const mealDate = new Date(sm.date);
+          return mealDate >= start && mealDate < end;
+        });
+
+        // Merge database meals with in-memory meals
+        dbMeals.forEach((dbMeal: any) => {
+          const existingDay = weekMeals.find(day => 
+            day.date.toDateString() === dbMeal.date.toDateString()
+          );
+          
+          if (existingDay) {
+            existingDay.meals[dbMeal.mealType] = dbMeal.meal;
+          } else {
+            weekMeals.push({
+              date: dbMeal.date,
+              meals: { [dbMeal.mealType]: dbMeal.meal }
+            });
+          }
+        });
+      }
+    } catch (dbError) {
+      console.warn('Failed to fetch meals from database:', dbError);
+      // Continue with in-memory data
+    }
+
+    // Sort by date
+    weekMeals.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Calculate nutrition totals for the week
+    const weeklyNutrition = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+    weekMeals.forEach(day => {
+      Object.values(day.meals).forEach((meal: any) => {
+        weeklyNutrition.calories += meal.calories || 0;
+        weeklyNutrition.protein += meal.macros?.protein || 0;
+        weeklyNutrition.carbs += meal.macros?.carbs || 0;
+        weeklyNutrition.fat += meal.macros?.fat || 0;
+      });
+    });
+
+    res.json({ 
+      meals: weekMeals,
+      weeklyNutrition,
+      dateRange: {
+        start: start.toISOString(),
+        end: end.toISOString()
+      }
+    });
+  } catch (error) {
+    console.error('Error getting meals for week:', error);
+    res.status(500).json({ error: 'Failed to get meals for week' });
   }
 };

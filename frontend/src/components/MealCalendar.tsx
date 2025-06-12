@@ -73,7 +73,7 @@ const MealCalendar: React.FC = () => {
       setWeekMeals((prev) => {
         const updated = [...prev];
         const dayIndex = updated.findIndex((day) =>
-          isSameDay(day.date, selectedDate)
+          isSameDay(day.date, selectedDate),
         );
 
         if (dayIndex === -1) {
@@ -95,7 +95,10 @@ const MealCalendar: React.FC = () => {
     }
   };
 
-  const getMealForDate = (date: Date, mealType: "breakfast" | "lunch" | "dinner") => {
+  const getMealForDate = (
+    date: Date,
+    mealType: "breakfast" | "lunch" | "dinner",
+  ) => {
     const dayMeals = weekMeals.find((day) => isSameDay(day.date, date));
     return dayMeals?.meals[mealType];
   };
@@ -131,21 +134,17 @@ const MealCalendar: React.FC = () => {
           <div
             key={date.toISOString()}
             className={cn(
-              "flex flex-col items-center p-2 rounded-lg cursor-pointer transition-colors",
+              "flex cursor-pointer flex-col items-center rounded-lg p-2 transition-colors",
               isSameDay(date, selectedDate)
                 ? "bg-primary text-primary-foreground"
                 : isToday(date)
-                ? "bg-muted"
-                : "hover:bg-muted/50"
+                  ? "bg-muted"
+                  : "hover:bg-muted/50",
             )}
             onClick={() => handleDateClick(date)}
           >
-            <span className="text-sm font-medium">
-              {format(date, "EEE")}
-            </span>
-            <span className="text-lg font-semibold">
-              {format(date, "d")}
-            </span>
+            <span className="text-sm font-medium">{format(date, "EEE")}</span>
+            <span className="text-lg font-semibold">{format(date, "d")}</span>
           </div>
         ))}
       </div>
@@ -175,7 +174,7 @@ const MealCalendar: React.FC = () => {
                   {meal ? (
                     <div className="space-y-2">
                       <h4 className="font-medium">{meal.name}</h4>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         <p>Calories: {meal.calories}</p>
                         <p>Protein: {meal.macros.protein}g</p>
                         <p>Carbs: {meal.macros.carbs}g</p>
@@ -183,7 +182,7 @@ const MealCalendar: React.FC = () => {
                       </div>
                       <div className="text-sm">
                         <p className="font-medium">Ingredients:</p>
-                        <ul className="list-disc list-inside">
+                        <ul className="list-inside list-disc">
                           {meal.ingredients.map((ingredient, index) => (
                             <li key={index}>{ingredient}</li>
                           ))}
@@ -205,4 +204,4 @@ const MealCalendar: React.FC = () => {
   );
 };
 
-export default MealCalendar; 
+export default MealCalendar;
