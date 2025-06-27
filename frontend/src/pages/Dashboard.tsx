@@ -1,5 +1,5 @@
 import Pagination from "@/components/Pagination";
-import { MealCard } from "@/components/MealCard";
+import MealCard from "@/components/MealCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PAGE_SIZE } from "@/lib/constants";
 import { useAuth, useUser } from "@clerk/clerk-react";
@@ -9,17 +9,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { PageHeader } from "@/components/PageHeader";
 import Unauthorized from "./Unauthorized";
-
-interface Meal {
-  name: string;
-  calories: number;
-  macros: {
-    protein: number;
-    carbs: number;
-    fat: number;
-  };
-  ingredients: string[];
-}
+import { Meal } from "@/components/MealCard";
 
 interface MealPlan {
   _id: string;
@@ -131,7 +121,7 @@ const Dashboard = () => {
                     key={mealPlan._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-4 overflow-hidden rounded-lg border bg-white/50 p-4 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:bg-neutral-800/50"
+                    className="mb-4 flex flex-col items-center justify-center gap-4 overflow-hidden rounded-lg border bg-white/50 p-4 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:bg-neutral-800/50"
                   >
                     <h3 className="py-4 text-2xl font-bold text-neutral-800 dark:text-white">
                       Goal: {mealPlan.goal}
@@ -143,9 +133,9 @@ const Dashboard = () => {
                     <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
                       {mealPlan.meals.map((meal, index) => (
                         <MealCard
+                          showNutritionDetails={true}
                           key={index}
                           meal={meal}
-                          index={index}
                           saveFavoriteMeal={saveFavoriteMeal}
                         />
                       ))}

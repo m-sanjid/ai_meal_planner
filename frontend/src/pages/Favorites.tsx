@@ -1,27 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
-import { Plus, Star, StarOff, User } from "lucide-react";
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { motion } from "motion/react";
 import Unauthorized from "./Unauthorized";
-
-interface Macros {
-  protein: number;
-  carbs: number;
-  fat: number;
-}
-
-interface Meal {
-  _id: string;
-  name: string;
-  calories: number;
-  macros?: Macros;
-  ingredients?: string[];
-}
+import { PageHeader } from "@/components/PageHeader";
+import MealCard from "@/components/MealCard";
+import { Meal } from "@/lib/constants";
 
 export interface Favorite {
   _id: string;
@@ -86,45 +75,12 @@ const Favorites = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-5xl mx-auto py-8 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-card rounded-xl p-6 shadow-sm mb-8"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {user?.hasImage ? (
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={user?.imageUrl}
-                    alt="user avatar"
-                  />
-                </div>
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center border-2 border-primary">
-                  <User className="w-6 h-6 text-primary" />
-                </div>
-              )}
-              <div>
-                <h1 className="text-2xl font-semibold">{user?.firstName}'s Favorites</h1>
-                <p className="text-muted-foreground">Your saved meals</p>
-              </div>
-            </div>
-            <Button asChild>
-              <a href="/meal">
-                <Plus className="h-4 w-4 mr-2" />
-                Create New Meal
-              </a>
-            </Button>
-          </div>
-        </motion.div>
+    <div className="bg-background min-h-screen">
+      <div className="container mx-auto max-w-5xl px-4 py-8">
+        <PageHeader user={user} title="Favorites" Cta="Create New Meal" />
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {[1, 2].map((i) => (
               <Card key={i} className="p-4">
                 <Skeleton className="h-[200px] w-full" />
@@ -136,12 +92,12 @@ const Favorites = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-center py-12"
+            className="py-12 text-center"
           >
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <Star className="w-8 h-8 text-muted-foreground" />
+            <div className="bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <Star className="text-muted-foreground h-8 w-8" />
             </div>
-            <h2 className="text-xl font-semibold mb-2">No Favorites Yet</h2>
+            <h2 className="mb-2 text-xl font-semibold">No Favorites Yet</h2>
             <p className="text-muted-foreground mb-4">
               Save your favorite meals to see them here
             </p>
@@ -154,7 +110,7 @@ const Favorites = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2"
           >
             {favorites.map((fav, index) => (
               <motion.div
@@ -162,55 +118,18 @@ const Favorites = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="mx-auto w-full max-w-md"
               >
-                <Card className="overflow-hidden">
-                  <CardHeader className="bg-muted/50">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{fav.meal.name}</CardTitle>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveFavorites(fav._id)}
-                      >
-                        <StarOff className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Calories</p>
-                          <p className="font-semibold">{fav.meal.calories} kcal</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Protein</p>
-                          <p className="font-semibold">{fav.meal.macros?.protein}g</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Carbs</p>
-                          <p className="font-semibold">{fav.meal.macros?.carbs}g</p>
-                        </div>
-                      </div>
-                      {fav.meal.ingredients && fav.meal.ingredients.length > 0 && (
-                        <div>
-                          <h3 className="text-sm font-medium mb-2">Ingredients</h3>
-                          <ul className="space-y-1">
-                            {fav.meal.ingredients.map((ingredient, idx) => (
-                              <li
-                                key={`${fav._id}-ingredient-${idx}`}
-                                className="text-sm text-muted-foreground flex items-center"
-                              >
-                                <span className="mr-2">•</span>
-                                {ingredient}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                <MealCard
+                  meal={{
+                    ...fav.meal,
+                    macros: fav.meal.macros || { protein: 0, fat: 0, carbs: 0 },
+                    ingredients: fav.meal.ingredients || [],
+                    isFavorite: true,
+                  }}
+                  saveFavoriteMeal={() => handleRemoveFavorites(fav._id)}
+                  showNutritionDetails={true}
+                />
               </motion.div>
             ))}
           </motion.div>

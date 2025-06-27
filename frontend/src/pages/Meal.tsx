@@ -1,23 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Options from "@/components/Options";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import {
   Star,
   Loader2,
   Filter,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Calendar,
   Utensils,
   Bookmark,
   StarOff,
@@ -25,12 +15,12 @@ import {
   ClipboardList,
   Tags,
   Target,
+  Clock,
 } from "lucide-react";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
-import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -45,13 +35,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSkeleton from "@/components/meal/LoadingSkeleton";
@@ -60,25 +43,7 @@ import UpgradeToPro from "@/components/UpgradeToPro";
 import Unauthorized from "./Unauthorized";
 import { IconPencil } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-
-interface Meal {
-  id?: string;
-  name: string;
-  calories: number;
-  macros: {
-    protein: number;
-    fat: number;
-    carbs: number;
-  };
-  ingredients: string[];
-  instructions?: string[];
-  prepTime?: string;
-  cookTime?: string;
-  servings?: number;
-  difficulty?: string;
-  tags?: string[];
-  isFavorite?: boolean;
-}
+import MealCard, { type Meal } from "@/components/MealCard";
 
 const Meal = () => {
   const [goal, setGoal] = useState("");
@@ -89,7 +54,6 @@ const Meal = () => {
   const [favoriteMeals, setFavoriteMeals] = useState<Meal[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [expandedMealId, setExpandedMealId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState("");
@@ -211,7 +175,7 @@ const Meal = () => {
       // Update the meals array to mark this meal as favorite
       if (meals) {
         setMeals(
-          meals.map((m) => (m.id === meal.id ? { ...m, isFavorite: true } : m)),
+          meals.map((m) => (m.name === meal.name ? { ...m, isFavorite: true } : m)),
         );
       }
 
@@ -237,10 +201,6 @@ const Meal = () => {
 
     setSavedMealPlans([...savedMealPlans, newPlan]);
     toast.success("Meal plan saved successfully!");
-  };
-
-  const toggleExpandMeal = (mealId: string) => {
-    setExpandedMealId(expandedMealId === mealId ? null : mealId);
   };
 
   // Helper functions to generate mock data
@@ -298,7 +258,7 @@ const Meal = () => {
 
   return (
     <div className="from-background to-muted/20 min-h-screen bg-gradient-to-br">
-      <div className="container mx-auto max-w-6xl px-4 py-12">
+      <div className="mx-auto max-w-5xl px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -538,7 +498,7 @@ const Meal = () => {
             transition={{ duration: 0.5 }}
             className="space-y-8"
           >
-            <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+            <div className="flex flex-col items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-20">
                   <h2 className="text-xl font-semibold">Your Meal Plan</h2>
@@ -570,304 +530,23 @@ const Meal = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 max-w-4xl mx-auto">
               {getFilteredMeals().map((meal, index) => (
                 <motion.div
-                  key={meal.id || index}
+                  key={index}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className="mx-auto"
                 >
-                  <Card className="group overflow-hidden transition-shadow duration-200 hover:shadow-lg">
-                    <CardHeader className="bg-muted/40 pb-4">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="group-hover:text-primary line-clamp-1 text-xl transition-colors">
-                          {meal.name}
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => saveFavoriteMeal(meal)}
-                            className={cn(
-                              "hover:bg-primary/10 transition-colors",
-                              meal.isFavorite && "text-primary",
-                            )}
-                          >
-                            <Star
-                              className={cn(
-                                "h-4 w-4 transition-transform",
-                                meal.isFavorite && "scale-110",
-                              )}
-                              fill={meal.isFavorite ? "currentColor" : "none"}
-                            />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {meal.tags?.map((tag, idx) => (
-                          <Badge
-                            key={idx}
-                            variant="outline"
-                            className="bg-background/50 hover:bg-primary/10 transition-colors"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="space-y-6">
-                        <div className="flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
-                            <Clock className="text-muted-foreground h-4 w-4" />
-                            <span>Prep: {meal.prepTime}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Utensils className="text-muted-foreground h-4 w-4" />
-                            <span>Cook: {meal.cookTime}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="text-muted-foreground h-4 w-4" />
-                            <span>Serves: {meal.servings}</span>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">
-                              Calories
-                            </span>
-                            <span className="font-medium">
-                              {meal.calories} kcal
-                            </span>
-                          </div>
-                          <Progress
-                            value={(meal.calories / calorieTarget) * 100}
-                            className="h-2"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
-                            <p className="text-muted-foreground text-sm">
-                              Protein
-                            </p>
-                            <p className="font-semibold">
-                              {meal.macros.protein}g
-                            </p>
-                            {showNutritionDetails && (
-                              <p className="text-muted-foreground mt-1 text-xs">
-                                {Math.round(
-                                  ((meal.macros.protein * 4) / meal.calories) *
-                                    100,
-                                )}
-                                % of calories
-                              </p>
-                            )}
-                          </div>
-                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
-                            <p className="text-muted-foreground text-sm">Fat</p>
-                            <p className="font-semibold">{meal.macros.fat}g</p>
-                            {showNutritionDetails && (
-                              <p className="text-muted-foreground mt-1 text-xs">
-                                {Math.round(
-                                  ((meal.macros.fat * 9) / meal.calories) * 100,
-                                )}
-                                % of calories
-                              </p>
-                            )}
-                          </div>
-                          <div className="bg-muted/30 hover:bg-muted/50 rounded-lg p-3 text-center transition-colors">
-                            <p className="text-muted-foreground text-sm">
-                              Carbs
-                            </p>
-                            <p className="font-semibold">
-                              {meal.macros.carbs}g
-                            </p>
-                            {showNutritionDetails && (
-                              <p className="text-muted-foreground mt-1 text-xs">
-                                {Math.round(
-                                  ((meal.macros.carbs * 4) / meal.calories) *
-                                    100,
-                                )}
-                                % of calories
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <Accordion type="single" collapsible className="w-full">
-                          <AccordionItem value="ingredients">
-                            <AccordionTrigger className="py-2 text-sm font-medium">
-                              Ingredients
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <ul className="space-y-2">
-                                {meal.ingredients.map((ingredient, idx) => (
-                                  <li
-                                    key={idx}
-                                    className="group flex items-center text-xs"
-                                  >
-                                    <span className="text-muted-foreground mr-2">
-                                      •
-                                    </span>
-                                    {ingredient}
-                                  </li>
-                                ))}
-                              </ul>
-                            </AccordionContent>
-                          </AccordionItem>
-
-                          <AccordionItem value="instructions">
-                            <AccordionTrigger className="py-2 text-sm font-medium">
-                              Instructions
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <ol className="list-inside list-decimal space-y-2">
-                                {meal.instructions?.map((instruction, idx) => (
-                                  <li key={idx} className="text-xs">
-                                    {instruction}
-                                  </li>
-                                ))}
-                              </ol>
-                            </AccordionContent>
-                          </AccordionItem>
-
-                          {showNutritionDetails && (
-                            <AccordionItem value="nutrition">
-                              <AccordionTrigger className="py-2 text-sm font-medium">
-                                Detailed Nutrition
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="space-y-4">
-                                  <div className="grid grid-cols-2 gap-2">
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Total Calories:</span>
-                                      <span className="text-primary font-medium">
-                                        {meal.calories} kcal
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Protein:</span>
-                                      <span className="text-primary font-medium">
-                                        {meal.macros.protein}g (
-                                        {Math.round(
-                                          ((meal.macros.protein * 4) /
-                                            meal.calories) *
-                                            100,
-                                        )}
-                                        %)
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Carbohydrates:</span>
-                                      <span className="text-primary font-medium">
-                                        {meal.macros.carbs}g (
-                                        {Math.round(
-                                          ((meal.macros.carbs * 4) /
-                                            meal.calories) *
-                                            100,
-                                        )}
-                                        %)
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Fat:</span>
-                                      <span className="text-primary font-medium">
-                                        {meal.macros.fat}g (
-                                        {Math.round(
-                                          ((meal.macros.fat * 9) /
-                                            meal.calories) *
-                                            100,
-                                        )}
-                                        %)
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Fiber (est.):</span>
-                                      <span className="text-primary font-medium">
-                                        {Math.round(meal.macros.carbs * 0.15)}g
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Sugar (est.):</span>
-                                      <span className="text-primary font-medium">
-                                        {Math.round(meal.macros.carbs * 0.25)}g
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Saturated Fat (est.):</span>
-                                      <span className="text-primary font-medium">
-                                        {Math.round(meal.macros.fat * 0.3)}g
-                                      </span>
-                                    </div>
-                                    <div className="text-muted-foreground flex justify-between text-xs">
-                                      <span>Sodium (est.):</span>
-                                      <span className="text-primary font-medium">
-                                        {meal.calories * 0.5}mg
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          )}
-                        </Accordion>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="bg-muted/10 flex items-center justify-between p-4">
-                      <span className="text-sm font-medium">
-                        {meal.difficulty}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => toggleExpandMeal(meal.id!)}
-                      >
-                        {expandedMealId === meal.id ? (
-                          <>
-                            <ChevronUp className="mr-1 h-4 w-4" /> Collapse
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="mr-1 h-4 w-4" /> Details
-                          </>
-                        )}
-                      </Button>
-                    </CardFooter>
-
-                    <AnimatePresence>
-                      {expandedMealId === meal.id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="border-t p-6">
-                            <div className="space-y-6">
-                              <div>
-                                <h3 className="mb-3 text-lg font-medium">
-                                  Cooking Instructions
-                                </h3>
-                                <ol className="list-inside list-decimal space-y-3">
-                                  {meal.instructions?.map(
-                                    (instruction, idx) => (
-                                      <li key={idx} className="text-sm">
-                                        {instruction}
-                                      </li>
-                                    ),
-                                  )}
-                                </ol>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Card>
+                  <MealCard
+                    meal={meal}
+                    saveFavoriteMeal={saveFavoriteMeal}
+                    setSelectedMeal={setSelectedMeal}
+                    setShowMealDetails={setShowMealDetails}
+                    calorieTarget={calorieTarget}
+                    showNutritionDetails={showNutritionDetails}
+                  />
                 </motion.div>
               ))}
             </div>
