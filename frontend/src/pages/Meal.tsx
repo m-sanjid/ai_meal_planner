@@ -58,6 +58,8 @@ import LoadingSkeleton from "@/components/meal/LoadingSkeleton";
 import HelpSheet from "@/components/meal/HelpSheet";
 import UpgradeToPro from "@/components/UpgradeToPro";
 import Unauthorized from "./Unauthorized";
+import { IconPencil } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 
 interface Meal {
   id?: string;
@@ -498,8 +500,13 @@ const Meal = () => {
             </Button>
 
             {!isPro && (
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                Upgrade to Pro
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                <Link to="/pricing">Upgrade to Pro</Link>
               </Button>
             )}
           </div>
@@ -533,13 +540,19 @@ const Meal = () => {
           >
             <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
               <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="text-2xl font-semibold">Your Meal Plan</h2>
-                  <Input
-                    value={mealPlanName}
-                    onChange={(e) => setMealPlanName(e.target.value)}
-                    className="focus-visible:bg-muted h-auto max-w-xs border-0 p-0 text-lg font-medium focus-visible:ring-0"
-                  />
+                <div className="flex items-center gap-20">
+                  <h2 className="text-xl font-semibold">Your Meal Plan</h2>
+                  <div className="relative">
+                    <IconPencil
+                      strokeWidth={1}
+                      className="absolute top-1/2 right-2 h-4 w-4 -translate-y-2"
+                    />
+                    <Input
+                      value={mealPlanName}
+                      onChange={(e) => setMealPlanName(e.target.value)}
+                      className="focus-visible:bg-muted text-muted-foreground focus:text-primary h-auto max-w-xs border px-4 py-2 font-medium focus-visible:ring-0"
+                    />
+                  </div>
                 </div>
                 <p className="text-muted-foreground">
                   {meals.length} meals • {calorieTarget} kcal target •{" "}
@@ -547,7 +560,7 @@ const Meal = () => {
                 </p>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex w-full items-center space-x-2">
                 <Input
                   placeholder="Search meals..."
                   value={searchQuery}
@@ -605,7 +618,7 @@ const Meal = () => {
                     </CardHeader>
                     <CardContent className="p-6">
                       <div className="space-y-6">
-                        <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
                             <Clock className="text-muted-foreground h-4 w-4" />
                             <span>Prep: {meal.prepTime}</span>
@@ -686,7 +699,7 @@ const Meal = () => {
 
                         <Accordion type="single" collapsible className="w-full">
                           <AccordionItem value="ingredients">
-                            <AccordionTrigger className="py-2 text-base font-medium">
+                            <AccordionTrigger className="py-2 text-sm font-medium">
                               Ingredients
                             </AccordionTrigger>
                             <AccordionContent>
@@ -694,9 +707,11 @@ const Meal = () => {
                                 {meal.ingredients.map((ingredient, idx) => (
                                   <li
                                     key={idx}
-                                    className="group flex items-center text-sm"
+                                    className="group flex items-center text-xs"
                                   >
-                                    <span className="text-primary mr-2">•</span>
+                                    <span className="text-muted-foreground mr-2">
+                                      •
+                                    </span>
                                     {ingredient}
                                   </li>
                                 ))}
@@ -705,13 +720,13 @@ const Meal = () => {
                           </AccordionItem>
 
                           <AccordionItem value="instructions">
-                            <AccordionTrigger className="py-2 text-base font-medium">
+                            <AccordionTrigger className="py-2 text-sm font-medium">
                               Instructions
                             </AccordionTrigger>
                             <AccordionContent>
                               <ol className="list-inside list-decimal space-y-2">
                                 {meal.instructions?.map((instruction, idx) => (
-                                  <li key={idx} className="text-sm">
+                                  <li key={idx} className="text-xs">
                                     {instruction}
                                   </li>
                                 ))}
@@ -721,21 +736,21 @@ const Meal = () => {
 
                           {showNutritionDetails && (
                             <AccordionItem value="nutrition">
-                              <AccordionTrigger className="py-2 text-base font-medium">
+                              <AccordionTrigger className="py-2 text-sm font-medium">
                                 Detailed Nutrition
                               </AccordionTrigger>
                               <AccordionContent>
                                 <div className="space-y-4">
                                   <div className="grid grid-cols-2 gap-2">
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Total Calories:</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {meal.calories} kcal
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Protein:</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {meal.macros.protein}g (
                                         {Math.round(
                                           ((meal.macros.protein * 4) /
@@ -745,9 +760,9 @@ const Meal = () => {
                                         %)
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Carbohydrates:</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {meal.macros.carbs}g (
                                         {Math.round(
                                           ((meal.macros.carbs * 4) /
@@ -757,9 +772,9 @@ const Meal = () => {
                                         %)
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Fat:</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {meal.macros.fat}g (
                                         {Math.round(
                                           ((meal.macros.fat * 9) /
@@ -769,27 +784,27 @@ const Meal = () => {
                                         %)
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Fiber (est.):</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {Math.round(meal.macros.carbs * 0.15)}g
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Sugar (est.):</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {Math.round(meal.macros.carbs * 0.25)}g
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Saturated Fat (est.):</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {Math.round(meal.macros.fat * 0.3)}g
                                       </span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
+                                    <div className="text-muted-foreground flex justify-between text-xs">
                                       <span>Sodium (est.):</span>
-                                      <span className="font-medium">
+                                      <span className="text-primary font-medium">
                                         {meal.calories * 0.5}mg
                                       </span>
                                     </div>
@@ -846,28 +861,6 @@ const Meal = () => {
                                     ),
                                   )}
                                 </ol>
-                              </div>
-
-                              <div>
-                                <h3 className="mb-3 text-lg font-medium">
-                                  Health Benefits
-                                </h3>
-                                <ul className="space-y-2">
-                                  <li className="flex items-start text-sm">
-                                    <span className="text-primary mr-2">•</span>
-                                    Rich in essential nutrients and vitamins
-                                  </li>
-                                  <li className="flex items-start text-sm">
-                                    <span className="text-primary mr-2">•</span>
-                                    Balanced macronutrient profile to support
-                                    your {goal.toLowerCase()} goals
-                                  </li>
-                                  <li className="flex items-start text-sm">
-                                    <span className="text-primary mr-2">•</span>
-                                    Contains antioxidants and anti-inflammatory
-                                    compounds
-                                  </li>
-                                </ul>
                               </div>
                             </div>
                           </div>
