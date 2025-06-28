@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import { toast } from "sonner";
 import { sendContactEmail } from "@/lib/contact";
 
@@ -148,7 +148,7 @@ const ContactForm = () => {
     },
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -160,7 +160,7 @@ const ContactForm = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: -20 },
     visible: {
       opacity: 1,
@@ -169,7 +169,7 @@ const ContactForm = () => {
     },
   };
 
-  const errorVariants = {
+  const errorVariants: Variants = {
     hidden: { opacity: 0, y: -10, height: 0 },
     visible: {
       opacity: 1,
@@ -185,7 +185,7 @@ const ContactForm = () => {
     },
   };
 
-  const buttonVariants = {
+  const buttonVariants: Variants = {
     idle: { scale: 1 },
     hover: { scale: 1.02 },
     tap: { scale: 0.98 },
@@ -195,7 +195,7 @@ const ContactForm = () => {
     },
   };
 
-  const spinnerVariants = {
+  const spinnerVariants: Variants = {
     spin: {
       rotate: 360,
       transition: {

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, Variants } from "motion/react";
 import { Testimonials } from "@/lib/constants";
 import SectionHeader from "./SectionHeader";
 import Marquee from "react-fast-marquee";
@@ -8,7 +8,7 @@ export default function TestimonialsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
 
-  const fadeUpVariants = {
+  const fadeUpVariants: Variants = {
     hidden: {
       opacity: 0,
       y: 40,
@@ -25,7 +25,7 @@ export default function TestimonialsSection() {
     },
   };
 
-  const staggerContainer = {
+  const staggerContainer: Variants = {
     visible: {
       transition: {
         staggerChildren: 0.1,

@@ -23,12 +23,12 @@ import { NavUser } from "./NavUser";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import { IconLayoutSidebar } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 // Animation variants
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0, filter: "blur(2px)" },
   show: {
     opacity: 1,
@@ -40,7 +40,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, x: -10 },
   show: { opacity: 1, x: 0 },
 };
