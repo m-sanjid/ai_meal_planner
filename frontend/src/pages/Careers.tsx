@@ -1,25 +1,10 @@
-import {
-  Briefcase,
-  Clock,
-  MapPin,
-  Send,
-  Search,
-  ChevronRight,
-} from "lucide-react";
+import { Briefcase, MapPin, Send, Search, ChevronRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { motion } from "motion/react";
-import { useState } from "react";
+import SectionHeader from "@/components/SectionHeader";
 
 const Careers = () => {
-  const [filter, setFilter] = useState("All");
-  const departments = ["All", "Engineering", "Design", "Marketing"];
-
-  const filteredPositions =
-    filter === "All"
-      ? openPositions
-      : openPositions.filter((position) => position.department === filter);
-
   return (
     <PageLayout>
       <div className="from-primary/10 to-background bg-gradient-to-b py-16">
@@ -29,23 +14,10 @@ const Careers = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <motion.div
-            className="mb-12 text-center"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <span className="bg-primary/10 text-primary mb-4 inline-block rounded-full px-4 py-1 text-sm font-medium">
-              We're Hiring
-            </span>
-            <h1 className="text-foreground mb-4 text-4xl font-bold md:text-5xl">
-              Join Our Team
-            </h1>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-              Help us revolutionize the way people plan and prepare their meals
-              with AI technology
-            </p>
-          </motion.div>
+          <SectionHeader
+            title="Join Our Team"
+            description="Help us revolutionize the way people plan and prepare their meals with AI technology"
+          />
 
           {/* Search and filter section */}
           <motion.div
@@ -60,25 +32,14 @@ const Careers = () => {
               </div>
               <input
                 type="text"
+                disabled
                 placeholder="Search positions..."
                 className="border-border bg-background focus:ring-primary/50 w-full rounded-lg border py-2 pr-4 pl-10 focus:ring-2 focus:outline-none"
               />
             </div>
 
             <div className="flex w-full items-center justify-center gap-2 md:w-auto md:justify-end">
-              {departments.map((dept) => (
-                <button
-                  key={dept}
-                  onClick={() => setFilter(dept)}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                    filter === dept
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card hover:bg-muted"
-                  }`}
-                >
-                  {dept}
-                </button>
-              ))}
+              <div className="text-muted-foreground">Currently Not Hiring</div>
             </div>
           </motion.div>
         </motion.div>
@@ -86,75 +47,6 @@ const Careers = () => {
 
       <div className="bg-background py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <motion.div
-            className="mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <h2 className="text-foreground mb-2 text-2xl font-bold">
-              Open Positions
-            </h2>
-            <p className="text-muted-foreground">
-              {filteredPositions.length}{" "}
-              {filteredPositions.length === 1 ? "position" : "positions"}{" "}
-              available
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="mb-16 grid gap-6 md:grid-cols-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            {filteredPositions.map((position, index) => (
-              <motion.div
-                key={position.title}
-                className="group bg-card border-border hover:border-primary/30 rounded-xl border p-8 transition-all duration-200 hover:shadow-lg"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-                whileHover={{ y: -5 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="mb-4 flex items-start justify-between">
-                  <div>
-                    <span className="bg-primary/10 text-primary mb-3 inline-block rounded-full px-3 py-1 text-xs font-medium">
-                      {position.department}
-                    </span>
-                    <h3 className="text-foreground group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
-                      {position.title}
-                    </h3>
-                  </div>
-                  <div className="bg-background border-border group-hover:bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full border transition-colors">
-                    <ChevronRight className="text-muted-foreground group-hover:text-primary h-5 w-5 transition-colors" />
-                  </div>
-                </div>
-
-                <p className="text-muted-foreground mb-6 line-clamp-2">
-                  {position.description}
-                </p>
-
-                <div className="text-muted-foreground mb-6 flex flex-wrap items-center gap-4 text-sm">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="text-primary h-4 w-4" />{" "}
-                    {position.location}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="text-primary h-4 w-4" /> {position.type}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="text-primary h-4 w-4" />{" "}
-                    {position.department}
-                  </span>
-                </div>
-
-                <Button className="w-full">Apply Now</Button>
-              </motion.div>
-            ))}
-          </motion.div>
-
           <motion.div
             className="bg-muted/50 border-border rounded-2xl border p-8 text-center md:p-12"
             initial={{ opacity: 0, y: 20 }}
@@ -173,6 +65,7 @@ const Careers = () => {
               skills and experience.
             </p>
             <Button size="lg" className="px-8">
+              <Mail className="mr-2 h-4 w-4" />
               Send General Application
             </Button>
           </motion.div>

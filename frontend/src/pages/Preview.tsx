@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import SectionHeader from "@/components/SectionHeader";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 const Preview = () => {
   return (
@@ -29,15 +30,17 @@ const Preview = () => {
                 </li>
               ))}
             </ul>
-            <Button className="flex items-center gap-2">
-              Start Free Trial <ArrowRight className="h-4 w-4" />
-            </Button>
+            <Link to="/signup">
+              <Button className="flex items-center gap-2">
+                Start for Free <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
-          <div className="bg-accent rounded-xl p-6 backdrop-blur-lg">
+          <div className="h-full w-full">
             <img
-              src="/preview-mockup.png"
+              src="/preview.png"
               alt="BefitAI Preview - app interface screenshot"
-              className="rounded-lg shadow-lg"
+              className="h-full w-full object-contain rounded-xl"
             />
           </div>
         </div>
@@ -58,11 +61,11 @@ const Preview = () => {
 };
 
 const features = [
-  "14-day free trial",
-  "No credit card required",
-  "Full access to all features",
-  "Personalized meal recommendations",
+  "10 tokens per month for free, unlimited for pro",
+  "Personalized meal generation",
+  "Calorie tracking",
   "Shopping list generation",
+  "Full access to all features",
 ];
 
 const demoFeatures = [

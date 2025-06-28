@@ -31,7 +31,7 @@ const Settings = () => {
           content="Manage your BefitAI account, appearance, and subscription settings."
         />
       </Helmet>
-      <main className="mx-auto max-w-5xl p-6" aria-label="Settings">
+      <main className="mx-auto max-w-5xl min-h-screen p-6" aria-label="Settings">
         <PageHeader
           user={user}
           title="Settings"

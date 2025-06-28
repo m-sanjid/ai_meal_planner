@@ -26,9 +26,10 @@ const Footer = () => {
               <motion.div
                 key={category}
                 className="group"
-                style={{
-                  animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
-                }}
+                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
               >
                 <h3 className="mb-6 text-lg font-medium text-neutral-900 dark:text-neutral-100">
                   {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -48,9 +49,9 @@ const Footer = () => {
                       >
                         <span className="relative z-10">{link.name}</span>
                         {/* Hover background effect */}
-                        <span className="absolute inset-0 -right-2 -left-2 origin-left scale-x-0 rounded-md bg-neutral-100/50 transition-transform duration-300 group-hover/link:scale-x-100 dark:bg-neutral-800/50" />
+                        <span className="absolute inset-0 -right-2 -left-2 origin-left scale-x-0 rounded-md bg-neutral-100/50 transition-transform duration-300 group-hover/link:scale-x-100 dark:bg-neutral-400/50" />
                         {/* Subtle dot indicator */}
-                        <span className="absolute top-1/2 -left-4 h-1 w-1 -translate-y-1/2 rounded-full bg-neutral-400 opacity-0 transition-all duration-300 group-hover/link:opacity-100 dark:bg-neutral-600" />
+                        <span className="absolute top-1/2 -left-4 h-1 w-1 -translate-y-1/2 rounded-full bg-neutral-400 opacity-0 transition-all duration-300 group-hover/link:opacity-100 dark:bg-neutral-500" />
                       </a>
                     </motion.li>
                   ))}
