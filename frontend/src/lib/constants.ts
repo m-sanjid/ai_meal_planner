@@ -19,7 +19,7 @@ export interface Meal {
     fat: number;
   };
   ingredients: string[];
-  isFavorite?: string;
+  isFavorite?: boolean;
 }
 
 export interface MealPlan {
