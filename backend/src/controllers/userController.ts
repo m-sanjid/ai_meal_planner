@@ -8,6 +8,11 @@ export const registerUser = async (
   try {
     const { userId, email, name } = req.body;
 
+    if (!userId || !email) {
+      res.status(400).json({ error: "userId and email are required" });
+      return;
+    }
+
     let user = await User.findOne({ userId });
     if (user) {
       res.status(200).json({ message: "User already exists", user });

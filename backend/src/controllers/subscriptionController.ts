@@ -79,9 +79,7 @@ export const subscriptionStatus = async (
       return;
     }
 
-    // ✅ Await the async method
     const statusInfo = await user.getSubscriptionStatus();
-
     res.json({
       tokens: statusInfo.tokens,
       subscription: statusInfo.subscription,

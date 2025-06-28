@@ -14,7 +14,13 @@ const app = express();
 
 // 1. CORS 
 app.use(cors({
-  origin: ['http://localhost:5173',"https://ai-meal-planner-m-sanjids-projects.vercel.app/", 'https://befitai.sanjid.shop', 'http://127.0.0.1:5173'],
+  origin: [
+    'http://localhost:5173', 
+    'https://ai-meal-planner-m-sanjids-projects.vercel.app', 
+    'https://befitai.sanjid.shop', 
+    'http://127.0.0.1:5173',
+    'https://ai-meal-planner-4i4t.onrender.com'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -37,5 +43,10 @@ app.use("/api/shopping-list", shoppingListRoutes);
 app.use("/api/sub", subscribeRoutes);
 app.use("/api/calorie", calorieRoutes);
 app.use('/api/contact', contactRoutes);
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
 app.listen(3000, () => console.log("Server started on port 3000"));
