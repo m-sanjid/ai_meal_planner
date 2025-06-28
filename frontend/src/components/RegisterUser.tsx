@@ -1,6 +1,7 @@
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 const AutoRegister = () => {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -33,6 +34,7 @@ const AutoRegister = () => {
 
         localStorage.setItem("isUserRegistered", "true");
       } catch (error) {
+        toast.error("Failed to register user");
         throw error;
       }
     };

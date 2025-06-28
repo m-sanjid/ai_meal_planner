@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/clerk-react";
 import {
   Loader2,
-  Filter,
   Utensils,
   Target,
   ChevronDown,
@@ -31,7 +30,6 @@ const Meal = () => {
   const [mealCount, setMealCount] = useState(2);
   const [calorieTarget, setCalorieTarget] = useState(2000);
   const [meals, setMeals] = useState<Meal[] | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [excludeIngredients, setExcludeIngredients] = useState("");
@@ -42,7 +40,6 @@ const Meal = () => {
   const [savedMealPlans, setSavedMealPlans] = useState<
     { name: string; meals: Meal[] }[]
   >([]);
-  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const [showNutritionDetails, setShowNutritionDetails] = useState(false);
 
   const { user, isSignedIn } = useUser();
@@ -98,11 +95,6 @@ const Meal = () => {
     setSavedMealPlans([...savedMealPlans, { name: mealPlanName, meals }]);
     toast.success("Meal plan saved locally!");
   };
-
-  const filteredMeals =
-    meals?.filter((meal) =>
-      meal.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    ) || [];
 
   return (
     <div className="bg-background min-h-screen">
@@ -248,21 +240,6 @@ const Meal = () => {
         </Card>
 
         <div className="mt-10 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Input
-                placeholder="Search meals..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-              <Filter className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-            </div>
-            <Button variant="outline" onClick={() => setFilterDialogOpen(true)}>
-              <Filter className="mr-2 h-4 w-4" /> Filters
-            </Button>
-          </div>
-
           {generateMealPlanMutation.isPending && (
             <LoadingSkeleton mealCount={mealCount} />
           )}
@@ -282,7 +259,7 @@ const Meal = () => {
               </div>
 
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                {filteredMeals.map((meal, index) => (
+                {meals.map((meal, index) => (
                   <MealCard
                     key={`${meal.name}-${index}`}
                     meal={meal}

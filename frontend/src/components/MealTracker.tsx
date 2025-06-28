@@ -1,16 +1,16 @@
-import { useState } from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { Progress } from "@/components/ui/progress";
 import { Star, Trash2, Edit2 } from "lucide-react";
-import { toast } from "sonner";
+import { Meal } from "@/lib/constants";
 
 interface MealTrackerProps {
-  meals: any[];
+  meals: Meal[];
   onRemoveMeal: (index: number) => void;
   onEditMeal?: (index: number) => void;
-  onAddToFavorites?: (meal: any) => void;
+  onAddToFavorites?: (meal: Meal) => void;
   dailyCalorieGoal?: number;
 }
 
@@ -21,7 +21,6 @@ const MealTracker = ({
   onAddToFavorites,
   dailyCalorieGoal = 2000,
 }: MealTrackerProps) => {
-  const [selectedMeal, setSelectedMeal] = useState<number | null>(null);
 
   const totalCalories = meals.reduce((sum, meal) => sum + meal.calories, 0);
   const totalProtein = meals.reduce(

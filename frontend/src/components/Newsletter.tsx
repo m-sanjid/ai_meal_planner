@@ -30,7 +30,7 @@ const NewsletterSection = () => {
         toast.error(
           "Failed to subscribe to newsletter. Please try again later.",
         );
-        return;
+        throw error;
       }
       setIsSuccess(true);
       setEmail("");
@@ -71,7 +71,6 @@ const NewsletterSection = () => {
               <SectionHeader
                 title="Stay Updated"
                 description="Subscribe for the latest features and AI-powered tips"
-                as="h2"
               />
             </motion.div>
 

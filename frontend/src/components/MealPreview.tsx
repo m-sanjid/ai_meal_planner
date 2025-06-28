@@ -3,9 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { useFavoriteMeals } from "@/hooks/useFavorites";
+import { Meal } from "@/lib/constants";
 
 interface MealPreviewProps {
-  onClick: (meal: any) => void;
+  onClick: (meal: Meal) => void;
 }
 
 const MealPreview = ({ onClick }: MealPreviewProps) => {

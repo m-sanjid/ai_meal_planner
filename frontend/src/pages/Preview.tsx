@@ -17,7 +17,6 @@ const Preview = () => {
         <SectionHeader
           title="Preview BefitAI"
           description="Experience the future of meal planning with our interactive preview"
-          as="h1"
         />
         <div className="mb-16 grid items-center gap-12 md:grid-cols-2">
           <div className="space-y-6">

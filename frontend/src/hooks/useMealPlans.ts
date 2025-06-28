@@ -97,6 +97,7 @@ export const useDeleteMealPlan = () => {
   return useMutation({
     mutationFn: ({
       mealPlanId,
+      // @ts-ignore
       userId,
     }: {
       mealPlanId: string;

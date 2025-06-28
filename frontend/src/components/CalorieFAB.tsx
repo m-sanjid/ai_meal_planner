@@ -13,8 +13,8 @@ import { Link } from "react-router-dom";
 
 const CalorieFAB = () => {
   const [isCalorieDropdownOpen, setIsCalorieDropdownOpen] = useState(false);
-  const [calorieProgress, setCalorieProgress] = useState(0);
-  const [calories, setCalories] = useState({
+  const [calorieProgress] = useState(0);
+  const [calories] = useState({
     consumed: 0,
     goal: 2000,
   });

@@ -52,7 +52,6 @@ export default function TestimonialsSection() {
           <SectionHeader
             title="Testimonials"
             description="What our users say about our AI-powered meal plans"
-            as="h2"
           />
           <Marquee
             pauseOnHover={true}

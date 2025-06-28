@@ -12,7 +12,7 @@ const Terms = () => {
         />
       </Helmet>
       <main className="mx-auto max-w-4xl" aria-label="Terms of Service">
-        <SectionHeader title="Terms of Service" as="h1" />
+        <SectionHeader title="Terms of Service" />
 
         {terms.map((term) => (
           <section key={term.title} className="mb-8">

@@ -66,6 +66,8 @@ export const useRemoveFromFavorites = () => {
   return useMutation({
     mutationFn: ({
       favoriteId,
+      // @ts-ignore
+      userId,
     }: {
       favoriteId: string;
       userId: string;

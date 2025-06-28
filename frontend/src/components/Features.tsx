@@ -14,7 +14,6 @@ export function FeaturesSection() {
       <SectionHeader
         title="Designed for Speed & Simplicity"
         description="No fluff. Just the essential tools to help you eat better, faster."
-        as="h2"
       />
 
       <div

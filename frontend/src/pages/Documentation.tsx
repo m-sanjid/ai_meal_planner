@@ -27,7 +27,7 @@ const Documentation = () => {
         />
       </Helmet>
       <main className="mx-auto max-w-6xl" aria-label="Documentation">
-        <SectionHeader title="Documentation" as="h1" />
+        <SectionHeader title="Documentation" />
         <div className="grid gap-8 md:grid-cols-[280px,1fr]">
           {/* Sidebar Navigation */}
           <div className="space-y-4">
