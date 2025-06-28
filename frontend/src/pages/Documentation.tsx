@@ -10,16 +10,21 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "motion/react";
-import { PageLayout } from "@/components/layout/PageLayout";
 import SectionHeader from "@/components/SectionHeader";
+import { Helmet } from "react-helmet-async";
 
 const Documentation = () => {
   const [activeSection, setActiveSection] = useState("getting-started");
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <PageLayout>
-      <SectionHeader title="Documentation" />
+    <>
+      <Helmet>
+        <title>Documentation | BefitAI Meal Planner</title>
+        <meta name="description" content="Learn how to use BefitAI's AI-powered meal planning platform. Get step-by-step guides and tutorials." />
+      </Helmet>
+      <main className="mx-auto max-w-6xl" aria-label="Documentation">
+        <SectionHeader title="Documentation" as="h1" />
       <div className="grid gap-8 md:grid-cols-[280px,1fr]">
         {/* Sidebar Navigation */}
         <div className="space-y-4">
@@ -78,7 +83,8 @@ const Documentation = () => {
           )}
         </motion.div>
       </div>
-    </PageLayout>
+    </main>
+    </>
   );
 };
 
@@ -89,13 +95,13 @@ const sections = [
     icon: <BookOpen className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-2xl font-semibold">Welcome to BefitAI</h2>
-        <p className="mb-6 text-lg">
+        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Welcome to BefitAI</h2>
+        <p className="mb-6 text-sm md:text-lg">
           Your AI-powered meal planning companion that helps you achieve your
           health and fitness goals through personalized nutrition.
         </p>
 
-        <h3 className="mb-3 text-xl font-semibold">Quick Start Guide</h3>
+        <h3 className="mb-3 text-lg md:text-xl font-semibold">Quick Start Guide</h3>
         <ol className="space-y-4">
           <li className="flex items-start gap-3">
             <span className="bg-primary/10 text-primary flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
@@ -103,7 +109,7 @@ const sections = [
             </span>
             <div>
               <h4 className="font-medium">Create Your Account</h4>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-xs md:text-sm">
                 Sign up and set up your profile with basic information about
                 yourself.
               </p>
@@ -115,7 +121,7 @@ const sections = [
             </span>
             <div>
               <h4 className="font-medium">Set Your Preferences</h4>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-xs md:text-sm">
                 Configure your dietary restrictions, allergies, and food
                 preferences.
               </p>
@@ -127,7 +133,7 @@ const sections = [
             </span>
             <div>
               <h4 className="font-medium">Generate Your First Plan</h4>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-xs md:text-sm">
                 Let our AI create a personalized meal plan based on your goals
                 and preferences.
               </p>
@@ -143,8 +149,8 @@ const sections = [
     icon: <Lightbulb className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-2xl font-semibold">Meal Planning Guide</h2>
-        <p className="mb-6 text-lg">
+        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Meal Planning Guide</h2>
+        <p className="mb-6 text-sm md:text-lg">
           Learn how to create and customize your meal plans to match your
           lifestyle and goals.
         </p>
@@ -152,14 +158,14 @@ const sections = [
         <div className="grid gap-6 md:grid-cols-2">
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Smart Meal Generation</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Our AI analyzes your preferences and goals to create balanced,
               nutritious meal plans.
             </p>
           </div>
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Customization Options</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Adjust portion sizes, swap ingredients, and modify recipes to suit
               your taste.
             </p>
@@ -174,8 +180,8 @@ const sections = [
     icon: <Settings className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-2xl font-semibold">Recipe Management</h2>
-        <p className="mb-6 text-lg">
+        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Recipe Management</h2>
+        <p className="mb-6 text-sm md:text-lg">
           Discover, save, and organize your favorite recipes with our intuitive
           recipe management system.
         </p>
@@ -183,14 +189,14 @@ const sections = [
         <div className="space-y-4">
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Recipe Library</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Access thousands of curated recipes with detailed nutritional
               information.
             </p>
           </div>
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Smart Search</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Find recipes based on ingredients, dietary restrictions, or
               cooking time.
             </p>
@@ -205,8 +211,8 @@ const sections = [
     icon: <HelpCircle className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-2xl font-semibold">Shopping List Guide</h2>
-        <p className="mb-6 text-lg">
+        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Shopping List Guide</h2>
+        <p className="mb-6 text-sm md:text-lg">
           Generate and manage your shopping lists efficiently with our smart
           shopping features.
         </p>
@@ -214,13 +220,13 @@ const sections = [
         <div className="space-y-4">
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Auto-Generated Lists</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Shopping lists are automatically created based on your meal plans.
             </p>
           </div>
           <div className="bg-muted/50 rounded-lg p-6">
             <h3 className="mb-2 font-semibold">Smart Organization</h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Items are categorized by department for efficient shopping.
             </p>
           </div>

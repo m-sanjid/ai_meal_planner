@@ -1,14 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
-import { PageLayout } from "@/components/layout/PageLayout";
 import SectionHeader from "@/components/SectionHeader";
+import { Helmet } from "react-helmet-async";
 
 const Preview = () => {
   return (
-    <PageLayout>
-      <div className="mx-auto max-w-6xl">
-          <SectionHeader title="Preview BefitAI" description="Experience the future of meal planning with our interactive preview" />
-
+    <>
+      <Helmet>
+        <title>Preview | BefitAI Meal Planner</title>
+        <meta name="description" content="Preview BefitAI's AI-powered meal planning features. Try before you buy with a free interactive demo." />
+      </Helmet>
+      <main className="mx-auto max-w-6xl" aria-label="Preview">
+        <SectionHeader
+          title="Preview BefitAI"
+          description="Experience the future of meal planning with our interactive preview"
+          as="h1"
+        />
         <div className="mb-16 grid items-center gap-12 md:grid-cols-2">
           <div className="space-y-6">
             <h2 className="text-2xl font-semibold">Try Before You Buy</h2>
@@ -27,25 +34,24 @@ const Preview = () => {
           <div className="bg-accent rounded-xl p-6 backdrop-blur-lg">
             <img
               src="/preview-mockup.png"
-              alt="BefitAI Preview"
+              alt="BefitAI Preview - app interface screenshot"
               className="rounded-lg shadow-lg"
             />
           </div>
         </div>
-
         <div className="grid gap-8 md:grid-cols-3">
           {demoFeatures.map((feature) => (
             <div
               key={feature.title}
               className="bg-accent rounded-xl p-6 backdrop-blur-lg transition-all duration-200 hover:shadow-lg"
             >
-              <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
+              <h2 className="mb-3 text-xl font-semibold">{feature.title}</h2>
               <p>{feature.description}</p>
             </div>
           ))}
         </div>
-      </div>
-    </PageLayout>
+      </main>
+    </>
   );
 };
 

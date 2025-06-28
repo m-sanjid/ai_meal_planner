@@ -1,22 +1,28 @@
-import { PageLayout } from "@/components/layout/PageLayout";
 import SectionHeader from "@/components/SectionHeader";
+import { Helmet } from "react-helmet-async";
 
 const Terms = () => {
   return (
-    <PageLayout>
-      <div className="mx-auto max-w-4xl">
-        <SectionHeader title="Terms of Service" />
+    <>
+      <Helmet>
+        <title>Terms of Service | BefitAI Meal Planner</title>
+        <meta name="description" content="Read the terms of service for using BefitAI's AI-powered meal planning platform." />
+      </Helmet>
+      <main className="mx-auto max-w-4xl" aria-label="Terms of Service">
+        <SectionHeader title="Terms of Service" as="h1" />
 
         {terms.map((term) => (
           <section key={term.title} className="mb-8">
-            <h2 className="mb-4 text-2xl font-semibold">{term.title}</h2>
-            <div className="prose dark:prose-invert">
+            <h2 className="mb-4 text-xl font-semibold md:text-2xl">
+              {term.title}
+            </h2>
+            <div className="prose dark:prose-invert text-sm md:text-base">
               <p>{term.content}</p>
             </div>
           </section>
         ))}
-      </div>
-    </PageLayout>
+      </main>
+    </>
   );
 };
 

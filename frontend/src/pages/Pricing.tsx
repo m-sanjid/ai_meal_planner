@@ -4,9 +4,9 @@ import Signin from "./Signin";
 import { useSubscription } from "@/context/SubscriptionContext";
 import { toast } from "sonner";
 import PricingComponent from "@/components/PricingComponent";
-import { PageLayout } from "@/components/layout/PageLayout";
 import PricingFaq from "./PricingFaq";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const Pricing = () => {
   const [loading, setLoading] = useState(false);
@@ -66,8 +66,12 @@ const Pricing = () => {
   };
 
   return (
-    <PageLayout>
-      <div className="mx-auto max-w-6xl py-8 lg:py-16">
+    <>
+      <Helmet>
+        <title>Pricing | BefitAI Meal Planner</title>
+        <meta name="description" content="See BefitAI's simple, transparent pricing for AI-powered meal planning. Choose the plan that fits your needs." />
+      </Helmet>
+      <main className="mx-auto max-w-6xl py-8 lg:py-16" aria-label="Pricing">
         <div>
           <PricingComponent
             loading={loading}
@@ -75,9 +79,9 @@ const Pricing = () => {
           />
         </div>
         <div className="mt-12 text-center">
-          <h2 className="mb-8 text-2xl font-semibold text-black dark:text-neutral-200">
+          <h1 className="mb-8 text-2xl font-semibold text-black dark:text-neutral-200">
             Frequently Asked Questions
-          </h2>
+          </h1>
           <PricingFaq />
         </div>
         <div className="flex items-center justify-center pt-20">
@@ -85,11 +89,11 @@ const Pricing = () => {
             to={"/contact"}
             className="bg-accent rounded-md border px-6 py-2"
           >
-            Contact
+            Have a question? Contact us
           </Link>
         </div>
-      </div>
-    </PageLayout>
+      </main>
+    </>
   );
 };
 
