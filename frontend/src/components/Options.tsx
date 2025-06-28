@@ -66,15 +66,27 @@ const list1 = [
     value: "keto",
     label: "Keto",
   },
+  {
+    value: "mediterranean",
+    label: "Mediterranean",
+  },
+  {
+    value: "low_carb",
+    label: "Low Carb",
+  },
+  {
+    value: "high_protein",
+    label: "High Protein",
+  },
 ];
 
 const list2 = [
   {
-    value: "weight loss",
+    value: "weight_loss",
     label: "Weight Loss",
   },
   {
-    value: "muscle gain",
+    value: "muscle_gain",
     label: "Muscle Gain",
   },
   {
@@ -82,7 +94,7 @@ const list2 = [
     label: "Maintenance",
   },
   {
-    value: "other",
-    label: "Other",
+    value: "athletic_performance",
+    label: "Athletic Performance",
   },
 ];

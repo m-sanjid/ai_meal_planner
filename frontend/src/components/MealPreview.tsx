@@ -1,47 +1,24 @@
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useUser } from "@clerk/clerk-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
-import { Favorite } from "@/pages/Favorites";
+import { useFavoriteMeals } from "@/hooks/useFavorites";
 
 interface MealPreviewProps {
   onClick: (meal: any) => void;
 }
 
 const MealPreview = ({ onClick }: MealPreviewProps) => {
-  const [loading, setLoading] = useState(true);
-  const { user, isSignedIn } = useUser();
-  const { getToken } = useAuth();
-  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const { user } = useUser();
 
-  useEffect(() => {
-    if (isSignedIn) {
-      getFavoriteMeals();
-    }
-  }, [isSignedIn]);
+  // TanStack Query hook
+  const {
+    data: favorites = [],
+    isLoading,
+    error,
+  } = useFavoriteMeals(user?.id || "");
 
-  const getFavoriteMeals = async () => {
-    try {
-      setLoading(true);
-      const token = await getToken();
-
-      const response = await axios.get<Favorite[]>(
-        `${import.meta.env.VITE_API_URL}/api/meals/favorites/${user?.id}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-
-      setFavorites(response.data || []);
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-      setFavorites([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <motion.div
         className="flex items-center justify-center p-8"
@@ -54,6 +31,23 @@ const MealPreview = ({ onClick }: MealPreviewProps) => {
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         />
+      </motion.div>
+    );
+  }
+
+  if (error) {
+    return (
+      <motion.div
+        className="p-8 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="bg-destructive/10 text-destructive rounded-lg border p-4">
+          <p className="text-sm">
+            Failed to load favorite meals. Please try again.
+          </p>
+        </div>
       </motion.div>
     );
   }
@@ -77,15 +71,15 @@ const MealPreview = ({ onClick }: MealPreviewProps) => {
     <AnimatePresence mode="popLayout">
       <motion.div
         key="favorites-grid"
-        className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-4 md:grid-cols-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        {favorites.slice(4).map((fav, index) => (
+        {favorites.slice(0, 6).map((fav, index) => (
           <motion.div
-            key={index}
+            key={fav._id || index}
             layout
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -98,13 +92,9 @@ const MealPreview = ({ onClick }: MealPreviewProps) => {
               <CardContent className="p-4">
                 <div className="flex h-full flex-col">
                   <div className="flex-1">
-                    <motion.h3
-                      className="text-foreground mb-2 text-lg font-semibold"
-                      whileHover={{ x: 4 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
+                    <h3 className="text-foreground mb-2 text-lg font-semibold">
                       {fav.meal.name}
-                    </motion.h3>
+                    </h3>
                     <div className="grid grid-cols-3 gap-4 text-center">
                       <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -138,10 +128,7 @@ const MealPreview = ({ onClick }: MealPreviewProps) => {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
+                    <motion.div whileTap={{ scale: 0.98 }}>
                       <Button
                         className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
                         onClick={() => onClick(fav.meal)}

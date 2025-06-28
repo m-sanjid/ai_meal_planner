@@ -6,7 +6,7 @@ const favoriteMealSchema = new mongoose.Schema({
     name: String,
     calories: Number,
     macros: {
-      protien: Number,
+      protein: Number,
       carbs: Number,
       fat: Number,
     },
