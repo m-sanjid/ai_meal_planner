@@ -38,13 +38,15 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
 
   return (
     <div
+      id="pricing"
       className={`${path !== "/" ? "max-w-6xl py-10" : "max-w-4xl py-20"} mx-auto`}
+      aria-label="Pricing"
     >
       {path !== "/settings" ? (
         <div className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-black dark:text-neutral-200">
+          <h2 className="mb-4 text-4xl font-bold text-black dark:text-neutral-200">
             Simple, Transparent Pricing
-          </h1>
+          </h2>
           <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400">
             Choose the perfect plan for your meal planning needs
           </p>
@@ -73,11 +75,11 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
         </Tabs>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-3 text-sm md:text-base">
         {plans.map((plan) => (
           <Card
             key={plan.name}
-            className={`relative ${
+            className={`relative max-w-sm mx-auto w-full ${
               current === plan.id
                 ? "border-2 border-black dark:border-white"
                 : ""
