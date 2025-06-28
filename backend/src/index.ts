@@ -5,6 +5,7 @@ import mealRoutes from "./routes/mealRoutes";
 import userRoutes from "./routes/userRoutes";
 import subscribeRoutes from "./routes/subscribeRoutes";
 import shoppingListRoutes from "./routes/shoppingListRoutes";
+import calorieRoutes from "./routes/calorieRoutes";
 import { clerkMiddleware } from "@clerk/express";
 import "dotenv/config";
 import contactRoutes from "./routes/contact";
@@ -34,6 +35,7 @@ app.use("/api/meals", mealRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/shopping-list", shoppingListRoutes);
 app.use("/api/sub", subscribeRoutes);
+app.use("/api/calorie", calorieRoutes);
 app.use('/api/contact', contactRoutes);
 
 app.listen(3000, () => console.log("Server started on port 3000"));

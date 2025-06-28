@@ -21,69 +21,72 @@ const Documentation = () => {
     <>
       <Helmet>
         <title>Documentation | BefitAI Meal Planner</title>
-        <meta name="description" content="Learn how to use BefitAI's AI-powered meal planning platform. Get step-by-step guides and tutorials." />
+        <meta
+          name="description"
+          content="Learn how to use BefitAI's AI-powered meal planning platform. Get step-by-step guides and tutorials."
+        />
       </Helmet>
       <main className="mx-auto max-w-6xl" aria-label="Documentation">
         <SectionHeader title="Documentation" as="h1" />
-      <div className="grid gap-8 md:grid-cols-[280px,1fr]">
-        {/* Sidebar Navigation */}
-        <div className="space-y-4">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-neutral-400" />
-            <Input
-              placeholder="Search documentation..."
-              className="border-none bg-white pl-10 dark:bg-[#2a2a2a]"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        <div className="grid gap-8 md:grid-cols-[280px,1fr]">
+          {/* Sidebar Navigation */}
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-neutral-400" />
+              <Input
+                placeholder="Search documentation..."
+                className="border-none bg-white pl-10 dark:bg-[#2a2a2a]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
 
-          <div className="space-y-2">
-            {sections.map((section) => (
-              <Button
-                variant={"ghost"}
-                key={section.id}
-                className={`group w-full justify-start ${
-                  activeSection === section.id
-                    ? "bg-primary/10 text-primary"
-                    : ""
-                }`}
-                onClick={() => setActiveSection(section.id)}
-              >
-                <span className="flex items-center gap-2">
-                  {section.icon}
-                  {section.title}
-                  <ChevronRight className="ml-auto h-4 w-4 opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100" />
-                </span>
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <motion.div
-          key={activeSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="rounded-lg bg-white p-8 shadow-sm dark:bg-[#2a2a2a]"
-        >
-          {sections.map(
-            (section) =>
-              activeSection === section.id && (
-                <div key={section.id}>
-                  <h1 className="mb-6 text-3xl font-bold dark:text-white">
+            <div className="space-y-2">
+              {sections.map((section) => (
+                <Button
+                  variant={"ghost"}
+                  key={section.id}
+                  className={`group w-full justify-start ${
+                    activeSection === section.id
+                      ? "bg-primary/10 text-primary"
+                      : ""
+                  }`}
+                  onClick={() => setActiveSection(section.id)}
+                >
+                  <span className="flex items-center gap-2">
+                    {section.icon}
                     {section.title}
-                  </h1>
-                  <div className="prose dark:prose-invert max-w-none">
-                    {section.content}
+                    <ChevronRight className="ml-auto h-4 w-4 opacity-0 transition-opacity duration-200 ease-in-out group-hover:opacity-100" />
+                  </span>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Content Area */}
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-lg bg-white p-8 shadow-sm dark:bg-[#2a2a2a]"
+          >
+            {sections.map(
+              (section) =>
+                activeSection === section.id && (
+                  <div key={section.id}>
+                    <h1 className="mb-6 text-3xl font-bold dark:text-white">
+                      {section.title}
+                    </h1>
+                    <div className="prose dark:prose-invert max-w-none">
+                      {section.content}
+                    </div>
                   </div>
-                </div>
-              ),
-          )}
-        </motion.div>
-      </div>
-    </main>
+                ),
+            )}
+          </motion.div>
+        </div>
+      </main>
     </>
   );
 };
@@ -95,13 +98,17 @@ const sections = [
     icon: <BookOpen className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Welcome to BefitAI</h2>
+        <h2 className="mb-4 text-xl font-semibold md:text-2xl">
+          Welcome to BefitAI
+        </h2>
         <p className="mb-6 text-sm md:text-lg">
           Your AI-powered meal planning companion that helps you achieve your
           health and fitness goals through personalized nutrition.
         </p>
 
-        <h3 className="mb-3 text-lg md:text-xl font-semibold">Quick Start Guide</h3>
+        <h3 className="mb-3 text-lg font-semibold md:text-xl">
+          Quick Start Guide
+        </h3>
         <ol className="space-y-4">
           <li className="flex items-start gap-3">
             <span className="bg-primary/10 text-primary flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
@@ -149,7 +156,9 @@ const sections = [
     icon: <Lightbulb className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Meal Planning Guide</h2>
+        <h2 className="mb-4 text-xl font-semibold md:text-2xl">
+          Meal Planning Guide
+        </h2>
         <p className="mb-6 text-sm md:text-lg">
           Learn how to create and customize your meal plans to match your
           lifestyle and goals.
@@ -180,7 +189,9 @@ const sections = [
     icon: <Settings className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Recipe Management</h2>
+        <h2 className="mb-4 text-xl font-semibold md:text-2xl">
+          Recipe Management
+        </h2>
         <p className="mb-6 text-sm md:text-lg">
           Discover, save, and organize your favorite recipes with our intuitive
           recipe management system.
@@ -211,7 +222,9 @@ const sections = [
     icon: <HelpCircle className="h-4 w-4" />,
     content: (
       <>
-        <h2 className="mb-4 text-xl md:text-2xl font-semibold">Shopping List Guide</h2>
+        <h2 className="mb-4 text-xl font-semibold md:text-2xl">
+          Shopping List Guide
+        </h2>
         <p className="mb-6 text-sm md:text-lg">
           Generate and manage your shopping lists efficiently with our smart
           shopping features.

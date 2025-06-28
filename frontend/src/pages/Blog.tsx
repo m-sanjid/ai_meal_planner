@@ -1,12 +1,19 @@
-import { PageLayout } from "@/components/layout/PageLayout";
 import { IconArrowRight, IconClock, IconTags } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const Blog = () => {
   return (
-    <PageLayout>
-      <div className="mx-auto max-w-6xl px-4 py-12">
+    <>
+      <Helmet>
+        <title>Blog | BefitAI Meal Planner</title>
+        <meta
+          name="description"
+          content="Read the latest articles, tips, and insights on AI-powered meal planning, nutrition, and healthy living from BefitAI."
+        />
+      </Helmet>
+      <main className="mx-auto max-w-6xl px-4 py-12" aria-label="Blog">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,11 +35,14 @@ const Blog = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-card hover:bg-card/80 group overflow-hidden rounded-xl border transition-colors duration-200"
             >
-              <Link to={`/blog/${post.slug}`}>
+              <Link
+                to={`/blog/${post.slug}`}
+                aria-label={`Read more about ${post.title}`}
+              >
                 <div className="bg-muted relative aspect-video overflow-hidden">
                   <img
                     src={post.image}
-                    alt={post.title}
+                    alt={post.title + " - blog cover image"}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -47,9 +57,9 @@ const Blog = () => {
                       {post.category}
                     </span>
                   </div>
-                  <h3 className="group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
+                  <h2 className="group-hover:text-primary mb-2 text-xl font-semibold transition-colors">
                     {post.title}
-                  </h3>
+                  </h2>
                   <p className="text-muted-foreground mb-4">{post.excerpt}</p>
                   <div className="text-primary flex items-center gap-2">
                     Read more
@@ -60,8 +70,8 @@ const Blog = () => {
             </motion.article>
           ))}
         </div>
-      </div>
-    </PageLayout>
+      </main>
+    </>
   );
 };
 

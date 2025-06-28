@@ -50,7 +50,7 @@ const SocialShare = () => {
               key={social.label}
               initial={{ opacity: 0, scale: 0, y: 20, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{once:true}}
+              viewport={{ once: true }}
               transition={{
                 delay: 0.6 + index * 0.1,
                 type: "spring",

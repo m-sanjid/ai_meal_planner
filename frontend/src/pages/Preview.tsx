@@ -8,7 +8,10 @@ const Preview = () => {
     <>
       <Helmet>
         <title>Preview | BefitAI Meal Planner</title>
-        <meta name="description" content="Preview BefitAI's AI-powered meal planning features. Try before you buy with a free interactive demo." />
+        <meta
+          name="description"
+          content="Preview BefitAI's AI-powered meal planning features. Try before you buy with a free interactive demo."
+        />
       </Helmet>
       <main className="mx-auto max-w-6xl" aria-label="Preview">
         <SectionHeader

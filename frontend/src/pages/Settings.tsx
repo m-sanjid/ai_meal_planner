@@ -26,7 +26,10 @@ const Settings = () => {
     <>
       <Helmet>
         <title>Settings | BefitAI Meal Planner</title>
-        <meta name="description" content="Manage your BefitAI account, appearance, and subscription settings." />
+        <meta
+          name="description"
+          content="Manage your BefitAI account, appearance, and subscription settings."
+        />
       </Helmet>
       <main className="mx-auto max-w-5xl p-6" aria-label="Settings">
         <PageHeader

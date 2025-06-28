@@ -63,48 +63,50 @@ const Navbar = () => {
                 onMouseLeave={() => setIsHovered(null)}
                 className="flex items-center gap-1 rounded-xl border border-neutral-200/50 bg-neutral-100/70 p-1 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/70"
               >
-                {(isSignedIn ? navItems.slice(0, 5) : outNavItems).map((item, idx) => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className="group relative rounded-lg px-4 py-2 text-xs font-medium"
-                    onMouseEnter={() => setIsHovered(idx)}
-                  >
-                    <motion.span
-                      className={`relative z-10 transition-colors duration-200 ${
-                        pathname === item.href
-                          ? "text-neutral-900 dark:text-neutral-100"
-                          : "text-neutral-600 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-neutral-100"
-                      }`}
+                {(isSignedIn ? navItems.slice(0, 5) : outNavItems).map(
+                  (item, idx) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className="group relative rounded-lg px-4 py-2 text-xs font-medium"
+                      onMouseEnter={() => setIsHovered(idx)}
                     >
-                      {item.title}
-                    </motion.span>
+                      <motion.span
+                        className={`relative z-10 transition-colors duration-200 ${
+                          pathname === item.href
+                            ? "text-neutral-900 dark:text-neutral-100"
+                            : "text-neutral-600 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-neutral-100"
+                        }`}
+                      >
+                        {item.title}
+                      </motion.span>
 
-                    {isHovered === idx && (
-                      <motion.div
-                        layoutId="activeTab"
-                        className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900 dark:shadow-lg"
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                    {/* Active tab background */}
-                    {pathname === item.href && (
-                      <motion.div
-                        layoutId="activeTab"
-                        className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900"
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                  </Link>
-                ))}
+                      {isHovered === idx && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900 dark:shadow-lg"
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                      {/* Active tab background */}
+                      {pathname === item.href && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 rounded-lg border border-neutral-200/50 bg-white shadow-sm dark:border-neutral-600/50 dark:bg-neutral-900"
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                    </Link>
+                  ),
+                )}
               </div>
             </nav>
             {isSignedIn && (

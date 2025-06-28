@@ -7,9 +7,15 @@ const Unauthorized = () => {
     <>
       <Helmet>
         <title>Unauthorized | BefitAI Meal Planner</title>
-        <meta name="description" content="You must be signed in to access this page. Sign in to use BefitAI's meal planning features." />
+        <meta
+          name="description"
+          content="You must be signed in to access this page. Sign in to use BefitAI's meal planning features."
+        />
       </Helmet>
-      <main className="flex min-h-[calc(100vh-6rem)] items-center justify-center" aria-label="Unauthorized">
+      <main
+        className="flex min-h-[calc(100vh-6rem)] items-center justify-center"
+        aria-label="Unauthorized"
+      >
         <div className="bg-card mx-auto max-w-md rounded-xl p-6 text-center shadow-lg">
           <h1 className="mb-4 text-2xl font-bold md:text-3xl lg:text-4xl">
             Please Sign In

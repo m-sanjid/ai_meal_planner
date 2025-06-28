@@ -6,7 +6,10 @@ const Terms = () => {
     <>
       <Helmet>
         <title>Terms of Service | BefitAI Meal Planner</title>
-        <meta name="description" content="Read the terms of service for using BefitAI's AI-powered meal planning platform." />
+        <meta
+          name="description"
+          content="Read the terms of service for using BefitAI's AI-powered meal planning platform."
+        />
       </Helmet>
       <main className="mx-auto max-w-4xl" aria-label="Terms of Service">
         <SectionHeader title="Terms of Service" as="h1" />

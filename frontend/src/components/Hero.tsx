@@ -10,7 +10,11 @@ const Hero = () => {
   const words = ["in Seconds", "for you", "Ai Generated", "Personalized"];
 
   return (
-    <section id="hero" className="relative isolate overflow-hidden px-4 py-32 text-center" aria-label="Hero">
+    <section
+      id="hero"
+      className="relative isolate overflow-hidden px-4 py-32 text-center"
+      aria-label="Hero"
+    >
       {/* Background Glow */}
       <motion.div className="absolute inset-0 -z-10 bg-gradient-to-br from-black via-transparent to-neutral-900 opacity-20 blur-3xl dark:from-white/5 dark:to-white/5" />
       <Spotlight

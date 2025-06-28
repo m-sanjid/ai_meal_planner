@@ -1,12 +1,18 @@
+import React, { JSX as ReactJSX } from "react";
 import { motion } from "motion/react";
 
-const SectionHeader = ({
-  title,
-  description,
-}: {
+interface SectionHeaderProps {
   title: string;
   description?: string;
+  as?: keyof ReactJSX.IntrinsicElements;
+}
+
+const SectionHeader: React.FC<SectionHeaderProps> = ({
+  title,
+  description,
+  as = "h2",
 }) => {
+  const Heading = as;
   return (
     <div className="mx-auto my-10 max-w-5xl text-center">
       <motion.h2

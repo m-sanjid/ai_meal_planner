@@ -33,7 +33,7 @@ const HelpSheet = () => {
             Learn how to get the most out of your meal planner.
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6 px-4">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>How are meals generated?</AccordionTrigger>

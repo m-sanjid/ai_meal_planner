@@ -35,7 +35,12 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section id="testimonials" className="py-20" ref={ref}>
+    <section
+      id="testimonials"
+      className="py-20"
+      ref={ref}
+      aria-label="Testimonials"
+    >
       <div className="mx-auto max-w-7xl px-8">
         {/* Testimonials */}
         <motion.div
@@ -47,6 +52,7 @@ export default function TestimonialsSection() {
           <SectionHeader
             title="Testimonials"
             description="What our users say about our AI-powered meal plans"
+            as="h2"
           />
           <Marquee
             pauseOnHover={true}

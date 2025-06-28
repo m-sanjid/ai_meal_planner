@@ -2,61 +2,27 @@ import Pagination from "@/components/Pagination";
 import MealCard from "@/components/MealCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PAGE_SIZE } from "@/lib/constants";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
-import { toast } from "sonner";
+import { useUser } from "@clerk/clerk-react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { PageHeader } from "@/components/PageHeader";
 import Unauthorized from "./Unauthorized";
 import { Meal } from "@/components/MealCard";
-
-interface MealPlan {
-  _id: string;
-  createdAt: string;
-  goal: string;
-  meals: Meal[];
-}
+import { Helmet } from "react-helmet-async";
+import { useMealPlans } from "@/hooks/useMealPlans";
+import { useAddToFavorites as useAddToFavoritesHook } from "@/hooks/useFavorites";
 
 const Dashboard = () => {
   const { user, isSignedIn } = useUser();
-  const { getToken } = useAuth();
-  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const fetchMealPlans = useCallback(async () => {
-    try {
-      const token = await getToken();
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/meals/`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      setMealPlans(response.data);
-    } catch (error) {
-      console.error("Error fetching meal plans", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [getToken]);
+  // TanStack Query hooks
+  const { data: mealPlans = [], isLoading, error } = useMealPlans();
+  const addToFavoritesMutation = useAddToFavoritesHook();
 
-  useEffect(() => {
-    if (isSignedIn) {
-      fetchMealPlans();
-    }
-  }, [isSignedIn, fetchMealPlans]);
-
-  const saveFavoriteMeal = async (meal: Meal) => {
-    try {
-      const token = await getToken();
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/meals/favorites`,
-        { userId: user?.id, meal },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      toast("Meal added to favorites ");
-    } catch (error) {
-      console.error("Error saving favorite meals", error);
+  const saveFavoriteMeal = (meal: Meal) => {
+    if (user?.id) {
+      addToFavoritesMutation.mutate({ userId: user.id, meal });
     }
   };
 
@@ -83,85 +49,132 @@ const Dashboard = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="mx-auto mb-6 flex min-h-screen max-w-5xl justify-center"
-    >
-      <div className="w-full p-4">
-        <PageHeader user={user} title="Meal Plans" Cta="Create New Meal Plan" />
-        <div className="flex flex-col gap-2">
-          <motion.h2
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="my-5 py-4 text-center text-5xl font-bold text-neutral-800 dark:text-white"
-          >
-            Your Meal Plans
-          </motion.h2>
-          <AnimatePresence mode="wait">
-            {loading ? (
-              <LoadingSkeleton key="loading" />
-            ) : mealPlans.length === 0 ? (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center text-lg text-neutral-600 dark:text-neutral-300"
-              >
-                No meal plans found
-              </motion.p>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center"
-              >
-                {mealPlans.slice(start, end).map((mealPlan) => (
-                  <motion.div
-                    key={mealPlan._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-4 flex flex-col items-center justify-center gap-4 overflow-hidden rounded-lg border bg-white/50 p-4 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:bg-neutral-800/50"
-                  >
-                    <h3 className="py-4 text-2xl font-bold text-neutral-800 dark:text-white">
-                      Goal: {mealPlan.goal}
+    <>
+      <Helmet>
+        <title>Dashboard | BefitAI Meal Planner</title>
+        <meta
+          name="description"
+          content="View and manage your AI-generated meal plans on your BefitAI dashboard. Track your nutrition and goals."
+        />
+      </Helmet>
+      <main
+        className="mx-auto mb-6 flex min-h-screen max-w-5xl justify-center"
+        aria-label="Dashboard"
+      >
+        <div className="w-full p-4">
+          <PageHeader
+            user={user}
+            title="Meal Plans"
+            Cta="Create New Meal Plan"
+          />
+          <div className="flex flex-col gap-2">
+            <motion.h1
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="my-5 py-4 text-center text-5xl font-bold text-neutral-800 dark:text-white"
+            >
+              Your Meal Plans
+            </motion.h1>
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <LoadingSkeleton key="loading" />
+              ) : error ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="py-8 text-center"
+                >
+                  <div className="bg-destructive/10 text-destructive rounded-lg border p-4">
+                    <h3 className="mb-2 text-lg font-semibold">
+                      Error Loading Meal Plans
                     </h3>
-                    <p className="text-neutral-600 dark:text-neutral-300">
-                      <strong>Created At:</strong>{" "}
-                      {new Date(mealPlan.createdAt).toLocaleString()}
+                    <p className="text-muted-foreground mb-4">
+                      Failed to load your meal plans. Please try again.
                     </p>
-                    <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
-                      {mealPlan.meals.map((meal, index) => (
-                        <MealCard
-                          showNutritionDetails={true}
-                          key={index}
-                          meal={meal}
-                          saveFavoriteMeal={saveFavoriteMeal}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                </motion.div>
+              ) : mealPlans.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="py-8 text-center"
+                >
+                  <div className="bg-muted/50 rounded-lg border p-8">
+                    <h3 className="mb-2 text-lg font-semibold">
+                      No Meal Plans Found
+                    </h3>
+                    <p className="text-muted-foreground mb-4">
+                      Create your first meal plan to get started with your
+                      nutrition journey.
+                    </p>
+                    <a
+                      href="/meal"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 inline-block rounded-md px-4 py-2"
+                    >
+                      Create Meal Plan
+                    </a>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center"
+                >
+                  {mealPlans.slice(start, end).map((mealPlan) => (
+                    <motion.div
+                      key={mealPlan._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mb-4 flex flex-col items-center justify-center gap-4 overflow-hidden rounded-lg border bg-white/50 p-4 shadow-md backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:bg-neutral-800/50"
+                    >
+                      <h3 className="py-4 text-2xl font-bold text-neutral-800 dark:text-white">
+                        Goal: {mealPlan.goal}
+                      </h3>
+                      <p className="text-neutral-600 dark:text-neutral-300">
+                        <strong>Created At:</strong>{" "}
+                        {new Date(mealPlan.createdAt).toLocaleString()}
+                      </p>
+                      <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
+                        {mealPlan.meals.map((meal, index) => (
+                          <MealCard
+                            showNutritionDetails={true}
+                            key={index}
+                            meal={meal}
+                            saveFavoriteMeal={saveFavoriteMeal}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          {!isLoading && !error && mealPlans.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="my-4 flex justify-center"
+            >
+              <Pagination
+                noOfPages={noOfPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </motion.div>
+          )}
         </div>
-        {!loading && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="my-4 flex justify-center"
-          >
-            <Pagination
-              noOfPages={noOfPages}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-          </motion.div>
-        )}
-      </div>
-    </motion.div>
+      </main>
+    </>
   );
 };
 

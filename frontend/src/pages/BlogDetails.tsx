@@ -25,6 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Helmet } from "react-helmet-async";
 
 export const BlogDetails = () => {
   const { slug } = useParams();
@@ -39,34 +40,45 @@ export const BlogDetails = () => {
   if (!post) {
     return (
       <PageLayout>
-        <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="mb-6 text-5xl font-bold">Post Not Found</h1>
-            <p className="text-muted-foreground mb-8 text-xl">
-              The blog post you're looking for doesn't exist or may have been
-              moved.
-            </p>
-            <Link to="/blog">
-              <Button size="lg" className="flex items-center gap-2">
-                Return to Blog
-                <IconArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
+        <Helmet>
+          <title>Post Not Found | BefitAI Blog</title>
+          <meta
+            name="description"
+            content="The blog post you're looking for doesn't exist or may have been moved."
+          />
+        </Helmet>
+        <main aria-label="Blog Post Not Found">
+          <div className="mx-auto max-w-6xl px-4 py-16 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="mb-6 text-5xl font-bold">Post Not Found</h1>
+              <p className="text-muted-foreground mb-8 text-xl">
+                The blog post you're looking for doesn't exist or may have been
+                moved.
+              </p>
+              <Link to="/blog">
+                <Button size="lg" className="flex items-center gap-2">
+                  Return to Blog
+                  <IconArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </main>
       </PageLayout>
     );
   }
 
   // Extract headings for table of contents
   const extractHeadings = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const headings: any[] = [];
     const contentArray = post.content.props.children;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     contentArray.forEach((child: any) => {
       if (child && child.type === "h2") {
         headings.push({
@@ -101,7 +113,14 @@ export const BlogDetails = () => {
 
   return (
     <PageLayout>
-      <div className="mx-auto max-w-7xl px-4 py-12">
+      <Helmet>
+        <title>{post.title} | BefitAI Blog</title>
+        <meta name="description" content={post.excerpt} />
+      </Helmet>
+      <main
+        className="mx-auto max-w-7xl px-4 py-12"
+        aria-label="Blog Post Details"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,6 +132,7 @@ export const BlogDetails = () => {
             <Link
               to="/blog"
               className="text-muted-foreground hover:text-primary group mb-8 flex items-center gap-2 text-sm"
+              aria-label="Back to all articles"
             >
               <IconArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
               Back to all articles
@@ -485,7 +505,7 @@ export const BlogDetails = () => {
             </div>
           </motion.div>
         </motion.div>
-      </div>
+      </main>
     </PageLayout>
   );
 };

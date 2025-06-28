@@ -45,7 +45,10 @@ const NewsletterSection = () => {
   };
 
   return (
-    <section className="relative isolate mx-auto max-w-6xl overflow-hidden px-4 py-24 sm:px-6 lg:px-8" aria-label="Newsletter">
+    <section
+      className="relative isolate mx-auto max-w-6xl overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+      aria-label="Newsletter"
+    >
       <div className="relative z-10 mx-auto max-w-3xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}

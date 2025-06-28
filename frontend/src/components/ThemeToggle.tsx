@@ -31,7 +31,8 @@ const ThemeToggle = () => {
         variant="ghost"
         size="icon"
         onClick={toggleTheme}
-        className="hover:bg-muted/50 text-primary relative ml-2 overflow-hidden rounded-xl transition-all duration-300"
+        aria-label="Toggle dark mode"
+        className="relative ml-2 overflow-hidden rounded-xl transition-all duration-300"
       >
         <AnimatePresence mode="wait">
           {isDarkMode ? (

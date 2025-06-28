@@ -69,7 +69,10 @@ const Pricing = () => {
     <>
       <Helmet>
         <title>Pricing | BefitAI Meal Planner</title>
-        <meta name="description" content="See BefitAI's simple, transparent pricing for AI-powered meal planning. Choose the plan that fits your needs." />
+        <meta
+          name="description"
+          content="See BefitAI's simple, transparent pricing for AI-powered meal planning. Choose the plan that fits your needs."
+        />
       </Helmet>
       <main className="mx-auto max-w-6xl py-8 lg:py-16" aria-label="Pricing">
         <div>

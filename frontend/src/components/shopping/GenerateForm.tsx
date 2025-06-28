@@ -27,7 +27,7 @@ export default function GenerateForm({
   onGenerate,
 }: Props) {
   return (
-    <Card className="bg-card border border-border shadow-none">
+    <Card className="bg-card border-border border shadow-none">
       <CardHeader>
         <CardTitle className="text-xl font-semibold">
           🧾 Generate Your Shopping List
@@ -60,11 +60,7 @@ export default function GenerateForm({
           type="number"
         />
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button
-            disabled={loading}
-            onClick={onGenerate}
-            className="w-full"
-          >
+          <Button disabled={loading} onClick={onGenerate} className="w-full">
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (

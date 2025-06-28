@@ -14,13 +14,21 @@ const NotFound = () => {
     <>
       <Helmet>
         <title>404 Not Found | BefitAI Meal Planner</title>
-        <meta name="description" content="The page you're looking for doesn't exist or has been moved. Return to the dashboard or use quick navigation." />
+        <meta
+          name="description"
+          content="The page you're looking for doesn't exist or has been moved. Return to the dashboard or use quick navigation."
+        />
       </Helmet>
-      <main className="bg-background flex min-h-screen flex-col items-center justify-center" aria-label="404 Not Found">
+      <main
+        className="bg-background flex min-h-screen flex-col items-center justify-center"
+        aria-label="404 Not Found"
+      >
         <div className="w-full max-w-2xl px-4">
           <div className="mb-12 text-center">
             <h1 className="text-primary mb-4 text-8xl font-bold">404</h1>
-            <p className="text-muted-foreground mb-8 text-2xl">Page not found</p>
+            <p className="text-muted-foreground mb-8 text-2xl">
+              Page not found
+            </p>
             <p className="text-muted-foreground mb-8">
               The page you're looking for doesn't exist or has been moved.
             </p>
@@ -29,7 +37,11 @@ const NotFound = () => {
           <div className="flex flex-col items-center gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-48" aria-label="Quick Navigation">
+                <Button
+                  variant="outline"
+                  className="w-48"
+                  aria-label="Quick Navigation"
+                >
                   Quick Navigation
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>

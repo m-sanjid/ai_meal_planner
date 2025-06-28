@@ -75,11 +75,11 @@ const PricingComponent = ({ loading, handleSubscribe }: Props) => {
         </Tabs>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3 text-sm md:text-base">
+      <div className="grid gap-8 text-sm md:grid-cols-3 md:text-base">
         {plans.map((plan) => (
           <Card
             key={plan.name}
-            className={`relative max-w-sm mx-auto w-full ${
+            className={`relative mx-auto w-full max-w-sm ${
               current === plan.id
                 ? "border-2 border-black dark:border-white"
                 : ""
