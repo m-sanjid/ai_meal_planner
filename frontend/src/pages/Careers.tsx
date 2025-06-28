@@ -119,40 +119,6 @@ const Careers = () => {
   );
 };
 
-const openPositions = [
-  {
-    title: "Senior Full Stack Developer",
-    location: "Remote",
-    type: "Full-time",
-    department: "Engineering",
-    description:
-      "We're looking for a senior developer to help build and scale our AI-powered meal planning platform. You'll work with modern technologies to create intuitive and performant web applications.",
-  },
-  {
-    title: "AI/ML Engineer",
-    location: "Remote",
-    type: "Full-time",
-    department: "Engineering",
-    description:
-      "Join us in developing cutting-edge AI models for personalized meal recommendations. You'll work on training and optimizing models that understand user preferences and dietary needs.",
-  },
-  {
-    title: "Product Designer",
-    location: "Remote",
-    type: "Full-time",
-    department: "Design",
-    description:
-      "Help create intuitive and beautiful interfaces for our meal planning platform. You'll work on the entire design process from research to implementation in a collaborative environment.",
-  },
-  {
-    title: "Content Marketing Manager",
-    location: "Remote",
-    type: "Full-time",
-    department: "Marketing",
-    description:
-      "Create engaging content about healthy eating and meal planning. You'll develop strategies to reach our target audience and communicate the benefits of our AI-powered platform.",
-  },
-];
 
 const benefits = [
   {
