@@ -84,7 +84,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem
-                onClick={() => (window.location.href = "/profile")}
+                onClick={() => (window.location.href = "/pricing")}
               >
                 <Sparkles />
                 Upgrade to Pro

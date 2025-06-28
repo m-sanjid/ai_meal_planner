@@ -17,9 +17,14 @@ const PricingFaq = () => {
           <motion.div
             key={index}
             whileHover={{ scale: 1.015 }}
-            initial={{ opacity: 0, y: 20,filter: "blur(5px)" }}
-            whileInView={{ opacity: 1, y: 0,filter: "blur(0px)" }}
-            transition={{ duration: 0.3,delay: index * 0.1,ease: "easeInOut" }}
+            initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.3,
+              delay: index * 0.1,
+              ease: "easeInOut",
+            }}
             className="rounded-xl bg-black/5 p-6 backdrop-blur-lg transition-colors duration-300 dark:bg-white/5"
           >
             <button

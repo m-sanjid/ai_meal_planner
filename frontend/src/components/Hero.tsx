@@ -10,7 +10,7 @@ const Hero = () => {
   const words = ["in Seconds", "for you", "Ai Generated", "Personalized"];
 
   return (
-    <section className="relative isolate overflow-hidden px-4 py-32 text-center">
+    <section id="hero" className="relative isolate overflow-hidden px-4 py-32 text-center" aria-label="Hero">
       {/* Background Glow */}
       <motion.div className="absolute inset-0 -z-10 bg-gradient-to-br from-black via-transparent to-neutral-900 opacity-20 blur-3xl dark:from-white/5 dark:to-white/5" />
       <Spotlight
@@ -25,7 +25,7 @@ const Hero = () => {
         initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         viewport={{ amount: 0.5, once: true }}
-        transition={{ duration: 0.6, delay: 0.2, staggerChildren: 0.1 }}
+        transition={{ duration: 0.7, delay: 0.2, staggerChildren: 0.1 }}
         className="mx-auto max-w-4xl"
       >
         {/* Title */}

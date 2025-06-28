@@ -29,9 +29,10 @@ import { cn } from "@/lib/utils";
 
 // Animation variants
 const containerVariants = {
-  hidden: { opacity: 0,filter:"blur(2px)" },
+  hidden: { opacity: 0, filter: "blur(2px)" },
   show: {
-    opacity: 1,filter:"blur(0px)",
+    opacity: 1,
+    filter: "blur(0px)",
     transition: {
       staggerChildren: 0.05,
       delayChildren: 0.2,
@@ -59,7 +60,7 @@ const AppSidebar = () => {
 
   useEffect(() => {
     const currentIndex = sidebarLinks.findIndex(
-      (item) => item.href === location.pathname
+      (item) => item.href === location.pathname,
     );
     setActiveIndex(currentIndex);
   }, [location]);
@@ -117,14 +118,19 @@ const AppSidebar = () => {
                       <SidebarMenuButton asChild className="my-1">
                         <Link
                           to={item.href}
-                          className={cn("relative flex items-center px-2 py-1.5 transition", isActive(index) ? "text-primary-foreground" : "text-primary")}
+                          className={cn(
+                            "relative flex items-center px-2 py-1.5 transition",
+                            isActive(index)
+                              ? "text-primary-foreground"
+                              : "text-primary",
+                          )}
                         >
                           {/* Active border glow */}
                           <AnimatePresence>
                             {isActive(index) && (
                               <motion.div
                                 layoutId="active-border"
-                                className="absolute inset-0 bg-primary rounded-md border-2 border-accent z-10"
+                                className="bg-primary border-accent absolute inset-0 z-10 rounded-md border-2"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
@@ -138,7 +144,7 @@ const AppSidebar = () => {
                             {hoveredIndex === index && (
                               <motion.div
                                 layoutId="hover-bg"
-                                className="absolute inset-0 z-0 rounded-md bg-primary/10"
+                                className="bg-primary/10 absolute inset-0 z-0 rounded-md"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}

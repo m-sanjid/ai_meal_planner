@@ -21,10 +21,6 @@ const fetchSubscriptionStatus = async ({
   setLoading(true);
 
   try {
-    if (!token) {
-      throw new Error("Failed to get Clerk token.");
-    }
-
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/sub/subscription-status`,
       {
@@ -40,7 +36,7 @@ const fetchSubscriptionStatus = async ({
     setSubscription?.(subscription);
     setStatus?.(subscriptionStatus || "inactive");
     setTokens?.(tokens === "unlimited" ? "Unlimited" : (tokens ?? 0));
-    setNextReset?.(nextReset ?? null);
+    setNextReset?.(nextReset ? new Date(nextReset) : null);
   } catch (error) {
     console.error("Failed to fetch subscription status:", error);
   } finally {

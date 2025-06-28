@@ -1,23 +1,14 @@
-import { Sparkles, Timer, ChefHat, CalendarDays, BarChart3, BarChart2, LucideIcon } from "lucide-react"
-
+import {
+  Sparkles,
+  Timer,
+  ChefHat,
+  CalendarDays,
+  BarChart3,
+  BarChart2,
+  LucideIcon,
+} from "lucide-react";
 
 export const PAGE_SIZE = 1;
-
-export const team = [
-  {
-    name: "John Doe",
-    role: "Founder & CEO",
-    image: "https://example.com/john-doe.jpg",
-    bio: "Passionate about combining AI with nutrition",
-  },
-  {
-    name: "Jane Smith",
-    role: "Head of Nutrition",
-    image: "https://example.com/jane-smith.jpg",
-    bio: "Certified nutritionist with 10+ years of experience",
-  },
-  // Add more team members
-];
 
 export interface Meal {
   name: string;
@@ -37,27 +28,6 @@ export interface MealPlan {
   goal: string;
   meals: Meal[];
 }
-
-export const tabContent = {
-  mission: {
-    title: "Our Mission",
-    content:
-      "We're on a mission to make healthy eating accessible and enjoyable for everyone. By leveraging artificial intelligence, we create personalized meal plans that fit your lifestyle, preferences, and nutritional needs.",
-    image: "/api/placeholder/600/400",
-  },
-  vision: {
-    title: "Our Vision",
-    content:
-      "We envision a world where everyone has access to personalized nutrition guidance that helps them live healthier, happier lives without the stress of meal planning.",
-    image: "/api/placeholder/600/400",
-  },
-  values: {
-    title: "Our Values",
-    content:
-      "Innovation, accessibility, and scientific accuracy form the foundation of everything we do. We believe technology should enhance your relationship with food, not complicate it.",
-    image: "/api/placeholder/600/400",
-  },
-};
 
 export const Testimonials = [
   {
@@ -80,15 +50,15 @@ export const Testimonials = [
   },
 ];
 
-
 export const features: {
-  title: string
-  description: string
-  icon: LucideIcon
+  title: string;
+  description: string;
+  icon: LucideIcon;
 }[] = [
   {
     title: "Effortless Planning",
-    description: "Generate personalized weekly meal plans in seconds with zero effort.",
+    description:
+      "Generate personalized weekly meal plans in seconds with zero effort.",
     icon: CalendarDays,
   },
   {
@@ -103,19 +73,22 @@ export const features: {
   },
   {
     title: "Intuitive Cooking Mode",
-    description: "Step-by-step visuals with timers and voice guidance built in.",
+    description:
+      "Step-by-step visuals with timers and voice guidance built in.",
     icon: ChefHat,
   },
   {
     title: "One-Click Grocery List",
-    description: "Auto-generate smart shopping lists—grouped, sorted, and editable.",
+    description:
+      "Auto-generate smart shopping lists—grouped, sorted, and editable.",
     icon: Sparkles,
-  },{
+  },
+  {
     title: "Calorie Tracking",
     description: "Track your daily nutrition and stay on top of your goals.",
     icon: BarChart2,
-  }
-]
+  },
+];
 
 export const plans = [
   {

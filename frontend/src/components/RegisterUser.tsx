@@ -33,7 +33,7 @@ const AutoRegister = () => {
 
         localStorage.setItem("isUserRegistered", "true");
       } catch (error) {
-        console.error("User registration failed:", error);
+        throw error;
       }
     };
 

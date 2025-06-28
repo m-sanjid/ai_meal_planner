@@ -13,7 +13,7 @@ const sendContactEmail = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Failed to send contact email:", error);
+    console.error("Error sending contact email:", error);
     throw error;
   }
 };
@@ -26,7 +26,7 @@ const subscribeToNewsletter = async (email: string) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Failed to subscribe to newsletter:", error);
+    console.error("Error subscribing to newsletter:", error);
     throw error;
   }
 };

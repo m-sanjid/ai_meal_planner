@@ -36,6 +36,8 @@ const Navbar = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         onMouseLeave={() => setIsHovered(null)}
+        role="navigation"
+        aria-label="Main Navigation"
         className={cn(
           "sticky z-50 w-full transition-all duration-700 ease-out",
           isScrolled
@@ -52,7 +54,7 @@ const Navbar = () => {
           )}
         >
           {/* Logo Section */}
-          <Logo />
+          <Logo asSpan={true} />
 
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-2 md:flex">
@@ -61,11 +63,11 @@ const Navbar = () => {
                 onMouseLeave={() => setIsHovered(null)}
                 className="flex items-center gap-1 rounded-xl border border-neutral-200/50 bg-neutral-100/70 p-1 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/70"
               >
-                {(isSignedIn ? navItems : outNavItems).map((item, idx) => (
+                {(isSignedIn ? navItems.slice(0, 5) : outNavItems).map((item, idx) => (
                   <Link
                     key={item.href}
                     to={item.href}
-                    className="group relative rounded-lg px-4 py-2 text-sm font-medium"
+                    className="group relative rounded-lg px-4 py-2 text-xs font-medium"
                     onMouseEnter={() => setIsHovered(idx)}
                   >
                     <motion.span
@@ -121,7 +123,7 @@ const Navbar = () => {
                     </motion.div>
                   ) : (
                     <motion.div
-                      className="bg-muted/50 border-border/30 hover:bg-muted/70 hover:border-border/50 rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-300"
+                      className="bg-muted/50 border-border/30 hover:bg-muted/70 hover:border-border/50 inline-flex rounded-xl border px-2 py-1 text-xs font-medium transition-all duration-300 md:py-2 lg:px-4 lg:text-sm"
                       whileHover={{ scale: 1.02 }}
                     >
                       <span className="text-muted-foreground">Tokens:</span>{" "}
@@ -136,45 +138,49 @@ const Navbar = () => {
           </div>
 
           {/* Enhanced Mobile Navigation */}
-          <div className="flex items-center gap-2 md:hidden">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:bg-muted/50 rounded-xl transition-all duration-300"
-                  >
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </motion.div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="border-border/50 bg-background/95 w-64 border shadow-2xl backdrop-blur-xl"
-              >
-                {(isSignedIn ? navItems : outNavItems).map((item) => (
-                  <DropdownMenuItem
-                    key={item.title}
-                    className="mx-1 rounded-lg"
-                  >
-                    <Link to={item.href} className="w-full text-left">
-                      {item.title}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-muted/50 rounded-xl transition-all duration-300"
+                      aria-label="Open menu"
+                    >
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </motion.div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="border-border/50 bg-background/95 w-64 border shadow-2xl backdrop-blur-xl"
+                >
+                  {(isSignedIn ? navItems : outNavItems).map((item) => (
+                    <DropdownMenuItem
+                      key={item.title}
+                      className="mx-1 rounded-lg"
+                    >
+                      <Link to={item.href} className="w-full text-left">
+                        {item.title}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <CommandMenu />
             {isSignedIn ? (
               <UserButton />
             ) : (
-              <Button className="bg-primary hover:shadow-primary/25 ml-4 rounded-xl transition-all duration-300 hover:shadow-lg">
+              <Button
+                asChild
+                className="bg-primary hover:shadow-primary/25 ml-4 rounded-xl transition-all duration-300 hover:shadow-lg"
+              >
                 <SignInButton />
               </Button>
             )}
@@ -194,6 +200,8 @@ const navItems = [
   { title: "Favorites", href: "/user/favorites" },
   { title: "Pro", href: "/pricing" },
   { title: "Settings", href: "/settings" },
+  { title: "Calorie Tracker", href: "/calorie-tracker" },
+  { title: "Shopping", href: "/shopping" },
 ];
 
 const outNavItems = [
