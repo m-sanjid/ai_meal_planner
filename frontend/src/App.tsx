@@ -82,6 +82,7 @@ function AppContent() {
 
       if (!token) {
         console.error("App: No auth token available for user registration");
+        localStorage.setItem("isUserRegistered", "true"); // Set flag anyway
         return;
       }
 
@@ -99,7 +100,7 @@ function AppContent() {
         },
       );
 
-      console.log("App: User registration response:", response.status);
+      console.log("App: User registration response:", response.status, response.data);
 
       if (response.status === 200 || response.status === 201) {
         console.log("App: User registered successfully in database");
@@ -112,7 +113,7 @@ function AppContent() {
         }
       }
     } catch (error: any) {
-      console.error("App: Failed to register user in database:", error);
+      console.error("App: Failed to register user in database:", error.response?.data || error);
 
       // Handle existing account case
       if (error.response?.data?.existingAccount) {
@@ -122,10 +123,12 @@ function AppContent() {
         return;
       }
 
+      // Set registration flag even on error to prevent infinite retries
+      localStorage.setItem("isUserRegistered", "true");
+      
       if (error.response?.status !== 409) {
+        console.error("App: Registration failed with status:", error.response?.status);
         toast.error("Failed to complete registration. Please try again.");
-      } else {
-        localStorage.setItem("isUserRegistered", "true");
       }
     }
   };

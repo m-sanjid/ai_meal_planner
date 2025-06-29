@@ -35,13 +35,16 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [nextReset, setNextReset] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchStatus = useCallback(async () => {
+  const fetchStatus = useCallback(async (retryCount = 0) => {
     if (!isSignedIn) {
       setLoading(false);
       return;
     }
     
     try {
+      // Add a small delay to ensure user registration completes
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const token = await getToken();
       if (token) {
         await fetchSubscriptionStatus({
@@ -55,8 +58,27 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to fetch subscription status:", error);
+      
+      // Handle 404 errors gracefully (user not found)
+      if (error.response?.status === 404) {
+        console.log("User not found in database, subscription status unavailable");
+        
+        // Retry up to 3 times with exponential backoff
+        if (retryCount < 3) {
+          console.log(`Retrying subscription status fetch (attempt ${retryCount + 1})`);
+          setTimeout(() => fetchStatus(retryCount + 1), Math.pow(2, retryCount) * 1000);
+          return;
+        }
+        
+        // After 3 retries, set default values
+        setSubscription("free");
+        setStatus("active");
+        setTokens(10);
+        setNextReset(null);
+      }
+      
       setLoading(false);
     }
   }, [getToken, isSignedIn]);
