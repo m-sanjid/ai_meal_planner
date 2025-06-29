@@ -23,11 +23,63 @@ export const generateMealPlan = async (
   try {
     const { goal, dietaryPreferences } = req.body;
 
-    const userId = req.user?.userId;
-    if (!goal || !dietaryPreferences || !userId) {
-      throw new Error(
-        "Missing required fields: goal, dietaryPreferences, or userId."
-      );
+    const userId = req.user?.userId || req.body.userId;
+    if (!goal || !dietaryPreferences) {
+      throw new Error("Missing required fields: goal or dietaryPreferences.");
+    }
+
+    // DEMO: If no userId, allow up to 2 demo generations (frontend tracks this)
+    if (!userId) {
+      // Construct the prompt
+      const prompt = `Create a meal plan for ${goal} with ${dietaryPreferences}. 
+      Include meal name, calories, macros (protein, carbs, fats), and ingredients.
+      Return the response in valid JSON format, without markdown or extra text.
+      Example:
+      {
+        "meals": [
+          {
+            "name": "Grilled Chicken Salad",
+            "calories": 400,
+            "macros": { "protein": 40, "carbs": 30, "fat": 10 },
+            "ingredients": ["Chicken Breast", "Lettuce", "Tomatoes", "Olive Oil"]
+          }
+        ]
+      }`;
+
+      // Generate content using Gemini AI
+      const result = await model.generateContent(prompt);
+      let responseText = result.response.text();
+
+      if (!responseText) {
+        throw new Error("AI failed to generate a response.");
+      }
+
+      responseText = responseText.replace(/```json|```/g, "").trim();
+
+      // Parse AI response
+      let aiGeneratedPlan;
+      try {
+        aiGeneratedPlan = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Failed to parse AI response:", responseText, parseError);
+        throw new Error("AI returned invalid JSON.");
+      }
+
+      const totalNutrition = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+      aiGeneratedPlan.meals.forEach((meal: any) => {
+        totalNutrition.calories += Number(meal.calories) || 0;
+        totalNutrition.protein += Number(meal.macros?.protein) || 0;
+        totalNutrition.carbs += Number(meal.macros?.carbs) || 0;
+        totalNutrition.fat += Number(meal.macros?.fat) || 0;
+      });
+
+      // Do NOT save to DB for demo
+      res.status(200).json({
+        meals: aiGeneratedPlan.meals,
+        totalNutrition,
+        demo: true,
+      });
+      return;
     }
 
     const user = await User.findOne({ userId });
@@ -466,12 +518,10 @@ export const addMealToCalendar = async (
 
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Meal added to calendar successfully",
-        scheduledMeals: user.scheduledMeals,
-      });
+    res.status(200).json({
+      message: "Meal added to calendar successfully",
+      scheduledMeals: user.scheduledMeals,
+    });
   } catch (error) {
     console.error("Error adding meal to calendar:", error);
     res.status(500).json({ error: "Failed to add meal to calendar" });
@@ -538,12 +588,10 @@ export const updateCalendarMeal = async (
 
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Calendar meal updated successfully",
-        meal: user.scheduledMeals[mealIndex],
-      });
+    res.status(200).json({
+      message: "Calendar meal updated successfully",
+      meal: user.scheduledMeals[mealIndex],
+    });
   } catch (error) {
     console.error("Error updating calendar meal:", error);
     res.status(500).json({ error: "Failed to update calendar meal" });

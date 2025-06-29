@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Menu, Sparkles } from "lucide-react";
-import { SignInButton, UserButton, useAuth } from "@clerk/clerk-react";
+import { SignUpButton, UserButton, useAuth } from "@clerk/clerk-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -183,7 +183,7 @@ const Navbar = () => {
                 asChild
                 className="bg-primary hover:shadow-primary/25 ml-4 rounded-xl transition-all duration-300 hover:shadow-lg"
               >
-                <SignInButton />
+                <SignUpButton />
               </Button>
             )}
             <ThemeToggle />

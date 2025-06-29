@@ -46,7 +46,7 @@ export const useGenerateMealPlan = () => {
     mutationFn: (data: {
       goal: string;
       dietaryPreferences: string;
-      userId: string;
+      userId?: string;
       mealCount?: number;
       calorieTarget?: number;
       additionalNotes?: string;
@@ -54,11 +54,13 @@ export const useGenerateMealPlan = () => {
       cookingTime?: string;
     }) => generateMealPlan(getToken, data),
     onSuccess: (data, variables) => {
-      // Invalidate and refetch meal plans
-      queryClient.invalidateQueries({ queryKey: mealPlanKeys.list() });
-      queryClient.invalidateQueries({
-        queryKey: mealPlanKeys.user(variables.userId),
-      });
+      // Only invalidate queries if userId is provided (not demo)
+      if (variables.userId) {
+        queryClient.invalidateQueries({ queryKey: mealPlanKeys.list() });
+        queryClient.invalidateQueries({
+          queryKey: mealPlanKeys.user(variables.userId),
+        });
+      }
 
       // Process the meals to add mock data
       const processedMeals = data.meals.map((meal: Meal) => ({

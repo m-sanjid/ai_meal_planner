@@ -64,22 +64,33 @@ export const subscriptionStatus = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
+  console.log("subscriptionStatus called", { user: req.user });
   const userId = req.user?.userId;
 
   if (!userId) {
+    console.log("No userId found in request");
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
 
   try {
+    console.log("Looking for user with userId:", userId);
     const user = await User.findOne({ userId });
 
     if (!user) {
+      console.log("User not found for userId:", userId);
+      console.log(
+        "Available users in DB:",
+        await User.find({}, { userId: 1, email: 1 })
+      );
       res.status(404).json({ message: "User not found" });
       return;
     }
 
+    console.log("User found, getting subscription status");
     const statusInfo = await user.getSubscriptionStatus();
+
+    console.log("Subscription status info:", statusInfo);
     res.json({
       tokens: statusInfo.tokens,
       subscription: statusInfo.subscription,

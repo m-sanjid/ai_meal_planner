@@ -18,13 +18,14 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSkeleton from "@/components/meal/LoadingSkeleton";
 import HelpSheet from "@/components/meal/HelpSheet";
-import Unauthorized from "./Unauthorized";
 import MealCard, { type Meal } from "@/components/MealCard";
 import { useGenerateMealPlan } from "@/hooks/useMealGeneration";
 import { useAddToFavorites } from "@/hooks/useFavorites";
 import Options from "@/components/Options";
+import { useNavigate } from "react-router-dom";
 
 const Meal = () => {
+  const navigate = useNavigate();
   const [goal, setGoal] = useState("");
   const [dietaryPreferences, setDietaryPreferences] = useState("");
   const [mealCount, setMealCount] = useState(2);
@@ -41,6 +42,7 @@ const Meal = () => {
     { name: string; meals: Meal[] }[]
   >([]);
   const [showNutritionDetails, setShowNutritionDetails] = useState(false);
+  const [demoLimitReached, setDemoLimitReached] = useState(false);
 
   const { user, isSignedIn } = useUser();
   const { tokens } = useSubscription();
@@ -48,9 +50,38 @@ const Meal = () => {
   const generateMealPlanMutation = useGenerateMealPlan();
   const addToFavoritesMutation = useAddToFavorites();
 
-  if (!isSignedIn) return <Unauthorized />;
-
   const generateMealPlan = async () => {
+    if (!isSignedIn) {
+      // Demo gating for unauthenticated users
+      const demoCount = Number(localStorage.getItem("demoMealCount") || "0");
+      if (demoCount >= 2) {
+        setDemoLimitReached(true);
+        toast.error("Sign up to generate unlimited meal plans!");
+        navigate("/signup");
+        return;
+      }
+      try {
+        const response = await generateMealPlanMutation.mutateAsync({
+          goal,
+          dietaryPreferences,
+          mealCount,
+          calorieTarget,
+          additionalNotes,
+          excludeIngredients: excludeIngredients
+            .split(",")
+            .map((item) => item.trim()),
+          cookingTime,
+        });
+        setMeals(response.meals || response);
+        localStorage.setItem("demoMealCount", String(demoCount + 1));
+      } catch (err: any) {
+        toast.error(
+          err.message || "Failed to generate meal plan. Please try again.",
+        );
+      }
+      return;
+    }
+
     if (!user) return toast.error("User not authenticated");
 
     try {
@@ -91,6 +122,11 @@ const Meal = () => {
   };
 
   const saveMealPlan = () => {
+    if (!isSignedIn) {
+      toast.error("Sign in to save meal plans");
+      navigate("/signin");
+      return;
+    }
     if (!meals || meals.length === 0) return toast.error("No meals to save");
     setSavedMealPlans([...savedMealPlans, { name: mealPlanName, meals }]);
     toast.success("Meal plan saved locally!");
@@ -213,7 +249,8 @@ const Meal = () => {
               disabled={
                 generateMealPlanMutation.isPending ||
                 !goal ||
-                !dietaryPreferences
+                !dietaryPreferences ||
+                demoLimitReached
               }
               className="w-full sm:w-auto"
             >
@@ -222,8 +259,10 @@ const Meal = () => {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
                   Generating...
                 </>
-              ) : (
+              ) : isSignedIn ? (
                 "Generate Meal Plan"
+              ) : (
+                "Try Demo (2 free)"
               )}
             </Button>
 
@@ -237,6 +276,17 @@ const Meal = () => {
               </Button>
             )}
           </div>
+          {demoLimitReached && !isSignedIn && (
+            <div className="text-destructive mt-4 text-center">
+              <p>
+                <strong>Demo limit reached.</strong> Sign up or sign in to
+                generate unlimited meal plans!
+              </p>
+              <a href="/signup" className="text-primary underline">
+                Sign up now
+              </a>
+            </div>
+          )}
         </Card>
 
         <div className="mt-10 space-y-6">

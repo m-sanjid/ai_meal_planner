@@ -55,7 +55,7 @@ const userSchema = new Schema<UserDocument>(
     subscriptionStatus: {
       type: String,
       enum: ["active", "inactive", "canceled"],
-      default: "inactive",
+      default: "active",
     },
     nextReset: { type: Date, default: null },
     nutritionGoals: {

@@ -32,6 +32,10 @@ import ShoppingList from "./components/ShoppingList";
 import MealCalendar from "./components/MealCalendar";
 import CalorieTracker from "./pages/CalorieTracker";
 import BlogDetails from "./pages/BlogDetails";
+import { useUser, useAuth } from "@clerk/clerk-react";
+import { useEffect } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 function App() {
   return (
@@ -52,6 +56,84 @@ function App() {
 
 function AppContent() {
   const location = useLocation();
+  const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth();
+
+  // Function to register user in database
+  const registerUserInDatabase = async (
+    userId: string,
+    email: string,
+    name: string,
+  ) => {
+    try {
+      console.log("App: Registering user in database:", {
+        userId,
+        email,
+        name,
+      });
+      const token = await getToken();
+
+      if (!token) {
+        console.error("App: No auth token available for user registration");
+        return;
+      }
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/register`,
+        {
+          userId,
+          email,
+          name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log("App: User registration response:", response.status);
+
+      if (response.status === 200 || response.status === 201) {
+        console.log("App: User registered successfully in database");
+        localStorage.setItem("isUserRegistered", "true");
+      }
+    } catch (error: any) {
+      console.error("App: Failed to register user in database:", error);
+
+      if (error.response?.status !== 409) {
+        toast.error("Failed to complete registration. Please try again.");
+      } else {
+        localStorage.setItem("isUserRegistered", "true");
+      }
+    }
+  };
+
+  // Register user when they are signed in
+  useEffect(() => {
+    console.log("App: useEffect triggered", {
+      isSignedIn,
+      userId: user?.id,
+      isRegistered: localStorage.getItem("isUserRegistered"),
+    });
+
+    if (
+      isSignedIn &&
+      user &&
+      localStorage.getItem("isUserRegistered") !== "true"
+    ) {
+      console.log("App: User signed in, attempting registration");
+      registerUserInDatabase(
+        user.id,
+        user.primaryEmailAddress?.emailAddress || "",
+        user.fullName || "",
+      );
+    } else if (isSignedIn && user) {
+      console.log("App: User already registered or missing data");
+    } else {
+      console.log("App: User not signed in or missing user data");
+    }
+  }, [isSignedIn, user, getToken]);
 
   const footerRoutes = [
     "/",

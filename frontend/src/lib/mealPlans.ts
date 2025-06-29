@@ -62,7 +62,7 @@ export const generateMealPlan = async (
   data: {
     goal: string;
     dietaryPreferences: string;
-    userId: string;
+    userId?: string;
     mealCount?: number;
     calorieTarget?: number;
     additionalNotes?: string;
@@ -70,7 +70,12 @@ export const generateMealPlan = async (
     cookingTime?: string;
   },
 ): Promise<MealPlan> => {
-  const headers = await getAuthHeaders(getToken);
+  // For demo generations (no userId), don't send auth headers
+  const headers = data.userId
+    ? await getAuthHeaders(getToken)
+    : {
+        "Content-Type": "application/json",
+      };
 
   const response = await axios.post(
     `${API_BASE_URL}/api/meals/generate`,
