@@ -52,11 +52,11 @@ const Appearance = () => {
       >
         <CardHeader>
           <CardTitle className="text-foreground">Appearance</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-xs md:text-sm">
             Customize how the application looks
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 text-xs md:text-sm">
           <div className="flex items-end justify-between">
             <div className="space-y-0.5">
               <label className="text-foreground">Theme</label>

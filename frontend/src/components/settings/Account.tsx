@@ -20,11 +20,11 @@ const Account = () => {
       >
         <CardHeader>
           <CardTitle className="text-foreground">Account Information</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-xs md:text-sm">
             Manage your personal account details
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 text-xs md:text-sm">
           <div className="space-y-2">
             <label className="text-foreground">Full Name</label>
             <div className="bg-card text-muted-foreground rounded-md p-2">

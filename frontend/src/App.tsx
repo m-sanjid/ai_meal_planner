@@ -66,7 +66,6 @@ function AppContent() {
     "/preview",
     "/privacy",
     "/careers",
-    "/settings",
   ];
 
   return (

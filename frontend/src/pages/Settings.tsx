@@ -45,11 +45,11 @@ const Settings = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Tabs defaultValue="account" className="mb-10 h-40 w-full">
+          <Tabs defaultValue="account" className="mb-10 h-40 w-full text-xs md:text-sm">
             <TabsList className="mb-8">
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="appearance">Appearance</TabsTrigger>
-              <TabsTrigger value="subscription">Subscription</TabsTrigger>
+              <TabsTrigger value="account" className="text-xs md:text-sm">Account</TabsTrigger>
+              <TabsTrigger value="appearance" className="text-xs md:text-sm">Appearance</TabsTrigger>
+              <TabsTrigger value="subscription" className="text-xs md:text-sm">Subscription</TabsTrigger>
             </TabsList>
             <TabsContent value="account">
               <Account />

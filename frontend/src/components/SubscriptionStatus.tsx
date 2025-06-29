@@ -24,8 +24,8 @@ const SubscriptionStatus = () => {
   };
 
   return (
-    <div className="space-y-4 p-4">
-      <h2 className="mb-4 text-xl font-bold">Subscription Details</h2>
+    <div className="space-y-4 p-0 text-xs md:text-sm">
+      <h2 className="mb-4 text-lg md:text-xl font-bold">Subscription Details</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (

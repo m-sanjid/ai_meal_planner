@@ -84,7 +84,7 @@ const Subscription = ({
       <Card className="bg-card backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="text-foreground">Subscription</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-xs md:text-sm">
             Manage your subscription plan
           </CardDescription>
         </CardHeader>

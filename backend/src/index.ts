@@ -36,6 +36,12 @@ connectDB();
 // 4. Clerk middleware comes *after* CORS
 app.use(clerkMiddleware());
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+  next();
+});
+
 // 5. Routes
 app.use("/api/meals", mealRoutes);
 app.use("/api/users", userRoutes);
@@ -47,6 +53,11 @@ app.use('/api/contact', contactRoutes);
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Test subscription endpoint without auth
+app.get("/api/sub/test", (req, res) => {
+  res.json({ message: "Subscription route is working" });
 });
 
 app.listen(3000, () => console.log("Server started on port 3000"));
