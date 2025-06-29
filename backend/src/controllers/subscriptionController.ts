@@ -1,6 +1,6 @@
 import razorpay from "../config/razorpay";
 import type { AuthenticatedRequest } from "../middlewares/authMiddleware";
-import User from "../models/user";
+import User from "../models/user.js";
 import type { Request, Response } from "express";
 import crypto from "crypto";
 

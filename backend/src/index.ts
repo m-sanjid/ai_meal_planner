@@ -1,14 +1,14 @@
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db";
-import mealRoutes from "./routes/mealRoutes";
-import userRoutes from "./routes/userRoutes";
-import subscribeRoutes from "./routes/subscribeRoutes";
-import shoppingListRoutes from "./routes/shoppingListRoutes";
-import calorieRoutes from "./routes/calorieRoutes";
+import mealRoutes from "./routes/mealRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import subscribeRoutes from "./routes/subscribeRoutes.js";
+import shoppingListRoutes from "./routes/shoppingListRoutes.js";
+import calorieRoutes from "./routes/calorieRoutes.js";
 import { clerkMiddleware } from "@clerk/express";
 import "dotenv/config";
-import contactRoutes from "./routes/contact";
+import contactRoutes from "./routes/contact.js";
 
 const app = express();
 
