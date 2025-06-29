@@ -97,9 +97,23 @@ function AppContent() {
       if (response.status === 200 || response.status === 201) {
         console.log("App: User registered successfully in database");
         localStorage.setItem("isUserRegistered", "true");
+        
+        // Handle existing account case
+        if (response.data?.existingAccount) {
+          console.log("App: Using existing account for email:", email);
+          toast.success("Welcome back! Using your existing account.");
+        }
       }
     } catch (error: any) {
       console.error("App: Failed to register user in database:", error);
+
+      // Handle existing account case
+      if (error.response?.data?.existingAccount) {
+        console.log("App: Using existing account for email:", email);
+        localStorage.setItem("isUserRegistered", "true");
+        toast.success("Welcome back! Using your existing account.");
+        return;
+      }
 
       if (error.response?.status !== 409) {
         toast.error("Failed to complete registration. Please try again.");

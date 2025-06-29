@@ -26,10 +26,12 @@ export const registerUser = async (
     // Check if email is already taken by another user
     const existingUserWithEmail = await User.findOne({ email });
     if (existingUserWithEmail) {
-      console.log("Email already taken:", email);
-      res.status(409).json({
-        error: "Email already registered with another account",
-        code: "EMAIL_TAKEN",
+      console.log("Email already taken by user:", existingUserWithEmail.userId);
+      // Return the existing user data instead of error
+      res.status(200).json({ 
+        message: "Email already registered", 
+        user: existingUserWithEmail,
+        existingAccount: true
       });
       return;
     }
