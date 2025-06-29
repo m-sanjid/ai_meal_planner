@@ -80,7 +80,6 @@ export const useGenerateMealPlan = () => {
       return processedMeals;
     },
     onError: (error: any) => {
-      console.error("Error generating meal plan:", error);
       const errorMessage =
         error.response?.data?.error || "Failed to generate meal plan";
       toast.error(errorMessage);

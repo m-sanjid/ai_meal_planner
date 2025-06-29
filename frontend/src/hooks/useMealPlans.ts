@@ -81,7 +81,6 @@ export const useGenerateMealPlan = () => {
       toast.success("Meal plan generated successfully!");
     },
     onError: (error: any) => {
-      console.error("Error generating meal plan:", error);
       toast.error(
         error.response?.data?.error || "Failed to generate meal plan",
       );
@@ -130,7 +129,6 @@ export const useDeleteMealPlan = () => {
       toast.success("Meal plan deleted successfully");
     },
     onError: (error: any) => {
-      console.error("Error deleting meal plan:", error);
       toast.error(error.response?.data?.error || "Failed to delete meal plan");
     },
   });

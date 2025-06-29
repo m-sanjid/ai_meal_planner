@@ -68,8 +68,7 @@ const Subscription = ({
         setSubscription("free");
 
         toast("Subscription cancelled successfully");
-      } catch (error) {
-        console.error("Error cancelling subscription:", error);
+      } catch (error: any) {
         toast.error("Failed to cancel subscription");
       }
     }

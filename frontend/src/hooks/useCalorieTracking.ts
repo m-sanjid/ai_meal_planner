@@ -76,7 +76,6 @@ export const useAddMeal = () => {
       toast.success("Meal added successfully");
     },
     onError: (error: any) => {
-      console.error("Error adding meal:", error);
       toast.error(error.response?.data?.error || "Failed to add meal");
     },
   });
@@ -117,7 +116,6 @@ export const useDeleteMeal = () => {
       toast.success("Meal removed");
     },
     onError: (error: any) => {
-      console.error("Error deleting meal:", error);
       toast.error(error.response?.data?.error || "Failed to delete meal");
     },
   });
@@ -157,7 +155,6 @@ export const useUpdateDailyGoal = () => {
       toast.success("Daily goal updated");
     },
     onError: (error: any) => {
-      console.error("Error updating daily goal:", error);
       toast.error(error.response?.data?.error || "Failed to update daily goal");
     },
   });

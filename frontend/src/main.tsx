@@ -38,5 +38,9 @@ createRoot(document.getElementById("root")!).render(
 
 // Load the script on page load
 loadRazorpayScript()
-  .then(() => console.log("Razorpay SDK loaded"))
-  .catch(() => console.error("Failed to load Razorpay SDK"));
+  .then(() => {
+    // Razorpay SDK loaded successfully
+  })
+  .catch(() => {
+    // Failed to load Razorpay SDK
+  });

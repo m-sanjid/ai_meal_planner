@@ -67,22 +67,15 @@ function AppContent() {
     name: string,
   ) => {
     if (registrationAttempted) {
-      console.log("App: Registration already attempted, skipping");
       return;
     }
 
     try {
       setRegistrationAttempted(true);
-      console.log("App: Registering user in database:", {
-        userId,
-        email,
-        name,
-      });
       const token = await getToken();
 
       if (!token) {
-        console.error("App: No auth token available for user registration");
-        localStorage.setItem("isUserRegistered", "true"); // Set flag anyway
+        localStorage.setItem("isUserRegistered", "true");
         return;
       }
 
@@ -100,34 +93,23 @@ function AppContent() {
         },
       );
 
-      console.log("App: User registration response:", response.status, response.data);
-
       if (response.status === 200 || response.status === 201) {
-        console.log("App: User registered successfully in database");
         localStorage.setItem("isUserRegistered", "true");
         
-        // Handle existing account case
         if (response.data?.existingAccount) {
-          console.log("App: Using existing account for email:", email);
           toast.success("Welcome back! Using your existing account.");
         }
       }
     } catch (error: any) {
-      console.error("App: Failed to register user in database:", error.response?.data || error);
-
-      // Handle existing account case
       if (error.response?.data?.existingAccount) {
-        console.log("App: Using existing account for email:", email);
         localStorage.setItem("isUserRegistered", "true");
         toast.success("Welcome back! Using your existing account.");
         return;
       }
 
-      // Set registration flag even on error to prevent infinite retries
       localStorage.setItem("isUserRegistered", "true");
       
       if (error.response?.status !== 409) {
-        console.error("App: Registration failed with status:", error.response?.status);
         toast.error("Failed to complete registration. Please try again.");
       }
     }
@@ -135,29 +117,17 @@ function AppContent() {
 
   // Register user when they are signed in
   useEffect(() => {
-    console.log("App: useEffect triggered", {
-      isSignedIn,
-      userId: user?.id,
-      isRegistered: localStorage.getItem("isUserRegistered"),
-      registrationAttempted,
-    });
-
     if (
       isSignedIn &&
       user &&
       localStorage.getItem("isUserRegistered") !== "true" &&
       !registrationAttempted
     ) {
-      console.log("App: User signed in, attempting registration");
       registerUserInDatabase(
         user.id,
         user.primaryEmailAddress?.emailAddress || "",
         user.fullName || "",
       );
-    } else if (isSignedIn && user) {
-      console.log("App: User already registered or missing data");
-    } else {
-      console.log("App: User not signed in or missing user data");
     }
   }, [isSignedIn, user, getToken, registrationAttempted]);
 

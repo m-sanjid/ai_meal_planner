@@ -65,8 +65,7 @@ const ShoppingList: React.FC = () => {
       const data = await response.json();
       setShoppingList(data.items);
       toast.success("Shopping list generated successfully");
-    } catch (error) {
-      console.error("Error generating shopping list:", error);
+    } catch (error: any) {
       toast.error("Failed to generate shopping list");
     } finally {
       setLoading(false);

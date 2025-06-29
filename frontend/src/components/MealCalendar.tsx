@@ -89,9 +89,8 @@ const MealCalendar: React.FC = () => {
       });
 
       toast.success("Meal added successfully");
-    } catch (error) {
-      console.error("Error adding meal:", error);
-      toast.error("Failed to add meal");
+    } catch (error: any) {
+      toast.error("Failed to add meal to calendar");
     }
   };
 

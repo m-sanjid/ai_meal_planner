@@ -52,7 +52,6 @@ export const useAddToFavorites = () => {
       toast.success("Meal added to favorites");
     },
     onError: (error: any) => {
-      console.error("Error adding to favorites:", error);
       toast.error(error.response?.data?.error || "Failed to add to favorites");
     },
   });
@@ -90,7 +89,6 @@ export const useRemoveFromFavorites = () => {
       toast.success("Meal removed from favorites");
     },
     onError: (error: any) => {
-      console.error("Error removing from favorites:", error);
       toast.error(
         error.response?.data?.error || "Failed to remove from favorites",
       );

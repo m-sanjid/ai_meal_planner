@@ -12,9 +12,8 @@ const sendContactEmail = async (
       { name, email, subject, message },
     );
     return response.data;
-  } catch (error) {
-    console.error("Error sending contact email:", error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || "Failed to send message");
   }
 };
 
@@ -25,9 +24,8 @@ const subscribeToNewsletter = async (email: string) => {
       { email },
     );
     return response.data;
-  } catch (error) {
-    console.error("Error subscribing to newsletter:", error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || "Failed to subscribe to newsletter");
   }
 };
 
