@@ -1,5 +1,5 @@
 import fetchSubscriptionStatus from "@/lib/subscription";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import {
   createContext,
   Dispatch,
@@ -28,6 +28,7 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const { getToken } = useAuth();
+  const { isSignedIn } = useUser();
   const [subscription, setSubscription] = useState("free");
   const [status, setStatus] = useState("inactive");
   const [tokens, setTokens] = useState(0);
@@ -35,6 +36,11 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchStatus = useCallback(async () => {
+    if (!isSignedIn) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       const token = await getToken();
       if (token) {
@@ -53,7 +59,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       console.error("Failed to fetch subscription status:", error);
       setLoading(false);
     }
-  }, [getToken]);
+  }, [getToken, isSignedIn]);
 
   const refreshSubscription = useCallback(async () => {
     setLoading(true);
@@ -68,7 +74,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     fetchStatus();
-  }, [getToken, fetchStatus]);
+  }, [isSignedIn, fetchStatus]);
 
   useEffect(() => {
     if (nextReset) {

@@ -86,7 +86,7 @@ const userSchema = new Schema<UserDocument>(
 // Pre-save hook to initialize values
 userSchema.pre<UserDocument>("save", function (next) {
   if (this.subscription === "free") {
-    this.subscriptionStatus = "inactive";
+    this.subscriptionStatus = "active";
     if (!this.nextReset) {
       const nextMonth = new Date();
       nextMonth.setMonth(nextMonth.getMonth() + 1, 1);
@@ -149,7 +149,7 @@ userSchema.methods.upgradeToPro = async function (subscriptionId: string) {
 userSchema.methods.downgradeToFree = async function () {
   this.subscription = "free";
   this.subscriptionId = null;
-  this.subscriptionStatus = "inactive";
+  this.subscriptionStatus = "active";
   this.tokens = 10;
 
   const nextMonth = new Date();

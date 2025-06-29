@@ -33,7 +33,7 @@ import MealCalendar from "./components/MealCalendar";
 import CalorieTracker from "./pages/CalorieTracker";
 import BlogDetails from "./pages/BlogDetails";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -58,6 +58,7 @@ function AppContent() {
   const location = useLocation();
   const { user, isSignedIn } = useUser();
   const { getToken } = useAuth();
+  const [registrationAttempted, setRegistrationAttempted] = useState(false);
 
   // Function to register user in database
   const registerUserInDatabase = async (
@@ -65,7 +66,13 @@ function AppContent() {
     email: string,
     name: string,
   ) => {
+    if (registrationAttempted) {
+      console.log("App: Registration already attempted, skipping");
+      return;
+    }
+
     try {
+      setRegistrationAttempted(true);
       console.log("App: Registering user in database:", {
         userId,
         email,
@@ -129,12 +136,14 @@ function AppContent() {
       isSignedIn,
       userId: user?.id,
       isRegistered: localStorage.getItem("isUserRegistered"),
+      registrationAttempted,
     });
 
     if (
       isSignedIn &&
       user &&
-      localStorage.getItem("isUserRegistered") !== "true"
+      localStorage.getItem("isUserRegistered") !== "true" &&
+      !registrationAttempted
     ) {
       console.log("App: User signed in, attempting registration");
       registerUserInDatabase(
@@ -147,7 +156,7 @@ function AppContent() {
     } else {
       console.log("App: User not signed in or missing user data");
     }
-  }, [isSignedIn, user, getToken]);
+  }, [isSignedIn, user, getToken, registrationAttempted]);
 
   const footerRoutes = [
     "/",
