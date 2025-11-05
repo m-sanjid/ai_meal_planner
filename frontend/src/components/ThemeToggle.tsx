@@ -35,7 +35,7 @@ const ThemeToggle = () => {
         className="relative ml-2 overflow-hidden rounded-xl transition-all duration-300"
       >
         <AnimatePresence mode="wait">
-          {isDarkMode ? (
+          {!isDarkMode ? (
             <motion.div
               key="sun"
               initial={{ rotate: -90, opacity: 0 }}
