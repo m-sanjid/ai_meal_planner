@@ -4,11 +4,11 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
-    "@typescript-eslint/eslint-plugin": "^8.26.0",
-    "@typescript-eslint/parser": "^8.26.0",
-    "esbuild": "^0.25.0",
-    "eslint": "^9.21.0",
-    "typescript-eslint": "^8.26.0"
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "esbuild": "^0.25.12",
+    "eslint": "^9.39.1",
+    "typescript-eslint": "^8.46.3"
   },
   "scripts": {
     "build": "bunx tsc",
@@ -19,22 +19,22 @@
     "lint:fix": "bunx eslint ./src --ext .ts,.tsx --fix"
   },
   "peerDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@clerk/express": "^1.4.14",
+    "@clerk/express": "^1.7.45",
     "@google/generative-ai": "^0.21.0",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
-    "@types/nodemailer": "^6.4.17",
-    "axios": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/nodemailer": "^6.4.21",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
-    "mongoose": "^8.12.0",
-    "nodemailer": "^7.0.3",
+    "mongoose": "^8.19.3",
+    "nodemailer": "^7.0.10",
     "razorpay": "^2.9.6",
-    "zod": "^3.24.3"
+    "zod": "^3.25.76"
   }
 }
