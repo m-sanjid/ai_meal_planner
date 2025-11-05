@@ -12,7 +12,7 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
 let userMeals: Record<string, DayMeals[]> = {};
 
@@ -193,10 +193,10 @@ export const updateMealPortion = async (req: Request, res: Response) => {
     meal.calories = meal.calories ? meal.calories * scaleFactor : 0;
     meal.macros = meal.macros
       ? {
-          protein: meal.macros.protein ? meal.macros.protein * scaleFactor : 0,
-          carbs: meal.macros.carbs ? meal.macros.carbs * scaleFactor : 0,
-          fat: meal.macros.fat ? meal.macros.fat * scaleFactor : 0,
-        }
+        protein: meal.macros.protein ? meal.macros.protein * scaleFactor : 0,
+        carbs: meal.macros.carbs ? meal.macros.carbs * scaleFactor : 0,
+        fat: meal.macros.fat ? meal.macros.fat * scaleFactor : 0,
+      }
       : { protein: 0, carbs: 0, fat: 0 };
     meal.portionSize = portionSize;
 
